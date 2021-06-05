@@ -1,0 +1,7 @@
+{
+  "/api": { 
+    "target":"http://solicitud.adgimm.com.mx:3000", 
+    "secure": false
+  }
+  
+}

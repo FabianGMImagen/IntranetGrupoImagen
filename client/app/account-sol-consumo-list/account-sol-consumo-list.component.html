@@ -1,0 +1,46 @@
+<app-toast [message]="toast.message"></app-toast>
+<mat-form-field class="firstFilter">
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="FILTRADO POR DESCRIPCCION DE LA SOLICITUD DE CONSUMO INTERNO">
+</mat-form-field>
+<div class="mat-elevation-z8">
+    <!--TABLA DINAMICA -->
+    <table mat-table [dataSource]="DATASOURCEFIRST" multiTemplateDataRows matSort>
+
+        <!--Columnas de las Tablas-->
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplayFirst">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
+            <td mat-cell *matCellDef="let element" > {{element[column]}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayFirst.length">
+                <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <div class="example-element-diagram">
+                            JUSTIFICACION: {{element.Justificacion}}
+                        <div class="example-element-position"
+                            *ngIf="(element.StatusName == 'S. C. I. RECHAZADA POR GERENTE') ||
+                            (element.StatusName == 'S. C. I. RECHAZADA POR DIRECCION')">MOTIVO RECHAZO:
+                            {{element.MotivoRechazo}}
+                        </div>
+                    </div>
+                    <div>
+                        <!-- <button class="btn btn-outline-primary btn-sm" (click)="UpdateDataforSol(element)">
+                            <i class="fa fa-pencil" varia-hidden="true"></i> Update datos Sol.Consumo</button> -->
+                        <button class="btn btn-outline-warning btn-sm" (click)="getDetalleProductos(element)">
+                            <i class="fa fa-cog" aria-hidden="true"></i> Detalles de Solicitud</button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplayFirst"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplayFirst;" class="example-element-row"
+            [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+</div>

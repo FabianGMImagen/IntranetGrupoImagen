@@ -1,0 +1,111 @@
+<app-toast [message]="toast.message"></app-toast>
+<h1 mat-dialog-title>DATOS ACTUALIZABLES POR PORDUCTO</h1>
+<mat-card-subtitle>Dog Breed</mat-card-subtitle>
+<div class="row">
+    <div class="col">
+        <mat-form-field>
+            <input matInput placeholder="Cantidad" type="number">
+            <mat-hint>Cantidad anterior: {{this.data[0].Cantidad}}</mat-hint>
+          </mat-form-field>
+    </div>
+    <div class="col">
+        <i class="far fa-building"></i>
+        <mat-form-field>
+            <mat-label>ALMACEN</mat-label>
+            <mat-select [(ngModel)]="this.SelectedAlmacen" (selectionChange)="selectedAlmacen()" name="almacen" >
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="AlmacenFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let almacen of filteredAlmacen | async" [value]="almacen">
+                    {{almacen.Nombre}}</mat-option>
+            </mat-select>
+            <mat-hint>{{this.data[0].AlmacenName}}</mat-hint>
+        </mat-form-field>
+    </div>
+    <div class="col">
+        <i class="far fa-building"></i>
+        <mat-form-field>
+            <mat-label>MATERIAL O SERVICIOS</mat-label>
+            <mat-select [(ngModel)]="this.Materiales" name="material" (selectionChange)="SelectMat()">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="AlmacenFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let mat of filteredMaterial | async" [value]="mat">{{mat.Nombre}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>{{this.data[0].MaterialName}}</mat-hint>
+        </mat-form-field>
+        </div>
+</div>
+<th></th>
+<div class="row">
+    <div class="col">
+        <div class="icons">
+            <i class="far fa-newspaper ico"></i>
+            <mat-form-field class="moreLarge">
+                <mat-label>CENTRO DE COSTOS</mat-label>
+                <mat-select [(ngModel)]="this.SelectedCentroCost" name="ccosto" >
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="CCosotosFilterCtrl"></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let ccosto of filteredCCostos | async" [value]="ccosto">
+                        {{ccosto.Nombre}} - {{ccosto.IdCentroCosto}} </mat-option>
+                </mat-select>
+                <mat-hint>{{this.data[0].CentroCostosName}}</mat-hint>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col">
+        <div class="icons">
+            <i class="fas fa-flag ico"></i>
+            <mat-form-field class="moreLarge">
+                <mat-label>CUENTA DE MAYOR</mat-label>
+                <mat-select [(ngModel)]="this.SelectCuentaMayor" name="cmayorr">
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="CMayorFilterCtrl"></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let cmayor of filteredCMayor | async" [value]="cmayor">
+                        {{cmayor.IdCuentaMayor}} - {{cmayor.Nombre}}</mat-option>
+                </mat-select>
+                <mat-hint>{{this.data[0].CuentaMayorName}}</mat-hint>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col">
+        <div class="icons">
+            <i class="fas fa-business-time"></i>
+            <mat-form-field class="empLarge">
+                <mat-label>CADUCIDAD</mat-label>
+                <mat-select [(ngModel)]="this.SelectCaducidad" name="caducidad" disabled="true">
+                    <mat-option *ngFor="let caducidad of ListCaducidad" [value]="caducidad">
+                        {{caducidad.CHARG | date:"shortDate"}}</mat-option>
+                </mat-select>
+                <mat-hint>Seleccionado anteriormente: {{this.data[0].Caducidad}}</mat-hint>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<th></th>
+<div class="row">
+    <div class="col">
+        <div class="icons">
+            <i class="fas fa-ruler-horizontal"></i>
+            <mat-form-field>
+                <mat-label>UNIDAD DE MEDIDA</mat-label>
+                <mat-select [(ngModel)]="this.SelectUnidadMedida" name="umedida">
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="UnidadMedidaFilterCtrl"></ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let umedida of filteredUnidadMedida | async" [value]="umedida">
+                        {{umedida.NombreUnidadMedida}}</mat-option>
+                </mat-select>
+                <mat-hint>{{this.data[0].UnidadMedidaName}}</mat-hint>
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions >
+    <button class="btn btn-outline-primary btn-sm" style="margin: 5px;" (click)="onNoClick()">Regresar</button>
+    <!-- <button class="btn btn-outline-success btn-sm" style="margin: 5px;" (click)="onYesClick()" cdkFocusInitial>Ok</button> -->
+    <button class="btn btn-outline-info btn-sm" style="margin: 5px;" (click)="onUpdate()"><i class="fa fa-pencil" aria-hidden="true"></i>Actualizar</button>
+</div>
