@@ -1,0 +1,49 @@
+<h1 mat-dialog-title>PRODUCTOS POR SOLICITU DE CONSUMO INTERNO :  {{data}}</h1>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col">
+      <p>PORDUCTOS</p>
+    </div>
+    <div class="col" *ngIf="viewspiner">
+      <mat-progress-spinner
+        class="example-margin"
+        color="warn"
+        mode="indeterminate"
+        diameter="50"
+        [value]="value">
+      </mat-progress-spinner>
+     </div>
+  </div>
+  
+  <th></th>
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Almacen</th>
+        <th scope="col">C.Costos</th>
+        <th scope="col">C.Mayor</th>
+        <th scope="col">Material</th>
+        <th scope="col">UnidadMedida</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+            <tr *ngFor="let Prod of ListProductos">
+              <td width="20">{{Prod.Cantidad}}</td>
+              <td width="20">{{Prod.AlmacenName}}</td>
+              <td width="20">{{Prod.CentroCostosName}}</td>
+              <td width="20">{{Prod.CuentaMayorName}}</td>
+              <td width="20">{{Prod.MaterialName}}</td>
+              <td width="20">{{Prod.UnidadMedidaName}}</td>
+              <td width="10">
+                <button class="btn btn-info btn-sm" (click)="UpdateDataProdcuts(Prod)"><i class="fa fa-wrench" aria-hidden="true"></i> Update Prod.</button>
+              </td>
+            </tr>  
+    </tbody>
+   </table>
+</div>
+<div mat-dialog-actions >
+  <button class="btn btn-outline-primary btn-sm" style="margin: 5px;" (click)="onNoClick()">Regresar</button>
+  <button class="btn btn-outline-success btn-sm" style="margin: 5px;" (click)="onYesClick()" cdkFocusInitial>Ok</button>
+</div>

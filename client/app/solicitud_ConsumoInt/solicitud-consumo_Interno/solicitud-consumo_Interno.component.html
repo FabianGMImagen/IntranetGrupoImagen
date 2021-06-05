@@ -1,0 +1,291 @@
+<app-toast [message]="toast.message"></app-toast>
+<div class="TOP">
+    <mat-grid-list cols="3" rowHeight="100px">
+        <mat-grid-tile>
+            <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACLCAYAAACDSWCnAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUATWljcm9zb2Z0IE9mZmljZX/tNXEAABrISURBVHhe7V0LeFxVtV57nzNnJq9J0lDb0iYpAYv9eKiVj0JRHgpe7pUrysMLFgjF0G/gRm+qgOLlMkzV9nrx3huvRWJJEwIURERBxEflA4VaiyLKJ1KpUPqw0FJq2jRp5nHOPvffZ2aSyWQmM5PmNDNnzi7zkZnZZ+211/r3Wmuv/Rg1FAqRW1wJTLUE1Kkm6NJzJSAl4ALLxYEtEnCBlUGswf2L6klX66mCZpHgx5CqVRH3xGUlYjrp0SHi4h0aHt5Lqqc/1PBivy3aKWGiLrASygsePvtkGhYfINX8EHm97yWvOZuEqCPFrAaoiJgSr8nxkn+abJCqKg7giz3Bgx96iUzzOTL470MNz75cwniYMtbLGljB3YuOoSrfR4lpnyJufpAqvA2kaLBKBoCDF5n4Dy89Yv1pFSZfQBdnAJxSDcDNI49yGhnRz5Bh7A8eOncjGeJ7NDS4ITT3xXemTFMlRqgsgRXcvWQG1XiuoDq1DRbo/cRgkYwoAIRXLDyxCiXALNDhZcRG60qwKR4JzItJjeHl/2Nw8OxuOqg/FJq76e8lhosjZrfsgBXcv+RSqvfdTFxbTKYAmAAkMZwwRUcgT4sWLJukxyFW1fc+YmwN1cauDu4/+064yEePgHrJPVo2wAruXjiTamYGyacthwvzEOJvC1gj/m2qdAdfKV2ppC+tmLdyMQD23eDAOWspdugOBPr7pqqlYqZTFsAK7j/9/VRXtYY8FUsoepgojBeTwZLNRQI3fAguUlPJV3UjKcr7wEt7qOG3f7C55Wkn73hgBQ+ccT6sxjry+JooPBAPxo8GqEZUCwDLWEy27fMvwcePgafPhOo2PzXt2reRAUcDywKVVvUAKeosGj5ooxjzIC0BLXnwVTcRq3wAvF3lZHA5FlhwOYvJ6+uzQCXdkZUnKIIiefHVzCK1oi+4d8kloVmbni8CrqacBUcCK3h40VxYqrtJ8x1Lw3BBxQKq5EQhPEhU4T8Wk4fvgNePhSpf3D3lmp1mgo4DVvDlhQo1V60iX+X76fCBaRbvBM1LwFfWvRfZ/tXBhQuXhbZskckxxxTHAYuaGq5EDmkpSatQ7EXy6AGvzzdsID89UOzsFsKfo4CFxeOZpLIvYdankNALkcP01JU8Mi/HuuOXgvsXbgg1bHl7ehiZ+lYdBSxSqq9FauEkipSAtUrqMoKcmrf6JCwTteKjO6dexdND0THAwlJNA3np6ng2PbliPD1CLaxVudANnrnnaiyK9zpl4doxwCJFXIT1v1MoJtf9SqxInj3eU7DT4iJwfm+JcZ+RXecAi2sXIGeF3QlwLUWVXsgDJnK3hFy4ZsoFLrDykNfRqoKgHXui6Kz4NpYiSYQW1PnEsg9jS9CXRixU7yro8SKs7AyLpVSfQZzPt/ZTlWqRvHN1PiYgi9EFF1hFoUeVHRff+SndYKkWBPEqNhwKo6VUe5DKtzMslh5rQlK0tCaD6eiRi9TSjZui0QVWsUiAsZnx0KqU0gwZhCf7IMyZxSLWI+HDGRbLpOrSDNrTVQdkMeE/EoUWy7POABZz0MFbpiTOmRULRCbHhzOAJcwSWBjMU0FmKSxy5u6LM4DFGHbPlXh8ZYWIcnlH9qX0izOARfR2HFcy+i1VgCV457S39GHlmEtBlJ3xQxIljitrbLCST47KbjjDYnF6nfSYiXN8LH5KuRQLziDGkH0X6IsDijOApQ5uJr3qdVK9J8Sz76W2Xiiz7lg50KOv0ZDYTHWljyxHAAuHEfYEB87eiN0NJ1Cs1ECViA2tnRnDm3DPw1ulDyunuEKpiVj057iU41ocn48fcS+lInnWsTPDjP2slNieiFdHWCyrg2H+U9L0F3A44TSK4N6EUioerHPq0RdoSP2JE9ygc4J39AQu5GBw4IP3IdtwmnWE3lrULYGSPO4vzPtkH0qA47xYdI7FsoaJuB9xSisOJ3zAuiuh6IN4gN9bg5tpDv+eVP3+vDRWIpUcBaxQ5aYDwYElq3BP6MPWDS+pF6MVo0KsPWS6TlF9dahh04FiZHGyPDkKWJYQ/vv8H9JNT99Dvtob6LD0LMXqEuGuvZXymqN76P/6f0gOu27fccAKhVaaOPz5H8TUU6my9qyiPWZfid0xw0Ob6NDQ7aHQluQNcJM1EEX3nOOAJSWME8X7g/trbkCI9QNcvnFC/AqjYslvwYL6amVc9RriwYBTzhGmI9uRwIqD67d/wlVG1wJQD0KR8UvXiqFIUMXCOykSbZU8FgNLdvDgWGAlwPXr4N7Tr6Bqfg9V1J40cqOfHZLMRVOmFXxwf9HIKxSJXI9gfVOuR0r5e0cDywLXrN/+BpbrUty9fhem9h+J32yM19EsqleedJYX3j5NkeEbYalePZrNT0dbjgdWwnK9inuzPkHzZv47aVo74q5qKztv99KPXKrxVsk7SAcpPLSGDu37WmjulhK6sWTykCwLYFngOlkqdMutwf0f3EBe48tYV8T9pJjuR3FvgpjKE9QIzuVPpGgV8fW/aOQpxFOrQg0bn8EdWGVTygZYSY1KBQdf9m6meWdcRorRhj1cZyH+UqxT1NZC8GRuq5Gna7CfSh44ldtfosOCouGN2GZ8Dx3a8v3Q3D05fu7CeXgrO2DFrVcEZupX98M9/oDm1Z8LE3MZGZGzAYoW7OlCDVgd6SZl5l4CLX3dUQbi8Z84waPyUA3ex3+V4g1s1PsVRcKP0lsHn4GVHConK5U6PMoSWCPWSyqe6En5wmUcs0nhH6bh8Gn4AaYFpPgaAagWAAg/xiR/8iulSLAJcxBnALchdbCLdGMraeoLyEs9HWr49R55ypEanGeFCulRWQMrVVC44WUP3j8oX8FgkNHnvjeTPPXzMJucBbOElWIuTRmKgGkShwC2vRR++2/0zcv3hVaujK8bSUC5xZKAC6wMQMDvZAMo1n2gue8EXbnShVIGCbjAcmFhiwRcYNkiVpeoo4D1+TUbjo9w/UyOH2yGaot1v8wY1MkLuTl+eFoIdfPd7R99zSmQdBSwhEofbeC+b+uY85fKcQqOVIUHr34RbQeoXGAV58jiRhg5pyiMValscJKJDMmrPKdTnDKdHFeOsljS/QkLVKUDLCuBYemOl4TrzhdmTgNWvv1269ksARdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMm7wCpXzdvcbxdYNgu4XMk7DVhaJVOpAhdcl8497ww/H8AoZobxC5rOKY4CFn7oZGeYjGdj+F0KQaxE7k03mRc/H8CFusM5sHLYz8pV733uya20YEMpKmgBbcXPuZ5fiqxn5NlRFmtlKCQ9IH6o0i3TLQFHAWu6hem2PyoBF1guGmyRgAssW8TqEnWB5WLAFgm4wLJFrC5RF1guBmyRgAssW8TqEnWB5WLAFgm4wLJFrC5RF1guBmyRgAssW8TqEs0KrL6+Tj/111cM+4aNpJgqwhWc6im6bdu2g6FQaGT3QDAY5HPmzKmrCIfVYZ9vZMcK3qN+fbS1tfVAvqLu6uqqx3OesXTi7RZCR7YHWk2qqsrtKEmeGP5mHo/nb6AVzpenieqhjWNqiI7RuTaPOGsgMhQh+CFDiDc9pL+zraZmT2jp0pzrl319fT7q7/en9nsy/CVkPpDav/Xr13v37dtX6xujmwqln/qHOjo6BnO109fZ50eddCwoRP2HWzs6DmV6PiOwJFBamppW8jr6cJXwjgCLfKSYhvHH+vr6AIgdThLE+5mVmreHe33zqkxzBFjM6+VCmJG+7u6bWtvans3Vgd61ay+o0nyrTa/Pk0pHtisM46XOzs7lEMRwLjry+761PR+p8nq/YzLuNU0z2QemMMYNw+hCla/lQydTHcjHM795/rnMFJdXad7TBWOzOdEM1PWQqRDjZKpMGcDf+4+PRHf29vT8hEeVJ1oDrX/J1qaIxT7hqa27Ff2WA3ayW34Y+Sq4bhj/BRoPJNuKDEf+aUZt3R2MQFv+k8VrKjNEzYGurjWfDQTaX5pIFrza/BpX2TnpWDCMmmcgixUwMuO2v2W1WIyxExXOT0l9gnNOMWgYTECOowUjQVqFRYzz2ZL31AJFkiH4qr7Ozn/Mhm4LCBj5XPN+Q1H4qULSwHPJItuFBZCE83bdJmfXK1w5XggxRkvol9xYt7yrs7M30NHxZqHg6u7uPrNl/vxbQeNChaseCwXJPku9WfTlf1SLtmo5Yy3A2bnCa37h3p6e+8LR6DcDgcDu9Ha5UGYzDz81XX6F8idlJYQxZ4wOBL1LUUEbXI3wKpWoeqiS8bthdS8GT/uytsXoROj2lFGN4Fm0g+GaVX5ZFQWBDUulyFdqwfY5aanSR5TU3pClxDRgyWe5opwVrfbfjD9vz8Y883hvA5BPxWjLViVTuxnrru/uPp1z5R8AxnH8wFpBKKypwu//FB7uLERxPd3dX/Aq6m0ATJ3sp6Q/rlhGIV6svxJv8MwslSs3w7JfgkF0VWsgsHnss2Y0m/wK4TFel0XHPiMs2unAknUw+M6s9Hjvgiu+Jlt4YPLMWMDgH/Fa6TzmbQEK79zoE1IJHoV3wCX+Ai7xuXRavd29FyoKW25ZqikoMa62ejivM0Q2kFpj7/rVXV19twYC/fk02dPd8xWPBBW0kz7YLFUmLKykPMaKJUGGvsF6Wd/FVDVnXJPKU5J2PnxadcVYjzLRcwKRC1f45Xostgtu7abU2Dmf9rLVOWrAUhSlxhR8NQLBi1o7RoN5uMh3Mb9/tcJ4RUYLUGDvYA1OZJr3k1Jg2YqJ0YtQa+Fsr/di1Lk3VxO93T2fwcCIgyqNruVaJWCEqSO8PAhXaOCTSnxWbX0uLRhesMZkGGIbxSKXtgUCL+dqM/V7gDEGRBogNyYEyUQDdTn+5b3lP+lhVEVdMb+x+Q3QXFMIb9MKLNm45YLgEmNVegfe3pFkSFRX3+rhyvumAlSSpsnVq0BvTnZrFbcosB7S9LStDwYfWhoKZZ21AajvUTXvynj1sfqSFgiR32GArQ9UfwJ07YyZFPMQNQjOj8Me/I9zxj+OQaWhf3uiMeNagGrCQHm8osxDumF2MM52AVWYieUohqkCxX/KVW0McAF8DDSmcr66t7t757K2th8V8nymukfFYiUblqNDVfmK7u6up9raAhu74QI1rgYyxWWT6RhSJLO5Uvsv4+klHdQoVctqEV+sN8+9AJ/+OFt7yE0sg6s4FtZmTBULaKbYDWd7w7Lrrnsiw/Mb4VrWz5/b/DGFxOdR7+62wPgwYKJ+Ji1hdHBgAyYaf5uMTPJ9RlpiaWVVrt4F/bwJ/byQ77NFASyMXr9HeG7H7OomWJY7EEj7MsUsk+mUMPxXeBT27lR6UjmwFq8C0wdUhS9Ogs6yWhikzFBvAAB+hthCT28Ts6W5SCdclh76xV0cDYNuO0Z3JlBZpBLT8CdA/8eTjV3i4b8vdUI2GdHk9YyUDWZ78zymtweW+p8xwZj0ySHbLVYyzkj2TLpEmN3zkfD5EaTVPAYEslIiLslLEimVMKupVZj56fhMf3QSYL0zxbe54K+Y3PwZ3o64EylINHd245w5Z+DzjeltejVtESq0pFvAuCURjwBUj6U+gzxbdb3PNwOJtlTzZrbUt+gAqWzXipEq8P/+cPgd5OSyzqpS6FZW+rVb7u/pfRvcwstmLgjheDisPwmr+JtCZZdaX+oDKZ9TdFNDRqbzUsmjTP4UStNWYEEhsLDmm3DfcyVkUphDWoQ3pyrMmswIcxgo2A3FnVBoR4yIcbHHo5yWCtR4rsXYb4TDT27ft++Nlqbml2AxFyXrxEeoUq16PNdnAhZQcJxkOyXnmwzUSTeNn6fz2OD3f5Jx5fbKeIQ/im7NpEpkeRMF44p4rarehvcPT9TPOPCZD/1oz6VZCJQUTcgZbt7AAoOYaJCSHihI+aiqcmFddfXXQe+zkEM4V/vp/bAVWBAI0w2xhpvmaaqiXJYaoI+zAhjMphn7X6StMQHjNxfiHtevD2qK0nw1lMDS6ZqCPdrW3v667Dhmd98FL4tShWDN2Bi/CLmvk5a2tf05bfRWK6oyLmeJeV4Y5md8zMNYA/p8gswcTlTk5I4rWKTKs+QjC3Qc1ETey1TWbNY0/26Y5uOYhHwa7ytTZWfJRVHbkQrapkAEhRotW4ElJ+JgaC8E/WUh2BIwf2zGBKqciuvid2zX4GpqqpUjuaASHWq8EJnl8+LJ+XhJuKuhqGHcl/wsog88yMnfDrA0pVotJAln6ILaUG/FmIYtu5Mht2Yl1zO4B4wMK6mcIx8nswHC5ONiumydziePZdUBFgoRHHrmCQ9H79R82nZNYV9N7WnCWkKO5iqwO2jwwnKMtgJLdhJmtB5J0b9ivewOldja9JgrMfMZJN1Y0RrqGOzr6cGabv4FgbECF3e1wpmSahElXVjL5wbDg3+QC7z9/f0MrzdbGv1PgvoN6VYL9S9FvU5kn0cDVs4HMnGCul4TQe6474TQmIJepiRLc4Esr56aZhRqlTDP5pFk5pXDAecNVtku8K+pPlXdsWvHfx7XNP+9cBWXp3sVWDPpw32FLjXZDqyk4Lbv2LGupbHxPGw2uNJIcRXWhRgitnpZoO3XiboFDQ3QPAvxxUXpCpSWA0JZMKPG/yNTF1p9TS3V1/ijnNicdNdiTbU5azRixlXgYWRx2iTxujAZcp6jLtaKyxAkQdAXou76VGAIXX9GcGUFLKdhxS+CNOCsHUHV8ZNJqViDzhCDsKY3ci62Yc0168Uhimoqiq6/khdQRyuZgKIPM1YDg+qzSKnMgys/Mx/Xm6udowYsOfXu6ur8YgWvXYQY6kRL8XLBVDd+enBwsDMXo9ndBL9KjqqMyyyctUCpLenWKdPok0rkjK6EgO9Kbs9RBgdfZP7aV/Hde8bEH3C54P0yLFE9Bmv8aJI+pud/xN/yNVLu6+29GM9PClgWEYy7yOHoLwMdgV2TlVE+z6HPe/u6+q4TmngSfWs5UnAdNWDJzgUCHbuQ2f0iBP0wZmdeLDi/FQuLW/Kcdo+TDxR7CmZhyDNlNnLJ5ZR8BJsA+kmxmIGUBX1bPoPdGHv77ul9WOEUHANO+B1YWh/a/lbv2h6+bPl1j2RqQ26vOb55vrfwyXo6tXDeSzT59DVbHbmtp2ft2us9qvYowFV3JOA6qsCSHULu5/G+db1dCL7+zRDmbW3tbQWtm6UKBdK+EovN9eN2YCTW7yYUMsCY7j6l1VI5uwr5m3uTYI9FhvqIV12D3M5xqe0kkolzmMe8H3HhxUKnxw0u5FrbEF4VsMpzWxqbLwTNkyerIGtgEGneSv81fb29e8BvzrVCbICT7vLP+ex/yySf65Yvfxrx8E0eUrrAuzoZFy7pHnVgyUaHY5GvV5jqXxSP58HJjrDuNWuO0yqrlqY/H8+HCZkK+Cv8SOZZEkOQZ7J5iKveneoWLSEytrjW778Iz39P0kaq4g2M4ls419bD5WqpYJSAkYE8ZpVLmSo+rZAyCEsWARyQuaIqzFSVTMG7jMA5E3nJHvSrVA9bJXmRa5O5CveomGEbWLuknBsrs9HCEtW63nXrmrAwfXuhQXuSZl6dy9WZQr/HprK38IzcxTnpomi+y2CuR9IGklByNoYQ6Jbtu7Y/smDBgozA2rp1q9E4p3GR5lV/gWf8I8s88SUN5D5oGdzYozKolXQxir+PUTxHJf4/+FpNt1zW1FxGQ4zJGW1N/I4+C+Dj+mclbS1ryffn2/lCrEbC/U+cSMuj4e07d34Fu4ibkMu6djIWd1qAlUe/Jqwi95lXaNo16ZWs3QZCPH9w8OATibW/rNNvAOcFbBN5yqMql6QnBpnCz2lpbj4P9J9KtoFR/C3Eh29jy/EquDlrmSfVGllRXpZYz0pGxneWEjbgvq4z+rrm3XHEOwiyCUmK4UhlLOXXtbrr85WzFDlTPL9QcGUHlmlWyz1EqSWxRbhaGoc0xjGLJ39yNCa/k9PymGmMrGXk2dnKTO0yw5DtWvrTVPUamOmTpSJlm8kilYc9ow/lc0BAzlJ7enrWASCXYCIxZqcpXFtFLBr9wvrg+meXhpaO7MZEfPhwd/ea33lYxeeQ4rgS/XuXlRKwdoqO7hxNtZ5xvGFRyBCvodZDFFN6lwVat4+XhXSpcWtWUL4ljZC170s3KlM/Bsq8WIC3xGeacdXFE6pGFYKhrBgI3Brox2aBGzWTP66o6sLUARjfX6ZLnWQs2YhiJYT9Qjd0bDceTTpZqSFhbsHhiXRLMIQHHjHImCNlaLUE7yC4kBmfgvYG4eFNaBcBeUq7wA+imb/MnDkzah30wEwL3z+Gvd0jJh+C4gY22lEsNjL9zwXkgYGBX9bX1HSC5+YRvvEQRqe8wPSAXq/LZZe9qXTa2tq34X0H0hJ3YwZ5Dvb0nw81LUTaCnvcORKJjAkmYvEt3HwP6L6AvN2z0UF9M1IGWfeIC06vYJb8Q6ytSr86aWxhcRzun41ZUIdtfRU5uh/IbLUEeQJYOAtiyiWgdyaSUxuS25h9LwNYV4AvLSknqBmnRtim5GBPp5ERWIktHndKJaaewMB7lmn7B2Kmv4Pwv6Z+L/+WjRW6XQQupxvP9mRrV9JVd2jf2Epb9bQjaBl5m0hoiZnfivR+JXiX8VlWBSPv8yq+l6+10jWruu4nnw8bF7AFIabHDofDh6C1Q2gj4/GodL6WtS37Odq17k8tVGaptNJ1Jr9DjChP0/wylXY2XWaSF2aYz+PzK9L0OwYbeQErWSn9WE+uDqd+n6vuRAqfqN0EXVwEO7YcYXtjAJSglffyCAaWHPUTjvyJ+psi70lbqmw6y0Z7MvJK0++EcVxJBu/5KMmtM70ScIE1vfJ3bOv/D0tgaQwGkl9fAAAAAElFTkSuQmCC'
+                height="100" width="100" />
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <div class="titutlo">
+                <h3>SOLICITUD DE CONSUMO INTERNO</h3>
+            </div>
+        </mat-grid-tile>
+
+
+    </mat-grid-list>
+
+
+    <mat-card class="example-card">
+        <mat-card-title>DATOS GENERALES</mat-card-title>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field>
+                        <input matInput [matDatepicker]="date" placeholder="FECHA DE CREACION" [formControl]="Date"
+                            disabled>
+                        <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                        <mat-datepicker #date></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <div class="icons">
+                    <i class="fas fa-glasses"></i>
+                    <mat-form-field>
+                        <mat-label>DIRECCION</mat-label>
+                        <mat-select
+                        [(ngModel)]="this.DataConsumInt.Area"
+                        name="area"
+                        >
+                          <mat-option *ngFor="let area of ListAreas" [value]="area">{{
+                            area.Nombre
+                        }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="icons">
+                        <i class="far fa-building"></i>
+                        <mat-form-field class="empLarge">
+                            <mat-label>EMPRESAS/SOCIEDAD</mat-label>
+                            <!--ngModel es como una varibale del modelo donde se guardara el valor selected-->
+                            <!--la etiqueta name es para especificar que variable es y el valor en espesifico sin eso sale undefined-->
+                            <!--despues el metodo  donde apunta y donde se guardara-->
+                            <mat-select [formControl]="EmpresaCtrl" [(ngModel)]="this.DataConsumInt.Empresa"
+                                name="empresa" (selectionChange)="selectedEmpresa()" [disabled]="BloqCentro">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="EmpreFilterCtrl"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let empresa of filteredEmpresa | async" [value]="empresa">
+                                    {{empresa.Butxt}} - {{empresa.Bukrs}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <!--<p>You selected: {{EmpresaS}}</p>-->
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="icons">
+                        <i class="fas fa-door-closed"></i>
+                        <mat-form-field class="empLarge">
+                            <mat-label>CENTRO</mat-label>
+                            <!--ngModel es como una varibale del modelo donde se guardara el valor selected-->
+                            <!--la etiqueta name es para especificar que variable es y el valor en espesifico sin eso sale undefined-->
+                            <!--despues el metodo  donde apunta y donde se guardara-->
+                            <mat-select [formControl]="CentroCtrl" [(ngModel)]="this.DataConsumInt.Centro" name="centro"
+                                (selectionChange)="selectedCentro()" [disabled]="BloqCentro">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="CentroFilterCtr"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let centro of filteredCentro | async" [value]="centro">
+                                    {{centro.IdCentro}} - {{centro.NombreCentro}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <!--<p>You selected: {{EmpresaS}}</p>-->
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <h4>DATOS DE PRODUCTO</h4>
+            <div class="row">
+                <div class="col">
+                    <div class="icons">
+                        <i class="fas fa-receipt"></i>
+                        <mat-form-field class="example-full-width">
+                            <input matInput type="number" name="Cantidad" [(ngModel)]="this.DataConsumInt.Cantidad"
+                                placeholder="CANTIDAD" step="any" min="1">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="icons">
+                        <i class="far fa-building"></i>
+                        <mat-form-field>
+                            <mat-label>ALMACEN</mat-label>
+                            <!--Simepre es Obligatorio poner un CENTRO-->
+                            <mat-select [formControl]="AlmacenCrtl" [(ngModel)]="this.DataConsumInt.Almacen"
+                                name="almacen" (selectionChange)="selectedAlmacen()">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="AlmacenFilterCtrl"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let almacen of filteredAlmacen | async" [value]="almacen">
+                                    {{almacen.Nombre}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="icons">
+                        <i class="far fa-building"></i>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>MATERIAL O SERVICIOS</mat-label>
+                            <mat-select [formControl]="MaterialesCtrl" [(ngModel)]="this.DataConsumInt.Materiales"
+                                name="material" (selectionChange)="SelectMat()">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="MaterialesFilterCtrl"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let mat of filteredMaterial | async" [value]="mat">{{mat.Nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="icons">
+                        <i class="far fa-newspaper ico"></i>
+                        <mat-form-field class="moreLarge">
+                            <mat-label>CENTRO DE COSTOS</mat-label>
+                            <mat-select [formControl]="CCostosCrtl" [(ngModel)]="this.DataConsumInt.CentroCostos"
+                                name="ccosto" (selectionChange)="SelectedCentroCostos()">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="CCosotosFilterCtrl"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let ccosto of filteredCCostos | async" [value]="ccosto">
+                                    {{ccosto.Nombre}} - {{ccosto.IdCentroCosto}} </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="icons">
+                        <i class="fas fa-flag ico"></i>
+                        <mat-form-field class="moreLarge">
+                            <mat-label>CUENTA DE MAYOR</mat-label>
+                            <mat-select [formControl]="CMayorCtrl" [(ngModel)]="this.DataConsumInt.Cuentamayor"
+                                name="cmayorr" (selectionChange)="selectionCMayor()">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="CMayorFilterCtrl"></ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let cmayor of filteredCMayor | async" [value]="cmayor">
+                                    {{cmayor.IdCuentaMayor}} - {{cmayor.Nombre}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="icons">
+                        <i class="fas fa-business-time"></i>
+                        <!-- <mat-list *ngFor="let caducidad of filteredCaducidad | async" >
+                            <mat-list-item>CADUCIDAD:  {{caducidad.CHARG}} </mat-list-item>
+                            <mat-list-item>EN STOCK:  {{caducidad.CLABS}} </mat-list-item>
+                        </mat-list> -->
+                        <mat-form-field class="empLarge">
+
+                            <mat-label>CADUCIDAD</mat-label>
+                            <!--ngModel es como una varibale del modelo donde se guardara el valor selected-->
+                            <!--la etiqueta name es para especificar que variable es y el valor en espesifico sin eso sale undefined-->
+                            <!--despues el metodo  donde apunta y donde se guardara-->
+
+                            <mat-select [formControl]="CaducidadCtrl" [(ngModel)]="this.DataConsumInt.Caducidad"
+                                name="caducidad" disabled="true">
+                                <!-- <mat-option>
+                                    <ngx-mat-select-search [formControl]="CaducidadFilterCtrl"></ngx-mat-select-search>
+                                </mat-option> -->
+                                <mat-option *ngFor="let caducidad of ListCaducidad" [value]="caducidad">
+                                    {{caducidad.CHARG |date:"shortDate"}}</mat-option>
+                            </mat-select>
+                            <mat-hint *ngFor="let caducidad of ListCaducidad">EN STOCK: {{caducidad.CLABS}}</mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <div class="col">
+                    <div class="icons">
+                        <i class="fas fa-ruler-horizontal"></i>
+                        <mat-form-field>
+                            <mat-label>UNIDAD DE MEDIDA</mat-label>
+                            <mat-select [formControl]="UnidadMedidaCtrl" [(ngModel)]="this.DataConsumInt.UMedida"
+                                name="umedida" (selectionChange)="SelectunidadMedida()">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="UnidadMedidaFilterCtrl">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let umedida of filteredUnidadMedida | async" [value]="umedida">
+                                    {{umedida.NombreUnidadMedida}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+            </div>
+            <br>
+            <mat-divider></mat-divider>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <button mat-raised-button color="primary" (click)="addProductoConsumInt()">GUARDAR PRODUCTO</button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="example-card">
+        <mat-card-header>
+            <mat-card-subtitle>PRODUCTO /S </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">CANTIDAD</th>
+                        <th scope="col">ALMACEN</th>
+                        <th scope="col">MATERIAL</th>
+                        <th scope="col">C.COSTOS</th>
+                        <th scope="col">C.MAYOR</th>
+                        <th scope="col">CADUCIDAD</th>
+                        <th scope="col">UNIDAD DE MEDIDA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let product of DataConsumInt.Productos">
+
+                        <td>{{product.Cantidad}}</td>
+                        <td>{{product.AlmacenName}}</td>
+                        <td>{{product.MaterialName}}</td>
+                        <td>{{product.CentroCostoName}}</td>
+                        <td width="15">{{product.CuentaMayorName}}</td>
+                        <td>{{product.Caducidad |date:"shortDate"}}</td>
+                        <td>{{product.NameUnidadMedida}}</td>
+                        <td width="15" *ngIf="isAddHijos">
+                            <button class="btn btn-sm btn-primary" (click)="viewHijosProduct(product)"><i
+                                    class="fa fa-pencil-square-o"></i> SUB CONCEPTOS</button>
+                        </td>
+                        <td width="15">
+                            <button class="btn btn-sm btn-danger" (click)="deleteProd(product)"><i
+                                    class="fa fa-trash"></i> BORRAR</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <mat-divider></mat-divider>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <div class="justifi icons">
+                        <i class="fa fa-text-width" aria-hidden="true"></i>
+                        <mat-form-field  class="example-full-width campjust ">
+                            <mat-label>Justificacion</mat-label>
+                            <textarea type="text" [(ngModel)]="this.DataConsumInt.Justificacion" name="justificacion" matInput upperCase> </textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button mat-raised-button color="primary" (click)="CheckValidaciones()">GUARDAR SOLICITUS DE
+                        CONSUMO</button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+
+</div>

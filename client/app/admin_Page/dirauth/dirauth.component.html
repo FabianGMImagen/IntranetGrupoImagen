@@ -1,0 +1,81 @@
+<app-toast [message]="toast.message"></app-toast>
+<app-loading [condition]="isLoading"></app-loading>
+
+<mat-card class="example-card" *ngIf="!isLoading">
+    <mat-card-header>
+        <mat-card-title>Permisos por Direccion</mat-card-title>
+        <mat-card-subtitle>Se espesifican las direcciones que pueden excluir autorizaciones</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row"> 
+        <div class="col">
+          <label>Selecciona una Direccion</label>
+          <div class="icons">
+            <i class="fas fa-street-view"></i>
+            <mat-form-field class="empLarge">
+              <mat-label>Direccion</mat-label>
+                  <mat-select name="dir" [(ngModel)]="SelectArea" (selectionChange)="selectedDireccion()">
+                      <!-- <mat-option>
+                          <ngx-mat-select-search [formControl]="EmpreFilterCtrl"></ngx-mat-select-search>
+                      </mat-option> -->
+                      <mat-option *ngFor="let area of ListAreas" [value]="area">{{area.Nombre}}</mat-option>
+                  </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <label>Selecciona un role para exexcluir de las Autorizaciones.</label>
+          <div class="icons">
+            <i class="fas fa-user-tag"></i>
+            <mat-form-field class="empLarge">
+              <mat-label>Autorizacion </mat-label>
+                  <mat-select name="role" [(ngModel)]="Selectrole">
+                      <!-- <mat-option>
+                          <ngx-mat-select-search [formControl]="EmpreFilterCtrl"></ngx-mat-select-search>
+                      </mat-option> -->
+                      <mat-option *ngFor="let role of ListStatus" [value]="role">{{role.Nombre}}</mat-option>
+                  </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <button mat-raised-button style="color: #143654;" (click)="ExcluirAuth()">Excluir Autorizacion a esta Direccion</button>
+        </div>
+        
+      </div>
+      
+    </mat-card-content>
+
+    
+</mat-card>
+
+<mat-card *ngIf="!isLoading">
+  <mat-card-header>
+    <label>
+      Lista de Direcciones con Excepcion de Autorizacion
+    </label>
+  </mat-card-header>
+  <mat-card-content>
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Direccion</th>
+          <th scope="col">Rol Excluido de las Validaciones</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let dirauth of ListDirAuth">
+          <td>{{dirauth.NameDir}}</td>
+          <td>{{dirauth.NameRole}}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="deleteExcept(dirauth)">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </td>
+        </tr>  
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,75 @@
+.titutlo{
+    
+    padding: 20px;
+}
+
+.TOP{
+    padding-bottom: 15px;
+    padding-top: 10px;
+}
+
+.row{
+    padding: 5px !important;
+}
+
+.icons{
+   padding-left: 29px;
+   position: relative;
+   width: 200px;
+   padding-top: 5px;
+   padding-bottom: 5px; 
+}
+.icons i{
+    position: absolute;
+    left: 0;
+    top: 10px;
+    padding: 6px 0px;
+}
+.col{
+    padding-right: 0px !important;
+}
+
+.ico{
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+
+.mat-form-field-appearance-legacy {
+    width: 207px !important;
+}
+
+.sellarge{
+    width: 250px !important;
+}
+
+.empLarge{
+    width: 300px !important;
+}
+
+.moreLarge{
+    width: 400px !important;
+}
+.moreLargecmayor{
+    min-width: 500px !important;
+    width: auto !important;
+    max-width: 650px !important;
+}
+.justifi{
+    padding-top: 15px;
+}
+.campjust{
+    width: 1500px !important;
+    max-width: 1250px !important;
+    min-width: 500px !important;
+}
+
+/* .mat-form-field-disabled {
+    background-image: linear-gradient(to right,rgba(0,0,0,.42) 0,rgba(0,0,0,.42) 55%,#ffc107  0) !important;
+    background-size: 4px 100% !important;
+    background-repeat: repeat-x !important;
+    background-position: 0 !important;
+    background-color: transparent !important;
+    height: 2px !important;
+    bottom: 0.25em !important;
+} */
+

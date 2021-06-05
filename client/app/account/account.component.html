@@ -1,0 +1,762 @@
+<!--<mat-spinner [condition]="isLoading"></mat-spinner>-->
+
+<app-toast [message]="toast.message"></app-toast>
+
+<!--<div class="card" >
+  <h4 class="card-header">Mis Solicitudes de Compra</h4>
+  <div class="card-body">
+
+      <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtrar">
+      </mat-form-field>
+
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" >-->
+
+<!--Esta es la parte de la seleccion por Solicitude de compra-->
+<!--<ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle() : null"
+                              [checked]="selection.hasValue() && isAllSelected()"
+                              [indeterminate]="selection.hasValue() && !isAllSelected()">
+                </mat-checkbox>
+              </th>
+              <td mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                              (change)="$event ? selection.toggle(row) : null"
+                              [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>-->
+<!--fin de la seleccion-->
+<!-- Position Column -->
+<!--<ng-container matColumnDef="Id">
+            <th mat-header-cell *matHeaderCellDef> N° </th>
+            <td mat-cell *matCellDef="let element"> {{element.Id}} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="FechaSolicitud">
+              <th mat-header-cell *matHeaderCellDef> Fecha </th>
+              <td mat-cell *matCellDef="let element"> {{element.FechaSolicitud}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="Plaza">
+              <th mat-header-cell *matHeaderCellDef> Plaza(s) </th>
+              <td mat-cell *matCellDef="let element"> {{element.Plaza}} </td>
+          </ng-container>
+
+          
+         
+          <ng-container matColumnDef='StatusSolicitud' >
+              <th mat-header-cell *matHeaderCellDef>Estatus</th>
+              <td mat-cell *matCellDef="let element" class="nuevapeticion">{{element.StatusSolicitud}}</td>
+          </ng-container>
+
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+  </div>
+</div>-->
+
+
+<div class="mat-app-background basic-container" *ngIf="viewcoutn">
+  <br>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <div mat-card-avatar class="example-header-image"></div>
+      <mat-card-title>
+        <h2>LISTADO DE SOLICITUDES CREADAS.</h2>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <button mat-raised-button color="warn" aria-label="Actualizar la Lista de Solicitudes de Pedido"
+          (click)="getAllSolicitudforUser()">
+          <mat-icon>cached</mat-icon> ACTUALIZAR
+        </button>
+      </mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+  <br>
+  <h4>SELECCIONA UNA OPCION</h4>
+  <mat-form-field>
+    <mat-label>Elige una opcion:</mat-label>
+    <mat-select [(ngModel)]="CheckSolicitud" (selectionChange)="SelectedTypeSol()">
+      <mat-option value="1">
+        Historial Solicitudes de Pedido
+      </mat-option>
+      <!-- <mat-option value="2">
+        Historial Solicitudes de Consumo Interno
+      </mat-option> -->
+    </mat-select>
+  </mat-form-field>
+  <th></th>
+
+
+  <div *ngIf="isSolPed">
+    <h4>HISTORIAL DE SOLICITUDES DE PEDIDO</h4>
+    <mat-form-field class="firstFilter">
+      <input matInput (keyup)="applyFilter($event.target.value)"
+        placeholder="FILTRADO POR DESCRIPCCION DE LA SOLICITUD">
+    </mat-form-field>
+    <div class="mat-elevation-z8">
+      <!--TABLA DINAMICA -->
+      <table mat-table [dataSource]="DataSource" multiTemplateDataRows matSort>
+
+        <!--Columnas de las Tablas-->
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
+          <td mat-cell *matCellDef="let element" (click)="isPDF(element)"> {{element[column]}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <div class="example-element-diagram">
+                <div class="example-element-position"
+                  [ngClass]="{'newsc': element.Statname == 'S. P. NUEVA PETICION',
+                                                                          'gerenaut' : element.Statname == 'S. P. AUTORIZADO POR GERENTE',
+                                                                          'gererech' : element.Statname == 'S. P. RECHAZADA POR GERENTE',
+                                                                          'diraut' : element.Statname == 'S. P. AUTORIZADO POR DIRECCION',
+                                                                          'dirrech' : element.Statname == 'S. P. RECHAZADA POR DIRECCION',
+                                                                          'preaut' : element.Statname == 'S. P. PRESUPUESTO AUTORIZADO',
+                                                                          'prerech' : element.Statname == 'S. P. PRESUPUESTO RECHAZADO',
+                                                                          'preaut' : element.Statname == 'S. P. REVISADA POR COMPRAS',
+                                                                          'prerech' : element.Statname == 'S. P. RECHAZADA POR COMPRAS',
+                                                                          'fin' : element.Statname == 'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP',
+                                                                          'prerech' : element.Statname == 'S. P. CANCELADA',
+                                                                          'newsc': element.Statname == 'CONTRATO MARCO'}"> {{element.Statname}}
+                </div>
+                <div class="example-element-position"
+                  *ngIf="(element.Statname == 'S. P. RECHAZADA POR GERENTE') ||
+                              (element.Statname == 'S. P. RECHAZADA POR DIRECCION')||(element.Statname == 'S. P. PRESUPUESTO RECHAZADO')">MOTIVO RECHAZO:
+                  {{element.MotivoRechazo}}</div>
+              </div>
+
+              <div class="example-element-description">
+                <div *ngIf="genPDF">
+                  <button mat-flat-button color="warn" (click)="GeneraPDF(element)"><i class="far fa-file-pdf"></i>
+                    Descargar</button>
+                </div>
+
+                <div *ngIf="editSol">
+                  <button class="btn btn-outline-warning btn-sm" (click)="EditSolicitud(element)"><i
+                      class="fa fa-pencil"></i> Detalles de Solicitud</button>
+                </div>
+              </div>
+
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+
+  <div *ngIf="isSolConInt">
+    <h4>HISTORIAL DE SOLICITUDES CONSUMO INTERNO</h4>
+    <app-account-sol-consumo-list></app-account-sol-consumo-list>
+  </div>
+
+
+
+
+
+</div>
+
+
+<!-- Esta parte solo la ve el Anunciante si esque le rechazaraon el solicitud por algun campo que esta mal.-->
+<div *ngIf="isViewEditingSol">
+
+  <mat-card class="example-card" *ngIf="iseditsolped">
+    <mat-card-content>
+      <mat-grid-list cols="3" rowHeight="100px">
+        <mat-grid-tile>
+          <img
+            src='data:image/png;base64,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'
+            height="100" width="100" />
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <div class="titutlo">
+            <h4>DATOS EDITABLES.</h4>
+          </div>
+        </mat-grid-tile>
+
+
+      </mat-grid-list>
+      <mat-accordion>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+          style="margin-top: 10px;">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h5>DATOS ACTUALIZABLES A NIVEL SOLICITUD.</h5>
+            </mat-panel-title>
+            <mat-panel-description>
+              <button mat-mini-fab color="primary"
+                matTooltip="LOS DATOS COMO EMPRESA, PLAZA/DIVI, TIPO DE SOLICITUD NO SON EDITABLES, SI SE REQUIERE CAMBIAR ESTOS VALORES SE TENDRA QUE CREAR UNA NUEVA SOLICITUD DE PEDIDO">
+                <i class="fas fa-info"></i>
+              </button>
+              <!-- Currently I am {{panelOpenState ? 'open' : 'closed'}} -->
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <mat-card class="example-card">
+            <mat-card-header>
+              <mat-card-title>
+                <h3>DATOS DE REFERENCIA GUARDADOS</h3>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Fecha de Solicitud" [(ngModel)]="DataSolReg.FECHASOLICITUD" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Tipo Solicitud" [(ngModel)]="DataSolReg.TSNOMBRE" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Empresa" [(ngModel)]="DataSolReg.EMPRESA" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Plaza" [(ngModel)]="DataSolReg.Plaza" disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <div class="title">
+            <mat-title class="title">
+              <h4>CAMPOS EDITABLES </h4>
+            </mat-title>
+
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="REQUIRENTE" [(ngModel)]="requirente" upperCase type="text">
+                <mat-hint>{{DataSolReg.REQUIRENTE}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Puesto" [(ngModel)]="puesto">
+                <mat-hint>{{DataSolReg.Puesto}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Email" [(ngModel)]="email">
+                <mat-hint>{{DataSolReg.Email}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Telefono" [(ngModel)]="tel" type="number">
+                <mat-hint>{{DataSolReg.Tel}}</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Ext" [(ngModel)]="ext" type="number">
+                <mat-hint>{{DataSolReg.Ext}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Produccion" [(ngModel)]="produccion" upperCase>
+                <mat-hint>{{DataSolReg.Produccion}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="moreLarge selected">
+                <!-- -->
+                <mat-label>ORDEN INVERSION</mat-label>
+                <mat-select [(ngModel)]="SelectedOInvercion" name="ordeninterna" (selectionChange)="selectedOInterna()"
+                  [disabled]="AplicaOrdInt">
+                  <mat-option *ngFor="let orden of ListOrdenInterna" [value]="orden">
+                    {{orden.IdOrdenInterna}}-{{orden.NombreOrder}}</mat-option>
+                </mat-select>
+                <mat-hint>{{DataSolReg.OInterna}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <textarea matInput placeholder="Justificacion" [(ngModel)]="justificacion" upperCase></textarea>
+                <!-- <mat-hint>{{DataSolReg.Justificacion}}</mat-hint> -->
+              </mat-form-field>
+            </div>
+
+
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-divider></mat-divider>
+            </div>
+          </div>
+          <div class="row" style="padding-top: 60px; padding-bottom: 30px;">
+
+            <div class="col">
+              <!-- <div class="spaceitem">
+                    <strong>ORDEN INVERSION</strong>: <label></label>
+                  </div> -->
+              <div class="spaceitem">
+                <strong>JUSTIFICACION</strong>: <label>{{DataSolReg.Justificacion}}</label>
+              </div>
+
+
+              <!-- <mat-list-item  ><strong>ORDEN INTERNA</strong>: {{DataSolReg.OInterna}}</mat-list-item> -->
+
+            </div>
+            <div class="col spaceitem">
+
+              <!-- <mat-list-item  ><strong>JUSTIFICACION</strong>: {{DataSolReg.Justificacion}}</mat-list-item> -->
+            </div>
+          </div>
+          <div style="padding: 20px;">
+            <button mat-raised-button (click)="openDialog(0)">Actualizar</button>
+
+          </div>
+
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+
+  <br>
+
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h3>DETALLADO DE SOLICITUD DE PEDIDO CONCEPTO</h3>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+          <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+          <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+        </ng-container>
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <!--parte del cuadro donde se puede agregar informacion de referencia-->
+              <div>
+                <div *ngIf="element.butonMoreChilds">
+                  <button mat-flat-button color="warn" (click)="ViewChilds(element)"><i class="fas fa-shapes"></i> ver
+                    SubConcepto / s</button>
+                </div>
+                <div class="example-element-description" *ngIf="iseditproductbutton">
+                  <button mat-raised-button color="primary" (click)="VieEditProductos(element)"><i
+                      class="fas fa-edit"></i>Editar Concepto</button>
+                </div>
+                <br>
+                <div *ngIf="element.isOpen" class="Childs">
+                  <table class="table table-bordered">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Precio Unitario</th>
+                        <th scope="col">O. Estadistica</th>
+                        <th scope="col">Unidad Medida.</th>
+                        <th scope="col">C.Costo</th>
+                        <th scope="col">C.Mayor</th>
+                        <th scope="col">Texto Breve.</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let childs of ListChilds">
+                        <td width="15">{{childs.CantidadChild}}</td>
+                        <td width="15">{{childs.PrecioChild}}</td>
+                        <td width="15">{{childs.NameOrdenEstadisticaChild}}</td>
+                        <td width="15">{{childs.NameUnidadMedidaChild}}</td>
+                        <td width="15">{{childs.NameCentroCostoChild}}</td>
+                        <td width="15">{{childs.NameCuentaMayorChild}}</td>
+                        <td>{{childs.TextoBreve}}</td>
+                        <td *ngIf="iseditchilds">
+                          <button class="btn btn-info" (click)="viewEditSubProducts(childs)"><i class="fa fa-times"></i>
+                            Actualizar SubConcepto</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+                <div class="editsubprod" *ngIf="iseditsubProduct">
+                  <h3>Datos Actualizables SUBPRODUCTOS</h3>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <mat-form-field class="example-full-width">
+                        <input matInput type="number" name="Cantidad" [(ngModel)]="cantidadchild" placeholder="CANTIDAD"
+                          step="any" min="1">
+                        <mat-hint>{{detalle_subproducts.CantidadChild}}</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div class="col">
+                      <mat-form-field class="example-full-width">
+                        <input matInput type="number" name="Precio" [(ngModel)]="preciochild" [value]="this.precio"
+                          placeholder="Precio" step="any" min="1">
+                        <mat-hint>{{detalle_subproducts.PrecioChild}}</mat-hint>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-sign"></i>
+                        <mat-form-field>
+                          <mat-label>ORDEN ESTADISTICA</mat-label>
+                          <mat-select [(ngModel)]="SelectOrdenEstadisiticaChild" name="oesestadistica"
+                            [disabled]="isOrdenEstadisticaChild">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="OrdenEstadisticaFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let oesestadistica of filteredOrdenEstadistica | async"
+                              [value]="oesestadistica">{{oesestadistica.IdOrdenInterna}}-{{oesestadistica.NombreOrder}}
+                            </mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameOrdenEstadisticaChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <mat-form-field>
+                          <mat-label>UNIDAD DE MEDIDA</mat-label>
+                          <mat-select [(ngModel)]="SelectedUnidadMedChild" name="umedida">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="UnidadMedidaFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let umedida of filteredUnidadMedida | async" [value]="umedida">
+                              {{umedida.NombreUnidadMedida}}</mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameUnidadMedidaChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="icons">
+                        <i class="far fa-newspaper ico"></i>
+                        <mat-form-field class="moreLarge">
+                          <mat-label>CENTRO DE COSTOS</mat-label>
+                          <mat-select [(ngModel)]="SelectedCentroCostChild" name="ccosto">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="CCosotosFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let ccosto of filteredCCostos | async" [value]="ccosto">
+                              {{ccosto.Nombre}} - {{ccosto.IdCentroCosto}} </mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameCentroCostoChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-flag ico"></i>
+                        <mat-form-field class="moreLarge">
+                          <mat-label>CUENTA DE MAYOR</mat-label>
+                          <mat-select [(ngModel)]="SelectedCuentaMayorChild" name="cmayorr">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="CMayorFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let cmayor of filteredCMayor | async" [value]="cmayor">
+                              {{cmayor.IdCuentaMayor}} - {{cmayor.Nombre}}</mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameCuentaMayorChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-heading"></i>
+                        <mat-form-field class="example-full-width expan">
+                          <textarea matInput type="text" name="textbreve" [(ngModel)]="textbreve"
+                            placeholder="TEXTO BREVE. " upperCase></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <strong>TEXTO BREVE: </strong>{{detalle_subproducts.TextoBreve}}
+                    </div>
+                  </div>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <button class="btn btn-info" (click)="openDialog(2)"><i class="fa fa-pencil-square-o"></i>
+                        ACTUALIZAR SUBCONCEPTO</button>
+                    </div>
+                    <div class="col">
+                      <button class="btn btn-warning" (click)="canceleditSubProduct()"><i class="fa fa-times"></i>CERRAR
+                        EDICION DE SUBCONCEPTO</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element"
+          (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+    </mat-card-content>
+    <mat-card-actions>
+      <!-- <div *ngIf="isviewEdit">
+        <button class="btn btn-sm btn-primary mr-2" type="submit" (click)="guardaCambiosSolicitud()"><i class="fa fa-floppy-o"></i> Save</button>
+      </div> -->
+      <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-times"></i> CERRAR</button>
+    </mat-card-actions>
+  </mat-card>
+
+</div>
+
+<div *ngIf="iseditproduct">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h3>ACTUALIZAR DATOS DE CONCEPTO</h3>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <input matInput type="number" name="Cantidad" [(ngModel)]="cantidad" placeholder="CANTIDAD" step="any"
+              min="1" [disabled]="isCantidad">
+            <mat-hint>{{detalle_producto.CANTIDAD}}</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <input matInput type="number" name="Precio" [(ngModel)]="precio" [value]="this.precio"
+              placeholder="Precio Unitario" step="any" min="1" [disabled]="isPrecio">
+            <mat-hint>{{detalle_producto.PRECIO}}</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="far fa-building"></i>
+            <mat-form-field>
+              <mat-label>ALMACEN</mat-label>
+              <!--Simepre es Obligatorio poner un CENTRO-->
+              <mat-select name="almacen" [(ngModel)]="SelectedAlmacen" (selectionChange)="getAllMateriales()"
+                [disabled]="AplicaAlma">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="AlmacenFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let almacen of filteredAlmacen | async" [value]="almacen">{{almacen.Nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.AlmacenName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label>MATERIAL O SERVICIOS</mat-label>
+            <mat-select [(ngModel)]="SelectedMaterial" name="material" [disabled]="AplicaMat">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="MaterialesFilterCtrl"></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let mat of filteredMaterial | async" [value]="mat">{{mat.Nombre}}</mat-option>
+            </mat-select>
+            <mat-hint>{{detalle_producto.MaterialName}}</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="icons">
+            <i class="far fa-newspaper ico"></i>
+            <mat-form-field class="moreLarge">
+              <mat-label>CENTRO DE COSTOS</mat-label>
+              <mat-select [(ngModel)]="SelectedCentroCost" name="ccosto" [disabled]="AplicaCenCost">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="CCosotosFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let ccosto of filteredCCostos | async" [value]="ccosto"> {{ccosto.Nombre}} -
+                  {{ccosto.IdCentroCosto}} </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.CECO}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-flag ico"></i>
+            <mat-form-field class="moreLarge">
+              <mat-label>CUENTA DE MAYOR</mat-label>
+              <mat-select [(ngModel)]="SelectedCuentaMayor" name="cmayorr" [disabled]="AplicaCtaMayor">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="CMayorFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let cmayor of filteredCMayor | async" [value]="cmayor">{{cmayor.IdCuentaMayor}} -
+                  {{cmayor.Nombre}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.CMAYOR}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <mat-form-field>
+              <mat-label>GRUPO DE COMPRAS</mat-label>
+              <mat-select [(ngModel)]="SelectedGrupoComp" name="gcompra">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="GCompraFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let gcompra of filteredGCompra | async" [value]="gcompra">{{gcompra.Nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.GrupoCompraName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <mat-form-field>
+              <mat-label>UNIDAD DE MEDIDA</mat-label>
+              <mat-select [(ngModel)]="SelectedUnidadMed" name="umedida" [disabled]="AplicaUMedida">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="UnidadMedidaFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let umedida of filteredUnidadMedida | async" [value]="umedida">
+                  {{umedida.NombreUnidadMedida}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.MEDIDA}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-sign"></i>
+            <mat-form-field>
+              <mat-label>ORDEN ESTADISTICA</mat-label>
+              <mat-select [(ngModel)]="SelectOrdenEstadisitica" name="oesestadistica" [disabled]="isOrdEstadistica">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="OrdenEstadisticaFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let oesestadistica of filteredOrdenEstadistica | async" [value]="oesestadistica">
+                  {{oesestadistica.IdOrdenInterna}}-{{oesestadistica.NombreOrder}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.OrdenEstadisticaName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-boxes"></i>
+            <mat-form-field class="moreLarge">
+              <mat-label>NUMERO ACTIVO</mat-label>
+              <mat-select name="numactivo" [disabled]="AplicaNumActivo" [(ngModel)]="SelectedNumActivo">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="ActivoFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let numactivo of filteredActivo | async" [value]="numactivo">
+                  {{numactivo.IdActivo}}-{{numactivo.Nombre}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.ACTFIJ}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-boxes"></i>
+            <mat-form-field>
+              <mat-label>NUMERO NECESIDAD</mat-label>
+              <mat-select [(ngModel)]="SelectedNecesidad" name="necesidad">
+                <mat-option *ngFor="let necesidad of ListNecesidad" [value]="necesidad">{{necesidad.Nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.NumeroNecesidadName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-heading"></i>
+            <mat-form-field class="example-full-width expan">
+              <textarea matInput type="text" name="UsoProd" [(ngModel)]="UsoBien" placeholder="BIEN O SERV."
+                [disabled]="AplicaUsobien" upperCase></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col ">
+          <div class="icons">
+            <i class="fas fa-heading"></i>
+            <mat-form-field class="example-full-width expan">
+              <textarea matInput type="text" name="Espf" [(ngModel)]="Espesificaciones"
+                placeholder="ESPF. GRAL./TECNICAS. " upperCase></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="spaceitem">
+            <strong>BIEN o SERV.</strong>: <label>{{detalle_producto.BIENOSERV}}</label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="spaceitem">
+            <strong>ESPF.GRAL./TECNICAS</strong>: <label>{{detalle_producto.EspGenerales}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary" (click)="openDialog(1)"><i class="fa fa-upload"></i> ACTUALIZAR
+            CONCEPTO</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-sm btn-warning" (click)="cancelEditProduct()"><i class="fa fa-times"></i> CERRAR
+            EDICION DE CONCEPTO</button>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>
