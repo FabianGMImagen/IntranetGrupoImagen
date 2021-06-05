@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Angular Full Stack [![Dependencies](https://david-dm.org/DavideViolante/Angular-Full-Stack.svg)](https://david-dm.org/DavideViolante/Angular2-Full-Stack) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante) [![MIT license](http://img.shields.io/badge/license-MIT-lightgrey.svg)](http://opensource.org/licenses/MIT)
 
 
@@ -80,3 +81,7 @@ To get more help on the `angular-cli` use `ng --help` or go check out the [Angul
 
 ### Author
 * [Davide Violante](https://github.com/DavideViolante)
+=======
+# IntranetGrupoImagen
+Intranet de Grupo Imagen para generar diferentes tipos de solicitudes y comunicaciones con clientes. Angular, Node JS , SQLserver
+>>>>>>> b554c6b462d8e012af685cb7156fd59331a275fc
