@@ -379,7 +379,7 @@ export default function setRoutes(app) {
                   console.log("pasamos a subir el archivo.....");
                   //'../ImagenFinanzasFabi/'+FileName, '/'+FileName
                   //var upfile = [{local:'../ImagenFinanzasFabi/' + FileName, remote:'/'+FileName}];
-                  ftp.upload('../ImagenFinanzasFabi/'+FileName, FileName, function(err){
+                  ftp.upload('../IntranetProduccion/'+FileName, FileName, function(err){
 
                     if(err) console.log(err);
                     else console.log("Se dejo el Archivo en el 10.29.148.24" + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);
