@@ -7,7 +7,8 @@
 
 # dependencies
 /node_modules
-/data
+**/data
+**/data/DatosCompras/
 
 # IDEs and editors
 /.idea
