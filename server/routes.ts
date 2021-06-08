@@ -230,7 +230,7 @@ export default function setRoutes(app) {
 
 
   //ruta para procesar el archivo subido en el front 
-  router.route('/upload/singlefile').post(auth, UploadCTR.upLoadSingleFile);
+  router.route('/upload/singlefile').post(UploadCTR.upLoadSingleFile);
   //crear archivo de excel con informacion de la solicitud para tablas comparativas
   router.route('/getfilecompras/:ID').get(auth, UploadCTR.createFileComrpas);
   

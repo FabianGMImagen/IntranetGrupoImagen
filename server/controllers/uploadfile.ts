@@ -10,7 +10,7 @@ import { read } from 'fs';
 
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
-const DIR = '../ImagenFinanzasFabi/data';
+const DIR = '../IntranetProduccion/datos';
 var id = 0;
 let storage = multer.diskStorage({
 
