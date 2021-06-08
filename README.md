@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Angular Full Stack [![Dependencies](https://david-dm.org/DavideViolante/Angular-Full-Stack.svg)](https://david-dm.org/DavideViolante/Angular2-Full-Stack) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante) [![MIT license](http://img.shields.io/badge/license-MIT-lightgrey.svg)](http://opensource.org/licenses/MIT)
 
 
@@ -84,7 +84,6 @@ To get more help on the `angular-cli` use `ng --help` or go check out the [Angul
 =======
 # IntranetGrupoImagen
 Intranet de Grupo Imagen para generar diferentes tipos de solicitudes y comunicaciones con clientes. Angular, Node JS , SQLserver
->>>>>>> b554c6b462d8e012af685cb7156fd59331a275fc
 
 Node JS and NODEMAILER
 Se requiere actualizar refresh_token en el caso de prensetar algun error relacionado con : GaxiosError: invalid_grant [2] at Gaxios._request (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\gaxios\build\src\gaxios.js:85:23) [2] at runMicrotasks () [2] at processTicksAndRejections (internal/process/task_queues.js:93:5) [2] at async OAuth2Client.refreshTokenNoCache (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\google-auth-library\build\src\auth\oauth2client.js:172:21)[2] at async OAuth2Client.refreshAccessTokenAsync (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\google-auth-library\build\src\auth\oauth2client.js:196:19) [2] at async OAuth2Client.getAccessTokenAsync (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\google-auth-library\build\src\auth\oauth2client.js:216:23). 
