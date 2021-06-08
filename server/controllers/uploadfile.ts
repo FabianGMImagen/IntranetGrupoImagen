@@ -114,7 +114,7 @@ export default class UploadFilesController {
                 if(Data != undefined || Data != ''){
                   var FileName = 'datos '+dia+'-'+MES+'-'+año+','+hora+':'+minutos+'.csv';
                   console.log( stringify(Data));
-                  var path = path.join(__dirname ,'../../../data/DatosCompras/'+FileName);
+                  var path = path.join(__dirname ,'../../../datos/DatosCompras/'+FileName);
                   stringify(Data, function(err, output){
                     fs.writeFile(path, output, 'utf-8', function(err){
                       if(err){
