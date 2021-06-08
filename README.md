@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Angular Full Stack [![Dependencies](https://david-dm.org/DavideViolante/Angular-Full-Stack.svg)](https://david-dm.org/DavideViolante/Angular2-Full-Stack) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante) [![MIT license](http://img.shields.io/badge/license-MIT-lightgrey.svg)](http://opensource.org/licenses/MIT)
 
 
@@ -84,4 +84,16 @@ To get more help on the `angular-cli` use `ng --help` or go check out the [Angul
 =======
 # IntranetGrupoImagen
 Intranet de Grupo Imagen para generar diferentes tipos de solicitudes y comunicaciones con clientes. Angular, Node JS , SQLserver
->>>>>>> b554c6b462d8e012af685cb7156fd59331a275fc
+
+Node JS and NODEMAILER
+Se requiere actualizar refresh_token en el caso de prensetar algun error relacionado con : GaxiosError: invalid_grant [2] at Gaxios._request (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\gaxios\build\src\gaxios.js:85:23) [2] at runMicrotasks () [2] at processTicksAndRejections (internal/process/task_queues.js:93:5) [2] at async OAuth2Client.refreshTokenNoCache (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\google-auth-library\build\src\auth\oauth2client.js:172:21)[2] at async OAuth2Client.refreshAccessTokenAsync (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\google-auth-library\build\src\auth\oauth2client.js:196:19) [2] at async OAuth2Client.getAccessTokenAsync (C:\Users\mfgarcia\Desktop\Intranet\ImagenFinanzasPruebaslocal\node_modules\google-auth-library\build\src\auth\oauth2client.js:216:23). 
+El error se corrige visitando: https://developers.google.com/oauthplayground para la actualizacion de refresh_token.
+
+## Important
+Para poder cambiar excluir en .gitignore la carpeta de `data`, se requiere renombrarla y se deben realizar los cambios pertinentes en app.ts (esto para garantizar que la carpeta que esta expuesta por node como public sea = a la `data` y renombrar dichas referencias a esa carpeta ), tambien importante señalar que se debe de modificar el archivo
+`uploadfiles.js` en la constante `DIR` apuntando a la carpeta donde se guardaran dichos archivos examp [../ImagenFinanzasPruebaslocal/datos],
+  
+Tambien modificar la linea [ftp.upload('../ImagenFinanzasFabi/'+FileName, FileName, function(err){}] esto para indicar a `ftp.update` donde esque se encuentra el archivo `.CSV`
+que posterior mente se cargara en `FTP` y enviado a `SAP`.
+
+
