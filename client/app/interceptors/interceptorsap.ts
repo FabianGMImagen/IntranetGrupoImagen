@@ -14,7 +14,7 @@ export class SAPInterceptor implements HttpInterceptor {
                 //funcion es validar si la url contiene o inica con /sap si es el caso hace una peticion http desde el server (NODEjs) 
                 if(request.url.startsWith('/sap')){//las peticiones que comiencen con este /sap se enviaran al server 35
                     //esta es la ruta de el Node JS en el Seriver
-                    var url = 'http://solicitud.adgimm.com.mx:3000';
+                    var url = 'http://localhost:3000';
                     //var url= 'http://ecc-go.net.mx:8000';
                     //console.log("------INTERCEPTOR----------" + url+request.url);                              
                     //console.log(request.headers);

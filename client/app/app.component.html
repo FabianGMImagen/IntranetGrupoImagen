@@ -36,7 +36,9 @@
           </li> -->
 
           <li class="nav-item">
-            <a routerLink="/solicitudesRegistradas" class="nav-link" routerLinkActive="active" *ngIf="auth.loggedIn && auth.isDirArea || auth.isJefeArea || auth.isAdmin || auth.isCompras || auth.isComprador || auth.isCheckPresupuesto">
+            <a routerLink="/solicitudesRegistradas" class="nav-link" routerLinkActive="active" 
+            *ngIf="auth.loggedIn && auth.isDirArea || auth.isJefeArea || auth.isAdmin 
+            || auth.isCompras || auth.isComprador || auth.isCheckPresupuesto || auth.isIntercambios">
               <i class="fa fa-list"></i> SOL. PEDIDO REGISTRADAS 
             </a>
           </li>

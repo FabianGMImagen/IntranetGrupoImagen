@@ -25,6 +25,7 @@ export class AuthServices {
   isCheckPresupuesto = false;
   isJefeAreaConsumoInt = false;
   isAlmacenistaConsumoInt = false;
+  isIntercambios = false;
   // private expiresAt: number;
 
   currentUser: User = new User();
@@ -59,6 +60,7 @@ export class AuthServices {
   logout() {
     localStorage.removeItem('token');
     this.loggedIn = false;
+    this.isIntercambios = false;
     this.isCheckPresupuesto = false;
     this.isJefeAreaConsumoInt = false;
     this.isAlmacenistaConsumoInt = false;
@@ -92,6 +94,7 @@ export class AuthServices {
     decodedUser.IdRoleConsumoInterno === 3 ? this.isAlmacenistaConsumoInt = true : this.isAlmacenistaConsumoInt = false;
     decodedUser.IdRoleConsumoInterno === 2 ? this.isJefeAreaConsumoInt = true : this.isJefeAreaConsumoInt = false;
 
+    decodedUser.IdRole === 9 ? this.isIntercambios = true : this.isIntercambios = false;
     decodedUser.IdRole === 8 ? this.isCheckPresupuesto = true : this.isCheckPresupuesto = false;
     decodedUser.IdRole === 7 ? this.isComprador = true : this.isComprador = false;
     decodedUser.IdRole === 6 ? this.isCompras = true : this.isCompras = false;

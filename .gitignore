@@ -44,3 +44,5 @@ Thumbs.db
 /FETCH_HEAD
 
 
+package.json
+proxy.conf.json

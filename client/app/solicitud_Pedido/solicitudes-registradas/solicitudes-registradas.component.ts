@@ -269,6 +269,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.isViewListSolicitudes = true;
         this.isEditing = true;
         this.getStatusCompras(this.auth.currentUser.IdRole, 0);
+      } else if (this.auth.isIntercambios){
+        this.getStatusCompras(this.auth.currentUser.IdRole, 0);
+        this.isViewListSolicitudes = true;
+        this.isEditing = true;
       } else {
         this.isEditing = false;
         this.isViewListSolicitudes = false;
