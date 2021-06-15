@@ -35,6 +35,10 @@ tr.example-element-row:not(.example-expanded-row):active {
   display: flex;
 }
 
+.example-element-namespesifications{
+  padding: 25px !important;
+  display: flex;
+}
 .example-element-diagram {
   min-width: 280px;
   border: 2px solid rgb(0, 0, 0);
