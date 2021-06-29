@@ -1,81 +1,94 @@
 <app-toast [message]="toast.message"></app-toast>
 
 <div class="card">
-  <h4 class="card-header">Register</h4>
+  <h4 class="card-header">Register Users</h4>
   <div class="card-body">
     <form [formGroup]="registerForm" (ngSubmit)="register()">
-
-      <div class="input-group" [ngClass]="setClassUsername()">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-user"></i></span>
-          </div>
-          <input class="form-control" type="text" name="name" formControlName="name" placeholder="Nombre Completo" autofocus>
-      </div>
-
-      <div class="input-group" [ngClass]="setClassUsername()">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-user"></i></span>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label> <i class="fa fa-user"></i> Nombre Completo</mat-label>
+            <input type="text" name="name" matInput [formControl]="name"  autofocus>
+            <mat-error *ngIf="name.invalid">{{getErrorMenssgeName()}}</mat-error>
+          </mat-form-field>
         </div>
-        <input class="form-control" type="text" name="username" formControlName="username" placeholder="Username">
-      </div>
-      <div class="input-group" [ngClass]="setClassEmail()">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label> <i class="fa fa-user"></i> Nombre de Usuario</mat-label>
+            <input type="text" name="username" matInput [formControl]="username" >
+            <mat-error *ngIf="username.invalid">{{getErrorMenssgeUserName()}}</mat-error>
+          </mat-form-field>
         </div>
-        <input class="form-control" type="email" name="email" formControlName="email" placeholder="Email">
-      </div>
-      <div class="input-group" [ngClass]="setClassPassword()">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-key"></i></span>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label> <i class="fa fa-envelope"></i> Email</mat-label>
+            <input type="email" name="email" matInput [formControl]="email" >
+            <mat-error *ngIf="email.invalid">{{getErrorMenssgeEmail()}}</mat-error>
+          </mat-form-field>
         </div>
-        <input class="form-control" type="password" name="password" formControlName="password" placeholder="Password">
-      </div>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-black-tie"></i></span>
+        <div class="col">
+          <mat-form-field>
+            <mat-label>Enter your password</mat-label>
+            <input matInput name="password" [formControl]="password" [type]="hide ? 'password' : 'text'">
+            <button mat-icon-button type="button" matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-hint align="end">{{password.value?.length || 0}}/8</mat-hint>
+            <mat-error *ngIf="password.invalid">{{getErrorMenssgePassword()}}</mat-error>
+          </mat-form-field>
         </div>
-        <select class="custom-select" name="role" formControlName="role">
-          <option [value]="role.IdRole" *ngFor="let role of ListRoles">{{role.Nombre}}</option>
-          <option value="0" disabled hidden selected>Role Solicitud Pedido</option>
-        </select>
       </div>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text"><i class="fa fa-black-tie"></i></span>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="empLarge">
+            <mat-label><i class="fa fa-black-tie"></i> Role Solicitud de Pedido</mat-label>
+            <mat-select [formControl]="role" name="role">
+              <mat-option *ngFor="let role of ListRoles" [value]="role.IdRole">{{role.Nombre}}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-        <select class="custom-select" name="rolec" formControlName="roleconsumo">
-          <option [value]="rolec.IdRoleConsumoInterno" *ngFor="let rolec of ListRolesConsumo">{{rolec.Nombre}}</option>
-          <option value="0" disabled hidden selected>Role Solicitud Consumo Interno</option>
-        </select>
+        <div class="col">
+          <mat-form-field class="empLarge">
+            <mat-label><i class="fa fa-black-tie"></i> Role Solicitud Consumo Interno</mat-label>
+            <mat-select [formControl]="roleconsumo" name="rolec">
+              <mat-option *ngFor="let rolec of ListRolesConsumo" [value]="rolec.IdRoleConsumoInterno">{{rolec.Nombre}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field>
+            <mat-label><i class="fa fa-black-tie"></i> Direccion</mat-label>
+            <mat-select [formControl]="direc" name="direc">
+              <mat-option *ngFor="let direc of ListDireccions" [value]="direc.IdDireccion">{{direc.Nombre}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-kaaba"></i></span>
-          </div>
-          <select class="custom-select" name="direc" formControlName="direc">
-            <option [value]="direc.IdDireccion" *ngFor="let direc of ListDireccions">{{direc.Nombre}}</option>
-            <option value="" disabled hidden selected>Direccion</option>
-          </select>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label> <i class="fas fa-phone"></i> Telefono</mat-label>
+            <input type="number" name="tel" matInput [formControl]="tel" minlength="10" maxlength="12">
+            <mat-error *ngIf="tel.invalid">{{getErrorMenssgeTelefono()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label> <i class="fas fa-phone-volume"></i> Extencion</mat-label>
+            <input type="number" name="ext" matInput [formControl]="ext" minlength="4" maxlength="5">
+            <mat-error >{{getErrorMenssgeExtencion()}}</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label> <i class="far fa-address-card"></i> Puesto</mat-label>
+            <input type="text" name="puesto" matInput [formControl]="puesto">
+            <mat-error *ngIf="puesto.invalid">{{getErrorMenssgePuesto()}}</mat-error>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="input-group" >
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-phone"></i></span>
-          </div>
-          <input class="form-control" type="text" name="tel" formControlName="tel" placeholder="Telefono">
+      <mat-divider></mat-divider>
+      <div style="padding-top: 10px;">
+        <button class="btn btn-primary" type="submit" [disabled]="!registerForm.valid"><i class="fa fa-user-plus"></i> Register</button>
       </div>
-      <div class="input-group" >
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fas fa-phone-volume"></i></span>
-          </div>
-          <input class="form-control" type="number" name="ext" formControlName="ext" placeholder="Extencion">
-      </div>
-      <div class="input-group" >
-          <div class="input-group-prepend">
-            <span class="input-group-text"><i class="far fa-address-card"></i></span>
-          </div>
-          <input class="form-control" type="puesto" name="puesto" formControlName="puesto" placeholder="Puesto" autofocus>
-      </div>
-      <button class="btn btn-primary" type="submit" [disabled]="!registerForm.valid"><i class="fa fa-user-plus"></i> Register</button>
     </form>
-  </div>
-</div>
