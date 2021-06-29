@@ -269,7 +269,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.isViewListSolicitudes = true;
         this.isEditing = true;
         this.getStatusCompras(this.auth.currentUser.IdRole, 0);
-      } else if (this.auth.isIntercambios){
+      }else if(this.auth.isIntercambios){
         this.getStatusCompras(this.auth.currentUser.IdRole, 0);
         this.isViewListSolicitudes = true;
         this.isEditing = true;
@@ -409,14 +409,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     if (this.auth.isCompras || this.auth.isComprador) {
       console.log(this.SelectedCompras.IdStatusSolicitud);
       console.log(this.Direccion.IdDireccion);
-      this.getAllSolicitudesRegistradasporUsrCompras(
-        this.Direccion,
-        this.SelectedCompras
-      );
-    } else if (this.auth.isCheckPresupuesto) {
+      this.getAllSolicitudesRegistradasporUsrCompras(this.Direccion,this.SelectedCompras);
+    } else if (this.auth.isCheckPresupuesto || this.auth.isIntercambios) {
       console.log("se selecciono un estatus para el subdirecto de finanzas");
       //console.log(this.SelectedCompras);
-      this.getSolPedVisualPresupuesto(this.SelectedCompras.IdStatusSolicitud);
+      this.getSolPedForStatus(this.SelectedCompras.IdStatusSolicitud);
     }
   }
 
@@ -559,16 +556,12 @@ export class SolicitudesRegistradasComponent implements OnInit {
     );
   }
 
-  getAllSolicitudesRegistradasporUsrCompras(
-    Dir: Direccion,
-    status: StatusSolicitud
-  ) {
+  getAllSolicitudesRegistradasporUsrCompras(Dir: Direccion,status: StatusSolicitud) {
     //console.log("recuperando el listado de las solicitudes para Compras");
     this.USR = this.auth.currentUser.IdUsuario;
     this.Direcc = Dir.IdDireccion;
     console.log(status);
-    this.solicitudComp
-      .getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
+    this.solicitudComp.getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
       .subscribe(
         (data) => {
           this.ListSolRegistr = data;
@@ -583,8 +576,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
       );
   }
 
-  //metodo para buiscar las solicitudes por estatus solo aplica en caso de Subdirector de Finanzas
-  getSolPedVisualPresupuesto(IdStatus: number) {
+  //metodo para buiscar las solicitudes por estatus aplica para Subdirector de Finanzas e Intercambios
+  getSolPedForStatus(IdStatus: number) {
     console.log(IdStatus);
     this.solicitudComp
       .getAllSolicitudesForStatusPresupuesto(IdStatus)
