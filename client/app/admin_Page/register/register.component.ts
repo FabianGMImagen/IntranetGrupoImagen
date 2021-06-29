@@ -67,7 +67,7 @@ export class RegisterComponent implements OnInit {
   ListRoles:Role[];
   ListDireccions:Direccion[];
   ListRolesConsumo:RoleSolConsumo[];
-
+  hide = true;
   constructor(private formBuilder: FormBuilder,
               private router: Router,
               public toast: ToastComponent,
