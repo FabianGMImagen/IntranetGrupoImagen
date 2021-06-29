@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
     Validators.minLength(2),
     Validators.maxLength(30),
     Validators.pattern('[a-zA-Z0-9_-\\s]*'),
-    Validators.pattern('/^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g')
+    //Validators.pattern('/^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/g')
   ]);
   username = new FormControl('', [
     Validators.required,
@@ -35,11 +35,12 @@ export class RegisterComponent implements OnInit {
   email = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
-    Validators.maxLength(100)
+    Validators.maxLength(60),
+    Validators.email
   ]);
   password = new FormControl('', [
     Validators.required,
-    Validators.minLength(6)
+    Validators.minLength(8)
   ]);
   role = new FormControl(0, [
     Validators.required
@@ -52,16 +53,15 @@ export class RegisterComponent implements OnInit {
   ]);
   tel = new FormControl(0, [
     Validators.required,
-    Validators.maxLength(10),
     Validators.minLength(10)
   ]);
   ext = new FormControl(0, [
     Validators.required, 
-    Validators.maxLength(4),
     Validators.minLength(4)
   ]);
   puesto = new FormControl('', [
-    Validators.required
+    Validators.required,
+    Validators.pattern('[a-zA-Z0-9_-\\s]*')
   ]);
 
   ListRoles:Role[];
@@ -148,16 +148,60 @@ export class RegisterComponent implements OnInit {
 
 
 
-  setClassUsername() {
-    return { 'has-danger': !this.username.pristine && !this.username.valid };
+  getErrorMenssgeName(){
+    if (this.name.hasError('required')) {
+      return 'Nombre es requerido';
+    }else if(this.name.hasError('pattern')){
+      return 'Not a valid Nombre';
+    }
   }
 
-  setClassEmail() {
-    return { 'has-danger': !this.email.pristine && !this.email.valid };
+  getErrorMenssgeUserName() {
+    if (this.username.hasError('required')) {
+      return 'NombreUser es requerido';
+    }else if(this.username.hasError('pattern')){
+      return 'Not a valid NombreUser';
+    }
   }
 
-  setClassPassword() {
-    return { 'has-danger': !this.password.pristine && !this.password.valid };
+  getErrorMenssgeEmail() {
+    if (this.email.hasError('required')) {
+      return 'Email es requerido';
+    }
+    return this.email.hasError('email') ? 'Not a valid email' : '';
+  }
+
+  getErrorMenssgePassword() {
+    if (this.password.hasError('required')) {
+      return 'NombreUser es requerido';
+    }else if(this.password.hasError('minLength')){
+      return 'no menos de 8 caracteres';
+    };
+  }
+
+  getErrorMenssgeTelefono() {
+    if (this.tel.hasError('required')) {
+      return 'Telefono invalido';
+    }else if(this.tel.hasError('minLength')){
+      return 'el telefono debe ser igual a 10 digitos';
+    };
+  }
+
+  getErrorMenssgeExtencion() {
+    if (this.ext.hasError('required')) {
+      return 'La Extencion es requerida';
+    }else if(this.ext.errors){
+      console.log(this.tel.hasError('pattern'))
+      return 'la ext. debe tener 4 numeros';
+    };
+  }
+
+  getErrorMenssgePuesto() {
+    if (this.puesto.hasError('required')) {
+      return 'El puesto es requerido';
+    }else if(this.puesto.hasError('pattern')){
+      return 'Nombre de Puesto invalido';
+    }
   }
 
   
