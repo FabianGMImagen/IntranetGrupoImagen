@@ -2790,7 +2790,7 @@ export default class SolicitudCompraCTR {
       //Opciones de correo para enviar a gerente de area
       var mailOptionAdmin = {
         to: req.params.EmailAutorizador,
-        //cc: 'mmp@gimm.com.mx',
+        cc: 'mmp@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO PENDIENTE',
         html:
           "<head>" +
@@ -2827,7 +2827,7 @@ export default class SolicitudCompraCTR {
       //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
       var mailOptionPresupuestoRechaza = {
         to: EmailSolicitante,
-        //cc: 'mmp@gimm.com.mx',
+        cc: 'mmp@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
