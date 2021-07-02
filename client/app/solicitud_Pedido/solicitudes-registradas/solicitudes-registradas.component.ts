@@ -922,8 +922,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                     this.SelectedStatus.IdStatusSolicitud = 4; //se cambia el estatus a S. P. AUTORIZADO POR DIRECCION para que le aparesca a Planeacion
                     // console.log(this.SelectSolicitud.ID);
                     // console.log(this.SelectSolicitud.DIVISION);
-                    this.solicitudComp
-                      .UpdateStatusSolicitud(
+                    this.solicitudComp.UpdateStatusSolicitud(
                         this.SelectedStatus.IdStatusSolicitud,
                         this.SelectedStatus.IdSolicitud,
                         this.motivo_Rechazo
@@ -951,30 +950,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 console.log(this.UserAuth[0].Email);
 
                                 //Parte donde se envia El correo para los Diferentes autorizadores
-                                //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
-                                console.log(
-                                  "Id de usuario Legeeoado-------------->" +
-                                    this.auth.currentUser.IdUsuario
-                                );
-                                console.log(
-                                  "Nombre de el Usuario logeado--------->" +
-                                    this.auth.currentUser.NombreCompleto
-                                );
-                                console.log(
-                                  "El Role de Usuario---->" +
-                                    this.auth.currentUser.IdRole
-                                );
-                                console.log(
-                                  "El mail por usuario --->" +
-                                    this.auth.currentUser.Email
-                                );
-                                console.log(
-                                  "Este es el Email de el Autorizador--->" +
-                                    this.UserAuth[0].Email
-                                );
-
-                                this.solicitudComp
-                                  .SendEmailGerenteFianzas(
+                                this.solicitudComp.SendEmailGerenteFianzas(
                                     data2.ID,
                                     this.SelectedStatus.IdStatusSolicitud,
                                     this.Direccion.IdDireccion,
@@ -1301,8 +1277,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
             this.SelectedStatus.IdStatusSolicitud,
             this.SelectedStatus.IdSolicitud,
             this.motivo_Rechazo
-          )
-          .subscribe(
+          ).subscribe(
             (res) => {
               this.toast.setMessage(
                 "Actualizacion de Status Correcta",
@@ -1313,8 +1288,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   res
               );
               this.getAllSolicitudesRegistradasAutFinanzas(this.Direccion); //Buscamos cual es el Usuario que lleva la Direccion y Autoriza su presupuesto
-              this.solicitudComp
-                .getUserAutorizador(this.Direccion.IdDireccion, 4)
+              this.solicitudComp.getUserAutorizador(this.Direccion.IdDireccion, 4)
                 .subscribe(
                   (res) => {
                     console.log("++++++++++++++++++");
@@ -1335,16 +1309,14 @@ export class SolicitudesRegistradasComponent implements OnInit {
                         this.UserAuth[0].Email
                     );
 
-                    this.solicitudComp
-                      .SendEmailGerenteFianzas(
+                    this.solicitudComp.SendEmailGerenteFianzas(
                         data2.ID,
                         this.SelectedStatus.IdStatusSolicitud,
                         this.Direccion.IdDireccion,
                         data2.NombreUsuario,
                         this.auth.currentUser.IdRole,
                         this.auth.currentUser.NombreCompleto,
-                        this.UserAuth[0].Email
-                      )
+                        this.UserAuth[0].Email)
                       .subscribe(
                         (res) => {
                           this.motivo_Rechazo = "";
@@ -1399,30 +1371,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //validamos si el estatus seleccionado es rechazado y si si despues pasamos a validar si se lleno un motivo de rechazo si no no podemos actualizar.
         if (this.SelectedStatus.IdStatusSolicitud == 7) {
           if (this.motivo_Rechazo != undefined) {
-            //Paso 1 Recuperar Informacion de Solicitud de Pedido y guardarla--------------------------------
-            this.solicitudComp
-              .getInfoSolPed(this.SelectedStatus.IdSolicitud, data2.Acronimo)
-              .subscribe((data) => {
-                {
-                  //console.log(data);
-                  this.ListSap.SOL_TYPE = data2.Acronimo;
-                  this.ListSap.Item = data;
-                  //this.MensajeSAP =
-
-                  //SERVICIO QUE CREA LA SOLICITUD EM SAP AL MOMENTO DE CAMBIAR EL STATUS DE DICHA SOLICITUD.
-                  //this.solicitudComp.getInsertinSAP(data2.Id,this.ListSap)
-                }
-                (error) => {
-                  if(error.status == 403 || error.status == 404){
-                    this.toast.setMessage(
-                      error.message,
-                      "danger"
-                    );
-                    this.auth.logout();
-                  }
-                  console.log("error al recuperar la info " + error);
-                };
-              });
 
             //  //Paso 2 Cambiar el Status de Solicitud a Enviada a SAP-----------
             this.solicitudComp
@@ -1442,9 +1390,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   );
                   this.getAllSolicitudesRegistradasAutAdmin(this.Direccion);
                   //Buscamos cual es el Usuario que lleva la Direccion y Autoriza su presupuesto
-                  this.solicitudComp
-                    .getUserAutorizador(this.Direccion.IdDireccion, 1)
-                    .subscribe(
+                  this.solicitudComp.getUserAutorizador(this.Direccion.IdDireccion, 1).subscribe(
                       (res) => {
                         console.log(res);
                         this.UserAuth = res;
@@ -1460,7 +1406,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             data2.ID,
                             this.SelectedStatus.IdStatusSolicitud,
                             this.Direccion.IdDireccion,
-                            data2.REQUIRENTE,
+                            data2.NombreUsuario,
                             1,
                             this.auth.currentUser.NombreCompleto,
                             this.UserAuth[0].Email
@@ -1477,11 +1423,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               );
                             },
                             (error) => {
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
                               }
                               console.log("Error al enviar el correo " + error);
@@ -1494,11 +1437,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           );
                       },
                       (error) => {
-                        if(error.status == 403 || error.status == 404){
-                          this.toast.setMessage(
-                            error.message,
-                            "danger"
-                          );
+                        if (error.status == 403 || error.status == 404) {
+                          this.toast.setMessage(error.message, "danger");
                           this.auth.logout();
                         }
                         console.log(
@@ -1509,11 +1449,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                     );
                 },
                 (error) => {
-                  if(error.status == 403 || error.status == 404){
-                    this.toast.setMessage(
-                      error.message,
-                      "danger"
-                    );
+                  if (error.status == 403 || error.status == 404) {
+                    this.toast.setMessage(error.message, "danger");
                     this.auth.logout();
                   }
                   console.log("error al actualizar como Administrador" + error);
@@ -1532,7 +1469,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
             .getInfoSolPed(this.SelectedStatus.IdSolicitud, data2.Acronimo)
             .subscribe((data) => {
               {
-                //console.log(data);
+                console.log("getInfoSolPed ================================");
+                console.log(data);
                 this.ListSap.SOL_TYPE = data2.Acronimo;
                 this.ListSap.Item = data;
                 //this.MensajeSAP =
@@ -1541,20 +1479,16 @@ export class SolicitudesRegistradasComponent implements OnInit {
                 //this.solicitudComp.getInsertinSAP(data2.Id,this.ListSap)
               }
               (error) => {
-                if(error.status == 403 || error.status == 404){
-                  this.toast.setMessage(
-                    error.message,
-                    "danger"
-                  );
+                if (error.status == 403 || error.status == 404) {
+                  this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
                 }
                 console.log("error al recuperar la info " + error);
               };
             });
 
-          //  //Paso 2 Cambiar el Status de Solicitud a Enviada a SAP-----------
-          this.solicitudComp
-            .UpdateStatusSolicitud(
+          //  //Paso 2 Cambiar el Status de Solicitud-----------
+          this.solicitudComp.UpdateStatusSolicitud(
               this.SelectedStatus.IdStatusSolicitud,
               this.SelectedStatus.IdSolicitud,
               this.motivo_Rechazo
@@ -1566,13 +1500,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   "success"
                 );
                 console.log(
-                  "se actualozo el status como -----Administrador-----" + res
+                  "se actualozo el status como -----Gerente de Finanzas-----" + res
                 );
                 this.getAllSolicitudesRegistradasAutAdmin(this.Direccion);
                 //Buscamos cual es el Usuario que lleva la Direccion y Autoriza su presupuesto
-                this.solicitudComp
-                  .getUserAutorizador(this.Direccion.IdDireccion, 1)
-                  .subscribe(
+                this.solicitudComp.getUserAutorizador(this.Direccion.IdDireccion, 1).subscribe(
                     (res) => {
                       console.log(res);
                       this.UserAuth = res;
@@ -1581,14 +1513,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                       console.log(this.auth.currentUser.Email);
                       console.log(
                         "este es el email del Usaurio Autorizador" +
-                          this.UserAuth.Email
+                        this.UserAuth[0].Email
                       );
-                      this.solicitudComp
-                        .SendEmailAdmin(
+                      this.solicitudComp.SendEmailAdmin(
                           data2.ID,
                           this.SelectedStatus.IdStatusSolicitud,
                           this.Direccion.IdDireccion,
-                          data2.REQUIRENTE,
+                          data2.NombreUsuario,
                           this.auth.currentUser.IdRole,
                           this.auth.currentUser.NombreCompleto,
                           this.UserAuth[0].Email
@@ -1597,19 +1528,16 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           (res) => {
                             this.motivo_Rechazo = "";
                             this.toast.setMessage(
-                              "Error en el envio de el Correo",
-                              "warning"
+                              "Envio de Email Correcto",
+                              "success"
                             );
                             console.log(
                               "dento de el metodo para enviar el correo" + res
                             );
                           },
                           (error) => {
-                            if(error.status == 403 || error.status == 404){
-                              this.toast.setMessage(
-                                error.message,
-                                "danger"
-                              );
+                            if (error.status == 403 || error.status == 404) {
+                              this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
                             }
                             console.log("Error al enviar el correo " + error);
@@ -1622,11 +1550,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                         );
                     },
                     (error) => {
-                      if(error.status == 403 || error.status == 404){
-                        this.toast.setMessage(
-                          error.message,
-                          "danger"
-                        );
+                      if (error.status == 403 || error.status == 404) {
+                        this.toast.setMessage(error.message, "danger");
                         this.auth.logout();
                       }
                       console.log(
@@ -1637,11 +1562,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   );
               },
               (error) => {
-                if(error.status == 403 || error.status == 404){
-                  this.toast.setMessage(
-                    error.message,
-                    "danger"
-                  );
+                if (error.status == 403 || error.status == 404) {
+                  this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
                 }
                 console.log("error al actualizar como Administrador" + error);
@@ -1669,8 +1591,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         console.log(data2);
         console.log(this.motivo_Rechazo);
         if (
-          this.SelectedStatus.Nombre == "S. P. RECHAZADA POR COMPRAS" &&
-            this.motivo_Rechazo == undefined ||
+          (this.SelectedStatus.Nombre == "S. P. RECHAZADA POR COMPRAS" &&
+            this.motivo_Rechazo == undefined) ||
           this.motivo_Rechazo == ""
         ) {
           this.toast.setMessage(
@@ -1702,11 +1624,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                 );
               },
               (error) => {
-                if(error.status == 403 || error.status == 404){
-                  this.toast.setMessage(
-                    error.message,
-                    "danger"
-                  );
+                if (error.status == 403 || error.status == 404) {
+                  this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
                 }
                 console.log(error);
