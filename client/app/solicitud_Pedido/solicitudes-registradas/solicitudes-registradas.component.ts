@@ -1023,7 +1023,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               console.log(res);
                               this.UserAuth = res;
                               console.log(this.UserAuth[0].Email);
-
                               //Parte donde se envia El correo para los Diferentes autorizadores
                               //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
                               console.log(
@@ -1124,7 +1123,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             console.log(res);
                             this.UserAuth = res;
                             console.log(this.UserAuth[0].Email);
-
                             //Parte donde se envia El correo para los Diferentes autorizadores
                             //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
                             console.log(

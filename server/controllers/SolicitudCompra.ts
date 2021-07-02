@@ -2700,7 +2700,6 @@ export default class SolicitudCompraCTR {
   }
 
   SendEmailAdmin = (req, res) => {
-
     console.log("Dentro del metodo para enviar el correo a el solicitante y al Administradior");
     console.log(req.params.IdSolicitud);
     console.log(req.params.IdStatus);
@@ -2720,29 +2719,6 @@ export default class SolicitudCompraCTR {
       Nombre = "S. P. PRESUPUESTO AUTORIZADO ";
     } else if (req.params.IdStatus == 7) {
       Nombre = "S. P. PRESUPUESTO RECHAZADO";
-      // var sql = require("mssql");
-      // var env = process.env.NODE_ENV || 'SERWEB';
-      // var config = require('../controllers/connections/servers')[env];
-      // new sql.ConnectionPool(config).connect().then(pool => {
-      //   return pool.request()
-      //     .input('IdDir', sql.Int, req.params.IdArea)
-      //     .execute('UserSolicitanteforDirandRole')
-      // }).then(result => {
-      //   console.log("----------------*****datos de regreso del solicitante----------------");
-      //   console.log(result.recordset);
-      //   console.log(result.recordset[0]);
-      //   NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
-      //   console.log(NombreCompletoSolicitante);
-      //   EmailSolicitante = result.recordset[0].Email;
-      //   console.log(EmailSolicitante);
-      //   console.log("???????????????????????????????");
-      //   //res.status(201).json(req.body);
-      //   sql.close();
-      // }).catch(err => {
-      //   if (err) console.log(err);
-  
-      //   sql.close();
-      // });
     }
     const oauth2Client = new google.auth.OAuth2(
       CLIENTID, //client ID
@@ -2799,11 +2775,6 @@ export default class SolicitudCompraCTR {
           '<div>' +
           '<a href="'+Intranet+'">ENTRAR A INTRANET</a>' +
           '<div>' +
-          '<br>' +
-          '<br>' +
-          // Envio de botones para aprovar o un denegar la solicitud de pedido
-          // '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 6 + '" style="text-decoration:none">AUTORIZAR</a></button>' +
-          // '<button type="button" style="text-decoration: none; border: 1px solid #f48f93; border-radius: 5px; padding: 5px; background-color: #f48f93; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 7 + '" style="text-decoration:none">RECHAZAR</a></button>' +
           '<br>' +
           '<br>' +
           '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>' +
