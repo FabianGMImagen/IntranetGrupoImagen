@@ -2720,40 +2720,30 @@ export default class SolicitudCompraCTR {
       Nombre = "S. P. PRESUPUESTO AUTORIZADO ";
     } else if (req.params.IdStatus == 7) {
       Nombre = "S. P. PRESUPUESTO RECHAZADO";
-      var sql = require("mssql");
-      var env = process.env.NODE_ENV || 'SERWEB';
-      var config = require('../controllers/connections/servers')[env];
-      console.log("??????????????????????????????????????????????????????????");
-      new sql.ConnectionPool(config).connect().then(pool => {
-        return pool.request()
-          .input('IdDir', sql.Int, req.params.IdArea)
-          .execute('UserSolicitanteforDirandRole')
-      }).then(result => {
-        console.log("----------------*****datos de regreso del solicitante----------------");
-        console.log(result.recordset);
-        console.log(result.recordset[0]);
-        NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
-        console.log(NombreCompletoSolicitante);
-        EmailSolicitante = result.recordset[0].Email;
-        console.log(EmailSolicitante);
-        console.log("???????????????????????????????");
-        //res.status(201).json(req.body);
-        sql.close();
-      }).catch(err => {
-        if (err) console.log(err);
+      // var sql = require("mssql");
+      // var env = process.env.NODE_ENV || 'SERWEB';
+      // var config = require('../controllers/connections/servers')[env];
+      // new sql.ConnectionPool(config).connect().then(pool => {
+      //   return pool.request()
+      //     .input('IdDir', sql.Int, req.params.IdArea)
+      //     .execute('UserSolicitanteforDirandRole')
+      // }).then(result => {
+      //   console.log("----------------*****datos de regreso del solicitante----------------");
+      //   console.log(result.recordset);
+      //   console.log(result.recordset[0]);
+      //   NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
+      //   console.log(NombreCompletoSolicitante);
+      //   EmailSolicitante = result.recordset[0].Email;
+      //   console.log(EmailSolicitante);
+      //   console.log("???????????????????????????????");
+      //   //res.status(201).json(req.body);
+      //   sql.close();
+      // }).catch(err => {
+      //   if (err) console.log(err);
   
-        sql.close();
-      });
+      //   sql.close();
+      // });
     }
-  
-    // if(req.params.IdArea == 1){
-    //   Direccion = "Operaciones";  
-    // }else if(req.params.IdArea == 2){
-    //   Direccion = "Finanzas"; 
-    // }else if(req.params.IdArea == 3){
-    //   Direccion = "Presupuestal";
-    // }
-  
     const oauth2Client = new google.auth.OAuth2(
       CLIENTID, //client ID
       CLIENTSECRET, // Client Secret 
@@ -2790,8 +2780,8 @@ export default class SolicitudCompraCTR {
       //Opciones de correo para enviar a gerente de area
       var mailOptionAdmin = {
         to: req.params.EmailAutorizador,
-        cc: 'mmp@gimm.com.mx',
-        subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+        cc: 'marco.garcia@gimm.com.mx',
+        subject: Nombre,
         html:
           "<head>" +
           "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
@@ -2799,11 +2789,12 @@ export default class SolicitudCompraCTR {
           "</head>" +
           "<body>" +
   
-          '<Strong>TIENEN UNSA SOLICITUD DE PEDIDO PENDIENTE DE : </Strong>' + req.params.Solicitante + '<br>' +
-          '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
-          '<Strong>FAVOR DE ENTRAR A LA INTRANET PARA SU REVISION MAS DETALLADA</Strong>' +
+          
+          '<Strong>TU SOLICITUD DE PEDIDO CON UN ID : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+          '<Strong>DE : </Strong>' + req.params.Solicitante + '<br>' +
+          '<Strong>CAMBIO DE ESTATUS A S. P. PRESUPUESTO AUTORIZADO </Strong>' +
           '<br>' +
-          '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+          '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION MAS DETALLADA</Strong>' +
           '<br>' +
           '<div>' +
           '<a href="'+Intranet+'">ENTRAR A INTRANET</a>' +
@@ -2811,8 +2802,8 @@ export default class SolicitudCompraCTR {
           '<br>' +
           '<br>' +
           // Envio de botones para aprovar o un denegar la solicitud de pedido
-          '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 6 + '" style="text-decoration:none">AUTORIZAR</a></button>' +
-          '<button type="button" style="text-decoration: none; border: 1px solid #f48f93; border-radius: 5px; padding: 5px; background-color: #f48f93; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 7 + '" style="text-decoration:none">RECHAZAR</a></button>' +
+          // '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 6 + '" style="text-decoration:none">AUTORIZAR</a></button>' +
+          // '<button type="button" style="text-decoration: none; border: 1px solid #f48f93; border-radius: 5px; padding: 5px; background-color: #f48f93; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 7 + '" style="text-decoration:none">RECHAZAR</a></button>' +
           '<br>' +
           '<br>' +
           '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>' +
@@ -2828,7 +2819,7 @@ export default class SolicitudCompraCTR {
       var mailOptionPresupuestoRechaza = {
         to: EmailSolicitante,
         cc: 'mmp@gimm.com.mx',
-        subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+        subject: Nombre,
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
           '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
@@ -2859,7 +2850,7 @@ export default class SolicitudCompraCTR {
           }
         })
       } else {
-        //envio de correo para el administrador (gente de finanzas)
+        //envio de mail para el solicitante indicando que se autorizo el presupuesto de su solicitud.
         smtpTransport.sendMail(mailOptionAdmin, function (err, resp) {
           if (err) {
             console.log(err);
