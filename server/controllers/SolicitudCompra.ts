@@ -2468,13 +2468,9 @@ export default class SolicitudCompraCTR {
       //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
       var mailOptiongerenteRechaza = {
         to: EmailSolicitante,
-<<<<<<< HEAD
-        cc: 'marco.garcia@gimm.com.mx',
-        //cc: 'marco.garcia@gimm.com.mx',
-=======
         //to:'marco.garcia@gimm.com.mx',
         cc: 'marco.garcia@gimm.com.mx',
->>>>>>> 0770ab57c7d4609249d6d285c9d4202b7c3c2ed5
+
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
