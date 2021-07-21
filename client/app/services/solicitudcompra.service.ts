@@ -86,6 +86,7 @@ export class SolicitudCompraService {
     //var url = '/sap/bc/srt/wsdl/flv_10002A10M1D1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/300/zws_sap_in/zws_sap_in?sap-client=300';
     //var url = '/sap/bc/srt/wsdl/flv_10002A10MAD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320'; //QIM CALIDAD
     var url = '/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320';
+    
     //Parametros para enviar servicio, se manda vacios para que nos regrese todas las empresas
     const parametros = {
       BUKRS: ''
@@ -202,7 +203,7 @@ export class SolicitudCompraService {
 
     //var url = '/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320';
     var url = '/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320';
-
+              
     const parametros = {
       BUKRS: idempresa.Bukrs,
       GSBER: idplaza.IdPlaza
@@ -325,6 +326,7 @@ export class SolicitudCompraService {
 
     //var url = '/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320';
     var url = '/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320';
+    
 
     const parametros = {
       BUKRS: IdEmpresa.Bukrs,
