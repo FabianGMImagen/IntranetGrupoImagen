@@ -121,7 +121,7 @@ export default class UploadFilesController {
                         console.log("ocurrio un error de algun tipo        " + err);
                       }else{
                         console.log(".....Se creo el Archivo CSV.... ");
-                        var RutaCotizacion = 'http://localhost:3000/public/DatosCompras/'+FileName;
+                        var RutaCotizacion = 'http://solicitud.adgimm.com.mx:3000/public/DatosCompras/'+FileName;
                         console.log(RutaCotizacion);
                         res.status(201).json(RutaCotizacion);
                       }
