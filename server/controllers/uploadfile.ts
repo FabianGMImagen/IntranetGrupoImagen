@@ -11,6 +11,7 @@ import { read } from 'fs';
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
 const DIR = '../IntranetProduccion/datos';
+const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
 var id = 0;
 let storage = multer.diskStorage({
 
@@ -121,7 +122,7 @@ export default class UploadFilesController {
                         console.log("ocurrio un error de algun tipo        " + err);
                       }else{
                         console.log(".....Se creo el Archivo CSV.... ");
-                        var RutaCotizacion = 'http://solicitud.adgimm.com.mx:3000/public/DatosCompras/'+FileName;
+                        var RutaCotizacion = UrlCompador+FileName;
                         console.log(RutaCotizacion);
                         res.status(201).json(RutaCotizacion);
                       }
