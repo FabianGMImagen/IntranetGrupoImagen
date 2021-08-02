@@ -147,7 +147,6 @@ export class RegisterComponent implements OnInit {
 
 
 
-
   getErrorMenssgeName(){
     if (this.name.hasError('required')) {
       return 'Nombre es requerido';
@@ -218,8 +217,6 @@ export class RegisterComponent implements OnInit {
     console.log("Esta es la extencion de el Usuario-->" + this.registerForm.value.ext);
     console.log("Este es el puesto para el USR-->" + this.registerForm.value.puesto);
     console.log("Est es el valor para Role Consumo interno --> " + this.registerForm.value.roleconsumo);
-
-
 
     this.userService.register(this.registerForm.value).subscribe(
       res => {

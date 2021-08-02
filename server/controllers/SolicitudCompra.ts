@@ -362,7 +362,6 @@ export default class SolicitudCompraCTR {
     });
   }
 
-
   AllMoneda = (req, res) => {
     console.log("recuperando la lista de monedas");
 
@@ -378,10 +377,10 @@ export default class SolicitudCompraCTR {
           if (err) console.log(err);
           console.log("*/*/*/*/*/*/----Tipos de Monedas ----*/*/*/*/*/");
           res.status(200).json(result.recordset);
+          res.end();
         });
     });
   }
-
 
   UsuarioAuth = (req, res) => {
     console.log("dentro de el metodo que nos regresa el usuario que autoriza la solicitud");
@@ -405,7 +404,170 @@ export default class SolicitudCompraCTR {
     });
   }
 
+  AllCategoriasforUserComprador = (req, resp) =>{
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
 
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdUserComprador', sql.Int, req.params.IdUser)
+        .execute('CategorysForUserComprador')
+    }).then(result => {
+      //console.log(result.recordset);
+      resp.status(201).json(result.recordset);
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
+
+  AllCategorias = (req, resp) =>{
+    console.log("recuperamos las categorias");
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
+    var config = require('../controllers/connections/servers')[env];
+    var query = "Select * from Categoria";
+    const pool1 = new sql.ConnectionPool(config, err => {
+      pool1.request()
+        .query(query, (err, result) => {
+          if (err){ console.log(err);}
+          resp.status(200).json(result.recordset);
+          resp.end();
+        });
+    });
+  }
+
+  AllUsersCompradores = (req, resp) =>{
+    console.log("Recuperamos los datos de Usuarios Compradores");
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
+    var config = require('../controllers/connections/servers')[env];
+    var query = "SELECT * FROM Usuario where IdRole = 7;";
+    const pool1 = new sql.ConnectionPool(config, err => {
+      pool1.request()
+        .query(query, (err, result) => {
+          if (err) console.log(err);
+          resp.status(200).json(result.recordset);
+        });
+    });
+  }
+
+  AllCategoriasnoUsadasporCompradores = (req, resp)=>{
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .execute('Categoriasnousadas')
+    }).then(result => {
+      //console.log(result.recordset);
+      resp.status(201).json(result.recordset);
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
+
+  ListCategoriasforUsuario = (req, resp) =>{
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdUser', sql.Int, req.params.IdUser)
+        .execute('ListCategorisforUser')
+    }).then(result => {
+      //console.log(result.recordset);
+      resp.status(201).json(result.recordset);
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
+
+  InsertNewCategoryforComprador = (req, resp) =>{
+    //InsertNewCategoriaForComprador
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdUser', sql.Int, req.params.IdUser)
+        .input('IdCategoria', sql.Int, req.params.IdCategoria)
+        .execute('InsertNewCategoriaForComprador')
+    }).then(result => {
+      console.log(result.recordsets);
+      resp.status(201).json("Se asigno la categoria Correctamente");
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
+
+  DeleteCategoriaForUser = (req, resp)=>{
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdUser', sql.Int, req.params.IdUser)
+        .input('IdCategoria', sql.Int, req.params.IdCategoria)
+        .execute('DeleteCategoriaforUserComprador')
+    }).then(result => {
+      console.log(result.recordsets);
+      resp.status(201).json("Se elimino la categoria correctamente del usuario");
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
+
+  ChangedCategoriForSolicitud = (req, resp) =>{
+    //ModificateCategoryforSolicitud
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdSol', sql.Int, req.params.IdSol)
+        .input('IdCategory', sql.Int, req.params.IdCat)
+        .execute('ModificateCategoryforSolicitud')
+    }).then(result => {
+      console.log(result.recordsets);
+      resp.status(201).json("Se Actualizo la categoria, correctamente");
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
 
 
   //Inserta Solicitud
@@ -422,6 +584,7 @@ export default class SolicitudCompraCTR {
     // console.log("id Imputacion-->"+req.body.Imputacion.IdImputacion);
     // console.log("Nombre Imputacion-->"+req.body.Imputacion.Nombre);
     // console.log("IdTipo de Moneda--" + req.body.Moneda.IdMoneda);
+    console.log(req.body.Categoria.IdCategoria); 
     // console.log("Nombre tipo de moneda---" + req.body.Acronimo);
     // // console.log("ID Centro de costo-->" + req.body.CentroCostos.IdCentroCosto);
     // // console.log("Name Centro de costo-->" + req.body.CentroCostos.Nombre);
@@ -487,6 +650,7 @@ export default class SolicitudCompraCTR {
               .input('IdUsuarioAutorizadorDireccion', sql.Int, req.body.Autorizador.IdUsuario)
               .input('IdDireccion', sql.Int, req.body.Area.IdDireccion)
               .input('IdMoneda', sql.Int, req.body.Moneda.IdMoneda)
+              .input('IdCategoria', sql.Int, req.body.Categoria.IdCategoria)
               .input('Usuario', sql.VarChar, req.body.Usr)
               .input('Puesto', sql.VarChar, req.body.Puesto)
               .input('Email', sql.VarChar, req.body.Email)
@@ -1793,7 +1957,7 @@ export default class SolicitudCompraCTR {
         .input('IdUsuario', sql.Int, req.params.IdUsuario)
         .execute('DirecionesforUser')
     }).then(result => {
-      console.log(result.recordsets);
+      //console.log(result.recordsets);
       res.status(201).json(result.recordset);
       sql.close();
     }).catch(err => {
@@ -2097,29 +2261,31 @@ export default class SolicitudCompraCTR {
 
 
   getAllSolicitudesforUsuario = (req, res) => {
-
-    var sql = require("mssql");
-    //variable de entorno para realizar la coneccion
-    var env = process.env.NODE_ENV || 'SERWEB';
-    //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
-    var config = require('../controllers/connections/servers')[env];
-    //console.log("Este es el id de el Usuario -->"+req.params.usr);
-    // console.log("Este es el ID de el USR--> " + req.params.idusr);
-    // console.log("Este es el ID de la Direccion --->" + req.params.iddireccion);
-    // console.log("Este es el ID de el ROLE-->"+ req.params.IdRole);
-    new sql.ConnectionPool(config).connect().then(pool => {
-      return pool.request()
-        .input('IdUsr', sql.Int, req.params.idusr)
-        //.input('IdDireccion', sql.Int, req.params.iddireccion)
-        .input('IdRole', sql.Int, req.params.IdRole)
-        .execute('getAllSolicitudforUsuario')
-    }).then(result => {
-      res.status(201).json(result.recordset);
-      sql.close();
-    }).catch(err => {
-      if (err) console.log(err);
-      sql.close();
-    });
+      var sql = require("mssql");
+      //variable de entorno para realizar la coneccion
+      var env = process.env.NODE_ENV || 'SERWEB';
+      //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
+      var config = require('../controllers/connections/servers')[env];
+      //console.log("Este es el id de el Usuario -->"+req.params.usr);
+      // console.log("Este es el ID de el USR--> " + req.params.idusr);
+      // console.log("Este es el ID de la Direccion --->" + req.params.iddireccion);
+      // console.log("Este es el ID de el ROLE-->"+ req.params.IdRole);
+      new sql.ConnectionPool(config).connect().then(pool => {
+        return pool.request()
+          .input('IdUsr', sql.Int, req.params.idusr)
+          //.input('IdDireccion', sql.Int, req.params.iddireccion)
+          .input('IdRole', sql.Int, req.params.IdRole)
+          .execute('getAllSolicitudforUsuario')
+      }).then(result => {
+        res.status(201).json(result.recordset);
+        sql.close();
+      }).catch(err => {
+        if (err){ 
+          res.status(500).send({message: 'Error en getAllSolicitudesforUsuario:  ' + err});
+          console.log(err);
+        }
+        sql.close();
+      });
   }
 
 
@@ -2170,11 +2336,9 @@ export default class SolicitudCompraCTR {
 
 
   UpdateStatusdeSolicitud = (req, res) => {
-    console.log("*********************hola como esta --------------------------------------------");
     console.log(req.body.Idstatus);
     console.log(req.body.IdSolicitud);
     console.log(req.body.Justifi_rechazo);
-    console.log("*********************hola como esta --------------------------------------------");
     var sql = require("mssql");
     var env = process.env.NODE_ENV || 'SERWEB';
     var config = require('../controllers/connections/servers')[env];
@@ -2346,7 +2510,7 @@ export default class SolicitudCompraCTR {
     // console.log("Id de Solicitud-->" + req.params.IdSolicitud);
     // console.log("id de Status SOl-->"  + req.params.IdStatus);
     // console.log("id de Area-->" + req.params.IdArea);
-    // console.log("id de Solicitante-->"+req.params.Solicitante);
+    console.log("id de Solicitante-->"+req.params.Solicitante);
     // console.log("Id de Rool -->" + req.params.IdRol);
     // console.log("Name Autoriza -->" + req.params.NombreAutorizador);
     // console.log("Email de la Persona DirArea que Autoriza--->" + req.params.EmailAutorizador);
@@ -2720,31 +2884,31 @@ export default class SolicitudCompraCTR {
       Nombre = "S. P. PRESUPUESTO AUTORIZADO ";
     } else if (req.params.IdStatus == 7) {
       Nombre = "S. P. PRESUPUESTO RECHAZADO";
-      var sql = require("mssql");
-      var env = process.env.NODE_ENV || 'SERWEB';
-      var config = require('../controllers/connections/servers')[env];
-      console.log("??????????????????????????????????????????????????????????");
-      new sql.ConnectionPool(config).connect().then(pool => {
-        return pool.request()
-          .input('IdDir', sql.Int, req.params.IdArea)
-          .execute('UserSolicitanteforDirandRole')
-      }).then(result => {
-        console.log("----------------*****datos de regreso del solicitante----------------");
-        console.log(result.recordset);
-        console.log(result.recordset[0]);
-        NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
-        console.log(NombreCompletoSolicitante);
-        EmailSolicitante = result.recordset[0].Email;
-        console.log(EmailSolicitante);
-        console.log("???????????????????????????????");
-        //res.status(201).json(req.body);
-        sql.close();
-      }).catch(err => {
-        if (err) console.log(err);
+      // var sql = require("mssql");
+      // var env = process.env.NODE_ENV || 'SERWEB';
+      // var config = require('../controllers/connections/servers')[env];
+      // new sql.ConnectionPool(config).connect().then(pool => {
+      //   return pool.request()
+      //     .input('IdDir', sql.Int, req.params.IdArea)
+      //     .execute('UserSolicitanteforDirandRole')
+      // }).then(result => {
+      //   console.log("----------------*****datos de regreso del solicitante----------------");
+      //   console.log(result.recordset);
+      //   console.log(result.recordset[0]);
+      //   NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
+      //   console.log(NombreCompletoSolicitante);
+      //   EmailSolicitante = result.recordset[0].Email;
+      //   console.log(EmailSolicitante);
+      //   console.log("???????????????????????????????");
+      //   //res.status(201).json(req.body);
+      //   sql.close();
+      // }).catch(err => {
+      //   if (err) console.log(err);
   
-        sql.close();
-      });
+      //   sql.close();
+      // });
     }
+<<<<<<< HEAD
   
     // if(req.params.IdArea == 1){
       //   Direccion = "Operaciones";  
@@ -2754,6 +2918,8 @@ export default class SolicitudCompraCTR {
           //   Direccion = "Presupuestal";
         // }
   
+=======
+>>>>>>> 1422813b294c50a7862f77ef3371203e1371dcde
     const oauth2Client = new google.auth.OAuth2(
       CLIENTID, //client ID
       CLIENTSECRET, // Client Secret 
@@ -2791,7 +2957,11 @@ export default class SolicitudCompraCTR {
       var mailOptionAdmin = {
         to: req.params.EmailAutorizador,
         cc: 'marco.garcia@gimm.com.mx',
+<<<<<<< HEAD
         subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+=======
+        subject: Nombre,
+>>>>>>> 1422813b294c50a7862f77ef3371203e1371dcde
         html:
           "<head>" +
           "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
@@ -2799,11 +2969,12 @@ export default class SolicitudCompraCTR {
           "</head>" +
           "<body>" +
   
-          '<Strong>TIENEN UNSA SOLICITUD DE PEDIDO PENDIENTE DE : </Strong>' + req.params.Solicitante + '<br>' +
-          '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
-          '<Strong>FAVOR DE ENTRAR A LA INTRANET PARA SU REVISION MAS DETALLADA</Strong>' +
+          
+          '<Strong>TU SOLICITUD DE PEDIDO CON UN ID : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+          '<Strong>DE : </Strong>' + req.params.Solicitante + '<br>' +
+          '<Strong>CAMBIO DE ESTATUS A S. P. PRESUPUESTO AUTORIZADO </Strong>' +
           '<br>' +
-          '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+          '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION MAS DETALLADA</Strong>' +
           '<br>' +
           '<div>' +
           '<a href="'+Intranet+'">ENTRAR A INTRANET</a>' +
@@ -2811,8 +2982,8 @@ export default class SolicitudCompraCTR {
           '<br>' +
           '<br>' +
           // Envio de botones para aprovar o un denegar la solicitud de pedido
-          '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 6 + '" style="text-decoration:none">AUTORIZAR</a></button>' +
-          '<button type="button" style="text-decoration: none; border: 1px solid #f48f93; border-radius: 5px; padding: 5px; background-color: #f48f93; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 7 + '" style="text-decoration:none">RECHAZAR</a></button>' +
+          // '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 6 + '" style="text-decoration:none">AUTORIZAR</a></button>' +
+          // '<button type="button" style="text-decoration: none; border: 1px solid #f48f93; border-radius: 5px; padding: 5px; background-color: #f48f93; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 7 + '" style="text-decoration:none">RECHAZAR</a></button>' +
           '<br>' +
           '<br>' +
           '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>' +
@@ -2827,8 +2998,13 @@ export default class SolicitudCompraCTR {
       //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
       var mailOptionPresupuestoRechaza = {
         to: EmailSolicitante,
+<<<<<<< HEAD
         cc: 'marco.garcia@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+=======
+        cc: 'mmp@gimm.com.mx',
+        subject: Nombre,
+>>>>>>> 1422813b294c50a7862f77ef3371203e1371dcde
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
           '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
@@ -2859,7 +3035,7 @@ export default class SolicitudCompraCTR {
           }
         })
       } else {
-        //envio de correo para el administrador (gente de finanzas)
+        //envio de mail para el solicitante indicando que se autorizo el presupuesto de su solicitud.
         smtpTransport.sendMail(mailOptionAdmin, function (err, resp) {
           if (err) {
             console.log(err);
@@ -3839,6 +4015,7 @@ export default class SolicitudCompraCTR {
                   '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
 
               }
+
               if (req.params.IdStatus == 5) {
                 console.log("Se envia Mail de Rechazo a Usuario Solicitante");
                 smtpTransport.sendMail(mailOptionRechaza, function (err, resp) {
@@ -3940,7 +4117,7 @@ export default class SolicitudCompraCTR {
             "<body>" +
 
             "<div class='alert alert-danger' role='alert'>" +
-            "Esta Solicitud de Pedido ya tieddddddne un status igual o superior al que se intenta actualizar" +
+            "Esta Solicitud de Pedido ya tiene un status igual o superior al que se intenta actualizar" +
             "</div>" +
             // "<h1>¡Solicitud de Pedido Actualizada!</h1>"+
 

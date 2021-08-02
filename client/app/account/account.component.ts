@@ -33,7 +33,7 @@ import {
   transition,
   trigger,
 } from "@angular/animations";
-import * as jsPDF from "jspdf";
+import { jsPDF } from "jspdf";
 
 import { ToastComponent } from "../shared/toast/toast.component";
 import { AuthServices } from "../services/auth.service";
@@ -3688,9 +3688,15 @@ export class AccountComponent implements OnInit {
       "data:image/png;base64,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";
 
     ("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");
-    let doc = new jsPDF({
-      orientation: "portrait",
-      format: "letter",
+    // let doc = new jsPDF({
+    //   orientation: "portrait",
+    //   format: "letter",
+    // });
+
+    const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "in",
+      format: [4, 2]
     });
 
     doc.setFont("Bold", "Calibri");
@@ -3700,314 +3706,314 @@ export class AccountComponent implements OnInit {
     doc.rect(50, 16, 115, 8, "S");
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(18);
-    doc.text(82, 22, "Solicitu de Compra");
+    doc.text("Solicitu de Compra",82, 22);
 
     doc.addImage(logo, "PNG", 170, 11, 20, 20);
     doc.addImage(logo, "PNG", 18, 11, 20, 20);
 
     doc.setFontSize(10);
-    doc.text(147, 39, "Fecha de Creacion: ");
+    doc.text("Fecha de Creacion: ",147, 39);
     //doc.text(169, 39, '___________');
-    doc.text(175, 39, datapdf.FECHASOLICITUD);
+    doc.text(datapdf.FECHASOLICITUD, 175, 39 );
 
     doc.setFontSize(10);
-    doc.text(15, 50, "Usuario Solicitante: ");
+    doc.text("Usuario Solicitante: ", 15, 50);
     //doc.text(38,50,'_____________________');
     doc.setFontSize(9);
-    doc.text(44, 50, datapdf.REQUIRENTE);
+    doc.text(datapdf.REQUIRENTE, 44, 50);
 
     doc.setFontSize(10);
-    doc.text(80, 50, "Correo Institucional: ");
+    doc.text("Correo Institucional: ", 80, 50);
     //doc.text(94, 50, "_____________________");
     doc.setFontSize(9);
-    doc.text(110, 50, "ejemplo12345@gimm.com.mx");
+    doc.text("ejemplo12345@gimm.com.mx", 110, 50);
 
     doc.setFontSize(10);
-    doc.text(153, 50, "Numero Telefonico: ");
+    doc.text("Numero Telefonico: ", 153, 50);
     doc.setFontSize(9);
-    doc.text(182, 50, "5502020202");
+    doc.text( "5502020202", 182, 50);
 
     doc.setFontSize(10);
-    doc.text(15, 58, "Extencion: ");
+    doc.text("Extencion: ", 15, 58);
     doc.setFontSize(9);
-    doc.text(31, 58, "4545");
+    doc.text("4545", 31, 58);
 
     doc.setFontSize(10);
-    doc.text(40, 58, "Puesto del Solicitante: ");
+    doc.text("Puesto del Solicitante: ", 40, 58);
     doc.setFontSize(9);
-    doc.text(72, 58, "Desarrollador");
+    doc.text( "Desarrollador", 72, 58);
 
     doc.setFontSize(10);
-    doc.text(118, 58, "C. C : ");
+    doc.text( "C. C : ", 118, 58);
     //doc.text(91, 58,"_______________");
-    doc.setFontSize(9);
-    doc.text(127, 58, "C00105015A");
+    // doc.setFontSize(9);
+    // doc.text(127, 58, "C00105015A");
 
-    doc.setFontSize(10);
-    doc.text(149, 58, "Nombre de la Produccion: ");
-    doc.setFontSize(9);
-    doc.text(187, 58, "Sale el Sol");
+    // doc.setFontSize(10);
+    // doc.text(149, 58, "Nombre de la Produccion: ");
+    // doc.setFontSize(9);
+    // doc.text(187, 58, "Sale el Sol");
 
-    doc.text(15, 66, "Empresa que compra Bien o Servicio: ");
-    //doc.text(53, 75, "___________________________________");
-    doc.setFontSize(6);
-    doc.text(64, 66, "IMAGEN MONTERREY, S.A. DE C.V.");
+    // doc.text(15, 66, "Empresa que compra Bien o Servicio: ");
+    // //doc.text(53, 75, "___________________________________");
+    // doc.setFontSize(6);
+    // doc.text(64, 66, "IMAGEN MONTERREY, S.A. DE C.V.");
 
-    doc.setFontSize(8);
-    doc.text(15, 74, "Plaza:");
-    //doc.text(106, 75, "__________________________________________________________________________");
-    doc.setFontSize(6);
-    doc.text(
-      23,
-      74,
-      "CELAYA, GUANAJUATO, IRAPUATO, SALAMANCA, GTO.; CD.  HIDALGO Y MORELIA, MICH.; QUERÉTARO, QRO."
-    );
+    // doc.setFontSize(8);
+    // doc.text(15, 74, "Plaza:");
+    // //doc.text(106, 75, "__________________________________________________________________________");
+    // doc.setFontSize(6);
+    // doc.text(
+    //   23,
+    //   74,
+    //   "CELAYA, GUANAJUATO, IRAPUATO, SALAMANCA, GTO.; CD.  HIDALGO Y MORELIA, MICH.; QUERÉTARO, QRO."
+    // );
 
-    doc.setFontSize(8);
-    doc.text(137, 74, "Cta. Mayor : ");
-    //doc.text(27, 83, "_______________");
-    doc.text(152, 74, "XXXXXXXXX");
-    //comienzo de la tabla
-    //Esta es la cabecera de la tabla
-    doc.rect(15, 97, 7, 5, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(8);
-    doc.text(18, 100, "#");
+    // doc.setFontSize(8);
+    // doc.text(137, 74, "Cta. Mayor : ");
+    // //doc.text(27, 83, "_______________");
+    // doc.text(152, 74, "XXXXXXXXX");
+    // //comienzo de la tabla
+    // //Esta es la cabecera de la tabla
+    // doc.rect(15, 97, 7, 5, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.setFontSize(8);
+    // doc.text(18, 100, "#");
 
-    doc.rect(22, 97, 41, 5, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(35, 100, "Bien o Servicio");
+    // doc.rect(22, 97, 41, 5, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(35, 100, "Bien o Servicio");
 
-    doc.rect(63, 97, 25, 5, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(64, 100, "Cantidad Solicitada");
+    // doc.rect(63, 97, 25, 5, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(64, 100, "Cantidad Solicitada");
 
-    doc.rect(88, 97, 24, 5, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(89, 100, "Unidad de Medida");
+    // doc.rect(88, 97, 24, 5, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(89, 100, "Unidad de Medida");
 
-    doc.rect(112, 97, 43, 5, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(120, 100, "Espf. Gral./Tecnicas");
+    // doc.rect(112, 97, 43, 5, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(120, 100, "Espf. Gral./Tecnicas");
 
-    doc.rect(155, 97, 45, 5, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(167, 100, "Uso de Bien o Serv.");
-    //aqui empieza la numeracion con los campos (1)
-    doc.setFontSize(8);
-    doc.rect(15, 102, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 109, "1");
+    // doc.rect(155, 97, 45, 5, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(167, 100, "Uso de Bien o Serv.");
+    // //aqui empieza la numeracion con los campos (1)
+    // doc.setFontSize(8);
+    // doc.rect(15, 102, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 109, "1");
 
-    doc.rect(22, 102, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 102, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 102, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 102, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 102, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 102, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 102, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 102, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 102, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (2)
-    doc.rect(15, 114, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 121, "2");
+    // doc.rect(155, 102, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (2)
+    // doc.rect(15, 114, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 121, "2");
 
-    doc.rect(22, 114, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 114, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 114, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 114, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 114, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 114, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 114, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 114, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 114, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (3)
-    doc.rect(15, 126, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 133, "3");
+    // doc.rect(155, 114, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (3)
+    // doc.rect(15, 126, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 133, "3");
 
-    doc.rect(22, 126, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 126, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 126, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 126, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 126, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 126, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 126, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 126, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 126, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (4)
-    doc.rect(15, 138, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 145, "4");
+    // doc.rect(155, 126, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (4)
+    // doc.rect(15, 138, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 145, "4");
 
-    doc.rect(22, 138, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 138, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 138, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 138, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 138, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 138, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 138, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 138, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 138, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (5)
-    doc.rect(15, 150, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 157, "5");
+    // doc.rect(155, 138, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (5)
+    // doc.rect(15, 150, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 157, "5");
 
-    doc.rect(22, 150, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 150, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 150, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 150, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 150, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 150, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 150, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 150, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 150, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (6)
-    doc.rect(15, 162, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 169, "6");
+    // doc.rect(155, 150, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (6)
+    // doc.rect(15, 162, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 169, "6");
 
-    doc.rect(22, 162, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 162, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 162, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 162, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 162, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 162, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 162, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 162, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 162, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (7)
-    doc.rect(15, 174, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 181, "7");
+    // doc.rect(155, 162, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (7)
+    // doc.rect(15, 174, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 181, "7");
 
-    doc.rect(22, 174, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 174, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 174, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 174, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 174, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 174, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 174, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 174, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 174, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (8)
-    doc.rect(15, 186, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 193, "8");
+    // doc.rect(155, 174, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (8)
+    // doc.rect(15, 186, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 193, "8");
 
-    doc.rect(22, 186, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 186, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 186, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 186, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 186, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 186, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 186, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 186, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 186, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //comienza el numero (9)
-    doc.rect(15, 198, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(18, 205, "9");
+    // doc.rect(155, 186, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //comienza el numero (9)
+    // doc.rect(15, 198, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(18, 205, "9");
 
-    doc.rect(22, 198, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(22, 198, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(63, 198, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 198, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 198, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 198, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 198, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 198, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 198, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //cmoienza el numero (10)
-    doc.rect(15, 210, 7, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(17, 216, "10");
+    // doc.rect(155, 198, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //cmoienza el numero (10)
+    // doc.rect(15, 210, 7, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(17, 216, "10");
 
-    doc.rect(22, 210, 41, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.text(23, 214, "Este es un texto ejemplo......");
-    doc.text(23, 217, "Este es otro texto Ejemplo");
-    doc.text(23, 220, "Mas texto ejempl");
+    // doc.rect(22, 210, 41, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.text(23, 214, "Este es un texto ejemplo......");
+    // doc.text(23, 217, "Este es otro texto Ejemplo");
+    // doc.text(23, 220, "Mas texto ejempl");
 
-    doc.rect(63, 210, 25, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(63, 210, 25, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(88, 210, 24, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(88, 210, 24, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(112, 210, 43, 12, "S");
-    doc.setTextColor(0, 0, 0);
+    // doc.rect(112, 210, 43, 12, "S");
+    // doc.setTextColor(0, 0, 0);
 
-    doc.rect(155, 210, 45, 12, "S");
-    doc.setTextColor(0, 0, 0);
-    //fin
+    // doc.rect(155, 210, 45, 12, "S");
+    // doc.setTextColor(0, 0, 0);
+    // //fin
 
-    doc.rect(15, 235, 75, 33, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.addImage(firma, "PNG", 45, 237, 15, 15);
-    doc.setFontSize(7);
-    doc.setFont("Bold", "Calibri");
-    doc.text(21, 256, "SANDRA CHAVEZ DIAZ");
-    doc.text(21, 260, "GERENTE DE INTELIGENCIA DE NEGOCIOS");
-    doc.text(28, 267, "Nombre, puesto y firma del Usuario Solicitante");
+    // doc.rect(15, 235, 75, 33, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.addImage(firma, "PNG", 45, 237, 15, 15);
+    // doc.setFontSize(7);
+    // doc.setFont("Bold", "Calibri");
+    // doc.text(21, 256, "SANDRA CHAVEZ DIAZ");
+    // doc.text(21, 260, "GERENTE DE INTELIGENCIA DE NEGOCIOS");
+    // doc.text(28, 267, "Nombre, puesto y firma del Usuario Solicitante");
 
-    doc.rect(125, 235, 75, 33, "S");
-    doc.setTextColor(0, 0, 0);
-    doc.addImage(firma2, "PNG", 155, 237, 15, 15);
-    doc.text(130, 256, "ALEJANDRO CORONADO NAVA");
-    doc.text(130, 260, "SUBDIRECTOR DE INTELIGENCA DE NEGOCIOS Y GESTION");
-    doc.setFontSize(7);
-    doc.text(145, 264, "Nombre, puesto y firma del Director");
-    doc.text(138, 267, 'que "autoriza" la compra de los bienes o servicios');
+    // doc.rect(125, 235, 75, 33, "S");
+    // doc.setTextColor(0, 0, 0);
+    // doc.addImage(firma2, "PNG", 155, 237, 15, 15);
+    // doc.text(130, 256, "ALEJANDRO CORONADO NAVA");
+    // doc.text(130, 260, "SUBDIRECTOR DE INTELIGENCA DE NEGOCIOS Y GESTION");
+    // doc.setFontSize(7);
+    // doc.text(145, 264, "Nombre, puesto y firma del Director");
+    // doc.text(138, 267, 'que "autoriza" la compra de los bienes o servicios');
 
-    doc.save("Ejemplo" + ".pdf");
+    // doc.save("Ejemplo" + ".pdf");
   }
 }
 

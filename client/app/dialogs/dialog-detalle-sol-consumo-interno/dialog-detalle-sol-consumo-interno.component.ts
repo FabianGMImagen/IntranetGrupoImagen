@@ -22,6 +22,7 @@ import { ToastComponent } from "client/app/shared/toast/toast.component";
 export class DialogDetalleSolConsumoInternoComponent implements OnInit {
   viewspiner:boolean;
   idsolicitud: number;
+  canupdate:boolean;
   DataInitial:Object;
   ListProductos: ProductoConsumoInterno[] = [];
   constructor(
@@ -29,10 +30,11 @@ export class DialogDetalleSolConsumoInternoComponent implements OnInit {
     public toast: ToastComponent,
     private solConsumoService: SolicitudConsumoService,
     public dialogRef: MatDialogRef<DialogDetalleSolConsumoInternoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: number
+    @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data);
     this.viewspiner = true;
     this.idsolicitud = this.data;
     this.getDataInciialforUpdateProducts();

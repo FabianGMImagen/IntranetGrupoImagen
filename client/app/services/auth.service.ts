@@ -23,9 +23,10 @@ export class AuthServices {
   isCompras = false;
   isComprador = false;
   isCheckPresupuesto = false;
+  isIntercambios = false;
+
   isJefeAreaConsumoInt = false;
   isAlmacenistaConsumoInt = false;
-  isIntercambios = false;
   // private expiresAt: number;
 
   currentUser: User = new User();
@@ -44,7 +45,7 @@ export class AuthServices {
   }
 
   login(emailAndPassword) {
-    console.log(emailAndPassword);
+    //console.log(emailAndPassword);
     return this.userService.login(emailAndPassword).map(
       res => {
         localStorage.setItem('token', res.token);
@@ -60,10 +61,13 @@ export class AuthServices {
   logout() {
     localStorage.removeItem('token');
     this.loggedIn = false;
-    this.isIntercambios = false;
-    this.isCheckPresupuesto = false;
+    //====================Solicitud Consumo Interno ==============================
     this.isJefeAreaConsumoInt = false;
     this.isAlmacenistaConsumoInt = false;
+    //====================Solicitud Pedido ==============================
+    this.isIntercambios = false;
+    this.isCheckPresupuesto = false;
+    this.isComprador = false;
     this.isCompras = false;
     this.isAdminApp = false;
     this.isAdmin = false;
@@ -90,10 +94,10 @@ export class AuthServices {
     this.currentUser.IdRoleConsumoInterno = decodedUser.IdRoleConsumoInterno;
     //this.currentUser.IdDireccion = decodedUser.IdDireccion;
     this.currentUser.NombreCompleto = decodedUser.NombreCompleto;
-    
+    //====================Solicitud Consumo Interno ==============================
     decodedUser.IdRoleConsumoInterno === 3 ? this.isAlmacenistaConsumoInt = true : this.isAlmacenistaConsumoInt = false;
     decodedUser.IdRoleConsumoInterno === 2 ? this.isJefeAreaConsumoInt = true : this.isJefeAreaConsumoInt = false;
-
+  //====================Solicitud Pedido ==============================
     decodedUser.IdRole === 9 ? this.isIntercambios = true : this.isIntercambios = false;
     decodedUser.IdRole === 8 ? this.isCheckPresupuesto = true : this.isCheckPresupuesto = false;
     decodedUser.IdRole === 7 ? this.isComprador = true : this.isComprador = false;
