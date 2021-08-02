@@ -15,13 +15,12 @@ import {
   trigger,
 } from "@angular/animations";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal/bs-modal-ref.service";
-import { AuthServices } from "../../services/auth.service";
 import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from "@angular/material/dialog";
+import { ToastComponent } from "../../shared/toast/toast.component";
 
 import { SolicitudesReg } from "../../shared/models/solicitudesReg.model";
 import { Imputacion } from "../../shared/models/imputacion.model";
@@ -34,17 +33,18 @@ import { DataSAP } from "../../shared/models/dataSAP.model";
 import { SolicitudPedidoSAP } from "../../shared/models/solpedSAP.model";
 import { MensajesSolPed } from "../../shared/models/mensajessolped.model";
 import { Direccion } from "../../shared/models/directions.model";
-
+import { Categorias } from "client/app/shared/models/categorias.model";
 import { Detallesol } from "../../shared/models/detallesol.model";
 import { SolicitudesCompraRegistradas } from "../../shared/models/solicitudcompraRegistradas.model";
-import { SolicitudCompraService } from "../../services/solicitudcompra.service";
-
-import { ToastComponent } from "../../shared/toast/toast.component";
+import { Childs } from "../../shared/models/childs.model";
 import { User } from "../../shared/models/user.model";
+
+import { BsModalRef } from "ngx-bootstrap/modal/bs-modal-ref.service";
+import { AuthServices } from "../../services/auth.service";
+import { SolicitudCompraService } from "../../services/solicitudcompra.service";
 
 import { MatPaginatorIntl, PageEvent } from "@angular/material/paginator";
 import { PdfViewerModule } from "ng2-pdf-viewer";
-import { Childs } from "../../shared/models/childs.model";
 
 //import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
@@ -107,6 +107,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
   ListDirforUser: Direccion[];
   ListStatusCompras: StatusSolicitud[];
   SelectedCompras: StatusSolicitud;
+  ListCategorys: Categorias[];
+  SelectCategory: Categorias;
+  // ListCategorysforUser: Categorias[];
+  // SelectCategoryforUser: Categorias;
 
   //ListDataSolPed:DataSAP;
   ListSap: SolicitudPedidoSAP = new SolicitudPedidoSAP();
@@ -157,7 +161,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
   USR: number;
   Direcc: number;
   ListSolRegistr: SolicitudesCompraRegistradas[];
-
   ListDetallesol: Detallesol[];
   ListChilds: Childs[];
   MensajeSAP: string;
@@ -206,11 +209,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     //this.hellosign();
 
     if (this.auth.loggedIn) {
-      console.log("esta logeado");
-      console.log(
-        "Este es el id del Rool que tiene quien se logeo-->" +
-          this.auth.currentUser.IdRole
-      );
+      //console.log("esta logeado");
+      // console.log(
+      //   "Este es el id del Rool que tiene quien se logeo-->" +
+      //     this.auth.currentUser.IdRole
+      // );
       if (this.auth.isJefeArea) {
         //este metodo solo trae el listado de las solicitudes para el rol Director de Area
         console.log(
@@ -247,12 +250,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //metodo que nos regresa filtado las autorizaciones o tipos de status por Nivel
         this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
       } else if (this.auth.isCompras) {
-        console.log(
-          "Este es el Id del Usuario logeado------->    " +
-            this.auth.currentUser.IdUsuario +
-            "--" +
-            this.auth.isCompras
-        );
+        console.log("Este es el Id del Usuario logeado------->    " +this.auth.currentUser.IdUsuario +"--" +this.auth.isCompras);
+        this.getAllCategorias();
         this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
         this.isEditing = true;
         this.isViewListSolicitudes = true;
@@ -260,16 +259,20 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.getStatusCompras(this.auth.currentUser.IdRole, 1);
         this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
       } else if (this.auth.isComprador) {
+        //this.getAllCategoriasForUserComprador(this.auth.currentUser.IdUsuario);
+        this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
+        this.getAllCategorias();
         this.is_persona_coprador = false;
         this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
         this.isEditing = true;
         this.isViewListSolicitudes = true;
-        this.getStatusCompras(this.auth.currentUser.IdRole, 0);
+        this.is_persona_coprador = true;
+        this.getStatusCompras(this.auth.currentUser.IdRole, 1);
       } else if (this.auth.isCheckPresupuesto) {
         this.isViewListSolicitudes = true;
         this.isEditing = true;
         this.getStatusCompras(this.auth.currentUser.IdRole, 0);
-      }else if(this.auth.isIntercambios){
+      } else if (this.auth.isIntercambios) {
         this.getStatusCompras(this.auth.currentUser.IdRole, 0);
         this.isViewListSolicitudes = true;
         this.isEditing = true;
@@ -290,16 +293,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.datSource.sort = this.sort;
   }
 
-  // hellosign(){
-  //   this.solicitudComp.getHellosgin().subscribe(data =>{
-  //     console.log("dentro del metodo para ver que hace el Hellosing");
-  //     console.log(data);
-  //   }, err =>{
-  //     console.log("error al recuperar la info de Hellosing");
-  //     console.log(err);
-  //   })
-  // }
-
   //mat dialog para mostrar firma
   openDialog() {
     this.isfirma = true;
@@ -317,19 +310,17 @@ export class SolicitudesRegistradasComponent implements OnInit {
     console.log("Este es el id de el Usuario------>   " + IdUser);
     this.solicitudComp.getAllDirectionsForUser(IdUser).subscribe(
       (data) => {
-        console.log(data);
+        //console.log(data);
         this.ListDirforUser = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log(
-          "error al recuperar las diferentes Direcciones del Usuario    " + error
+          "error al recuperar las diferentes Direcciones del Usuario    " +
+            error
         );
       }
     );
@@ -339,15 +330,12 @@ export class SolicitudesRegistradasComponent implements OnInit {
     console.log("metodo para recuperar los status de COMPRAS");
     this.solicitudComp.getStatusforCompras(IdRole, isCompras).subscribe(
       (data) => {
-        console.log(data);
+        //console.log(data);
         this.ListStatusCompras = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log(error);
@@ -407,15 +395,50 @@ export class SolicitudesRegistradasComponent implements OnInit {
 
   SelectionCompras() {
     if (this.auth.isCompras || this.auth.isComprador) {
-      console.log(this.SelectedCompras.IdStatusSolicitud);
-      console.log(this.Direccion.IdDireccion);
-      this.getAllSolicitudesRegistradasporUsrCompras(this.Direccion,this.SelectedCompras);
+      //console.log(this.SelectedCompras.IdStatusSolicitud);
+      //console.log(this.Direccion.IdDireccion);
+      this.getAllSolicitudesRegistradasporUsrCompras(
+        this.Direccion,
+        this.SelectedCompras
+      );
     } else if (this.auth.isCheckPresupuesto || this.auth.isIntercambios) {
       console.log("se selecciono un estatus para el subdirecto de finanzas");
       //console.log(this.SelectedCompras);
       this.getSolPedForStatus(this.SelectedCompras.IdStatusSolicitud);
     }
   }
+
+  async getAllCategorias(){
+    try {
+      this.ListCategorys = await this.solicitudComp.getAllCategorias();
+      if(!this.ListCategorys){
+        this.toast.setMessage("Error al recuperar las categorias", "warning");
+      }
+    } catch (error) {
+      if (error.status == 403 || error.status == 404) {
+        this.auth.logout();
+      }else{
+        this.toast.setMessage(error.message,"danger");
+      }
+      
+    }
+  }
+
+  // async getAllCategoriasForUserComprador(IdUser:number){
+  //   try {
+  //     this.ListCategorysforUser = await this.solicitudComp.getAllCategoriasforUser(IdUser);
+  //     if(!this.ListCategorysforUser){
+  //       this.toast.setMessage("Error al recuperar las categorias", "warning");
+  //     }
+  //   } catch (error) {
+  //     if (error.status == 403 || error.status == 404) {
+  //       this.auth.logout();
+  //     }else{
+  //       this.toast.setMessage(error.message,"danger");
+  //     }
+      
+  //   }
+  // }
 
   getAllSolicitudesRegistradasAutorizadorDir(Dir: Direccion) {
     console.log(
@@ -433,14 +456,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //console.log(this.ListSolRegistr);
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("error al recuperar las solicitudes" + error)
+        console.log("error al recuperar las solicitudes" + error);
       },
       () => {
         //  this.ListSolRegistr.forEach(element =>{
@@ -480,11 +500,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         // });
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log("error al recuperar las Solicitudes para Finanzas" + error);
@@ -512,17 +529,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.ListSolRegistr = data;
         //console.log(this.ListSolRegistr);
       },
-      (error) =>
-        {
-          if(error.status == 403 || error.status == 404){
-            this.toast.setMessage(
-              error.message,
-              "danger"
-            );
-            this.auth.logout();
-          }
-          console.log("error al recuperar las Solicitudes para Finanzas" + error)
-        },
+      (error) => {
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
+          this.auth.logout();
+        }
+        console.log("error al recuperar las Solicitudes para Finanzas" + error);
+      },
       () => {
         // this.ListSolRegistr.forEach(element =>{
         //   if(element.IdTipoSolicitud == 4 || element.IdTipoSolicitud == 7){
@@ -556,12 +569,16 @@ export class SolicitudesRegistradasComponent implements OnInit {
     );
   }
 
-  getAllSolicitudesRegistradasporUsrCompras(Dir: Direccion,status: StatusSolicitud) {
+  getAllSolicitudesRegistradasporUsrCompras(
+    Dir: Direccion,
+    status: StatusSolicitud
+  ) {
     //console.log("recuperando el listado de las solicitudes para Compras");
     this.USR = this.auth.currentUser.IdUsuario;
     this.Direcc = Dir.IdDireccion;
-    console.log(status);
-    this.solicitudComp.getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
+    //console.log(status);
+    this.solicitudComp
+      .getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
       .subscribe(
         (data) => {
           this.ListSolRegistr = data;
@@ -593,11 +610,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
           }
         },
         (error) => {
-          if(error.status == 403 || error.status == 404){
-            this.toast.setMessage(
-              error.message,
-              "danger"
-            );
+          if (error.status == 403 || error.status == 404) {
+            this.toast.setMessage(error.message, "danger");
             this.auth.logout();
           }
           console.log(
@@ -626,11 +640,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.UpdateVista();
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log(error);
@@ -648,13 +659,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         window.open(data.toString(), "_blank");
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
+        this.toast.setMessage(error, "danger");
         console.log(error);
       }
     );
@@ -686,14 +695,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         // });
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("error al traer el detalle de la solicitud" + error)
+        console.log("error al traer el detalle de la solicitud" + error);
       },
       () => {
         this.dataSource = new MatTableDataSource(this.ListDetallesol);
@@ -732,11 +738,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         // }
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log("error al recuperar la informacion de los Hijos");
@@ -803,14 +806,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.solicitudComp.getAllStatusSolicitud(idRole).subscribe(
       (data) => (this.ListStatus = data),
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("Error al traer los status" + error)
+        console.log("Error al traer los status" + error);
       }
     );
   }
@@ -850,14 +850,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.ListImputacion = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log(error)
+        console.log(error);
       }
     );
   }
@@ -872,13 +869,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.solicitudComp.getAllPosiciones().subscribe(
       (data) => (this.ListPosicion = data),
       (error) => {
-        if(error.status == 403 || error.status == 404){
-        this.toast.setMessage(
-          error.message,
-          "danger"
-        );
-        this.auth.logout();
-      }}
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
+          this.auth.logout();
+        }
+      }
     );
   }
 
@@ -1023,6 +1018,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               console.log(res);
                               this.UserAuth = res;
                               console.log(this.UserAuth[0].Email);
+
                               //Parte donde se envia El correo para los Diferentes autorizadores
                               //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
                               console.log(
@@ -1123,6 +1119,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             console.log(res);
                             this.UserAuth = res;
                             console.log(this.UserAuth[0].Email);
+
                             //Parte donde se envia El correo para los Diferentes autorizadores
                             //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
                             console.log(
@@ -1575,7 +1572,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
           "warning"
         );
       }
-    } else if (this.auth.isCompras) {
+    } else if (this.auth.isCompras || this.auth.isComprador) {
       //solo valida el estatus que se seleciono y si correcponde a alguno de los 2 que tiene permitido pasa a actualizar
       //dicha solicitud a estatus autorizado por Compras despues refresca las solicitudes y los campos.
       if (
@@ -1649,18 +1646,41 @@ export class SolicitudesRegistradasComponent implements OnInit {
     }
   }
 
-  async verPDF(ruta: any) {
-    console.log(ruta.RutaCotizacion);
-    //window.open(ruta, null);
-    //this.pdfSrc = "https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf";
-    this.pdfSrc = "http://solicitud.adgimm.com.mx:3000/public/ 111.txt";
-    // // location.href = this.pdfSrc;
-    window.open(this.pdfSrc, null);
-
-    // var nameCotizacion = this.pdfSrc;
-    // this.solicitudComp.downloadCotizacion(nameCotizacion);
-    // .subscribe(data =>{
-    //   console.log(data);
-    // });
+  async changedCategorySol(sol:SolicitudesCompraRegistradas){
+    console.log(sol.ID);
+    console.log(this.SelectCategory.IdCategoria);
+    try {
+      let message = await this.solicitudComp.changedcategoryforsolicitud(sol.ID, this.SelectCategory.IdCategoria);
+      if(message != undefined){
+        this.toast.setMessage(message,"success");
+        this.getAllSolicitudesRegistradasporUsrCompras(
+          this.Direccion,
+          this.SelectedCompras
+        );
+        this.getAllCategorias();
+      }
+    } catch (error) {
+      if (error.status == 403 || error.status == 404) {
+        this.toast.setMessage(error.message,"danger");
+        this.auth.logout();
+      }else{
+        this.toast.setMessage(error.message,"danger");
+      }
+    }
   }
+
+  // async verPDF(ruta: any) {
+  //   console.log(ruta.RutaCotizacion);
+  //   //window.open(ruta, null);
+  //   //this.pdfSrc = "https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf";
+  //   this.pdfSrc = "http://solicitud.adgimm.com.mx:3000/public/ 111.txt";
+  //   // // location.href = this.pdfSrc;
+  //   window.open(this.pdfSrc, null);
+
+  //   // var nameCotizacion = this.pdfSrc;
+  //   // this.solicitudComp.downloadCotizacion(nameCotizacion);
+  //   // .subscribe(data =>{
+  //   //   console.log(data);
+  //   // });
+  // }
 }

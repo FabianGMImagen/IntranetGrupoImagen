@@ -27,7 +27,7 @@ import { User } from "../../shared/models/user.model";
 import { OrdenInterna } from "../../shared/models/ordeninterna.model";
 import { UnidadMedida } from "../../shared/models/umedida.model";
 import { Moneda } from "../../shared/models/moneda.model";
-
+import { Categorias } from "client/app/shared/models/categorias.model";
 //importamos el modelo con el que se empalmara el json de la consulta de el webservice
 
 import { MensajesSolPed } from "../../shared/models/mensajessolped.model";
@@ -60,6 +60,7 @@ import {
 } from "ngx-soap";
 
 import { NgxXml2jsonService } from "ngx-xml2json";
+
 
 //import { ConsoleReporter } from 'jasmine';
 
@@ -207,7 +208,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   SelectArea: Area | undefined;
   ListUser: User[];
   ListMoneda: Moneda[];
-
+  ListCategorias: Categorias[];
   //Campos que se bloaquearan dependiendo de la seleccion de Imputacion
   AplicaCenCost: boolean = false;
   AplicaOrdInt: boolean = false;
@@ -349,7 +350,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     //this.getAllAlmacen();
     //this.getAllActivo();
     this.getAllNecesidad();
-
+    this.getAllCategorias();
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required],
     });
@@ -620,6 +621,25 @@ export class ListadoSolicitudesComponent implements OnInit {
     );
   }
 
+  async getAllCategorias(){
+    console.log("buscamos las categorias");
+    try {
+      this.ListCategorias = await this.solicitudComp.getAllCategorias();
+      if(!this.ListCategorias){
+        this.toast.setMessage("Error al recuperar las categorias", "warning");
+      }
+    } catch (error) {
+      if (error.status == 403 || error.status == 404) {
+        this.auth.logout();
+      }else{
+        this.toast.setMessage(error.message,"danger");
+      }
+      
+    }
+  }
+
+
+
   selectedPlaza() {
     // console.log("dentro de el metodo que selecciona");
     // console.log(this.DataInsert.Plaza.IdPlaza);
@@ -627,6 +647,9 @@ export class ListadoSolicitudesComponent implements OnInit {
     this.getAllCentroCosto(this.DataInsert.Empresa, this.DataInsert.Plaza);
     this.getAllAlmacen(this.DataInsert.Plaza);
   }
+
+
+ 
 
   getAllCentroCosto(idEmpresa: Empresa, idPlaza: SucursalPlaza) {
     // console.log(
@@ -1071,103 +1094,6 @@ export class ListadoSolicitudesComponent implements OnInit {
     );
   }
 
-  // selectSolPedporItem(){
-  //   console.log("dentro del metodo para seleccionar un tipo de sol por item");
-  //   console.log(this.DataInsert.ImputacionItem.Acronimo);
-  //   console.log(this.DataInsert.ImputacionItem.Nombre);
-  //   // if(this.DataInsert.Productos.length != 0){
-  //   //   this.toast.setMessage('No se puede Cambiar el Tipo de Solicitud cuando ya se crearon Materiales/Servicios para la Solicitud', 'danger');
-  //   // }else{
-  //     if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 1){
-  //       //TIPO DE IMPUTACUION A -----se bloquearan Centro de Costos, Orden interna, Cta. Mayor
-  //       this.AplicaCenCost = true;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = true;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = false;
-  //       //vaciando los Selects de Almacen y Materiales.
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       //cuando se seleccione este tipo de Solicitud se mandara a llamar metodo de unidad de medida para el llenado sin idmaterial
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 2){
-  //       //TIPO DE IMPUTACION F ----ninguno se bloquea y todos son obligatorios Centro de Costos, Orden interna, Cta. Mayor
-  //       this.AplicaCenCost = true;
-  //       this.AplicaOrdInt = false;
-  //       this.AplicaCtaMayor = false;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = true;
-  //       //vaciando los Selects de Almacen y Materiales.
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       //cuando se seleccione este tipo de Solicitud se mandara a llamar metodo de unidad de medida para el llenado sin idmaterial
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 3){
-  //       //TIPO DE IMPUTCION K ------- solo se bloquea Orden Interna, y quedan como obligatorioCentro de Costos y Cta de mayor
-  //       this.AplicaCenCost = false;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = false;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = true;
-  //       //vaciando los Selects de Almacen y Materiales.
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       //cuando se seleccione este tipo de Solicitud se mandara a llamar metodo de unidad de medida para el llenado sin idmaterial
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 4){
-  //       //TIPO DE SOLICITUD KF Servicios
-  //       this.AplicaCenCost = false;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = false;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       this.AplicaNumActivo = true;
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 5){
-  //       //TIPO DE IMPUTACION NORMAL ------- se bloquea centro de costos , orden interna, cta de mayor, almacen
-  //       this.AplicaCenCost = true;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = true;
-  //       this.AplicaMat = false;
-  //       this.AplicaAlma = false;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = true;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //     }
-  //   //}
-
-  // }
 
   getAllPosiciones(IdImputacion: Imputacion) {
     this.solicitudComp.getAllPosicionesByImputacion(IdImputacion).subscribe(
@@ -2529,11 +2455,12 @@ export class ListadoSolicitudesComponent implements OnInit {
     console.log("Centro de costo-->" + this.DataInsert.CentroCostos);
     console.log("Orden Interna-->" + this.DataInsert.OrdenInterna);
     console.log("Cuenta de mayor-->" + this.DataInsert.Cuentamayor);
+    console.log("Categorias --->" + this.DataInsert.Categoria)
     //console.log("Producto-->" + this.DataInsert.Productos);
     this.buscaIdAutorizador(this.DataInsert.Area);
     this.uploader.progress = 0;
-    console.log(this.uploader.queue[0]._file.name);
-    console.log(this.uploader.queue.length);
+    //console.log(this.uploader.queue[0]._file.name);
+    //console.log(this.uploader.queue.length);
     
     if (
       this.Date.value == "" ||
@@ -5158,7 +5085,10 @@ export class ListadoSolicitudesComponent implements OnInit {
               console.log("este es un tipo de solicitud --IMP G--");
               var Role;
               var status;
-              this.solicitudComp.checkdirauthexeption(this.DataInsert.Area.IdDireccion).subscribe((data) => {
+              this.solicitudComp
+                .checkdirauthexeption(this.DataInsert.Area.IdDireccion)
+                .subscribe(
+                  (data) => {
                     if (data[0] != undefined || data[0] != null) {
                       console.log(
                         "validamos que tipo de esxcepcion se esta manejando"
@@ -5169,7 +5099,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                         status = data[0].IdRole;
                         this.DataInsert.TipoSolicitud = 6;
                         this.DataInsert.EstatusSol = status;
-                        this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
+                        this.solicitudComp
+                          .InsertSolicitudPedido1(this.DataInsert)
+                          .subscribe(
                             (res) => {
                               // console.log("??????????????????????????????????????");
                               // console.log(res);
@@ -5302,7 +5234,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                         status = data[0].IdRole - 2;
                         this.DataInsert.TipoSolicitud = 6;
                         this.DataInsert.EstatusSol = status;
-                        this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
+                        this.solicitudComp
+                          .InsertSolicitudPedido1(this.DataInsert)
+                          .subscribe(
                             (res) => {
                               // console.log("??????????????????????????????????????");
                               // console.log(res);
@@ -5429,7 +5363,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                           );
                       }
                     } else {
-                      console.log("seguimos con el flujo normal de la operacion");
+                      console.log(
+                        "seguimos con el flujo normal de la operacion"
+                      );
                       Role = 2;
                       status = 1;
                       this.DataInsert.TipoSolicitud = 6;
@@ -5562,7 +5498,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                     }
                   },
                   (error) => {
-                    if(error.status == 403 || error.status == 404){this.toast.setMessage(error.message,"danger");
+                    if(error.status == 403 || error.status == 404){
+                      this.toast.setMessage(
+                        error.message,
+                        "danger"
+                      );
                       this.auth.logout();
                     }
                     console.log(

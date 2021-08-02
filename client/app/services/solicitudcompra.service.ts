@@ -43,6 +43,8 @@ import { Options } from 'selenium-webdriver/opera';
 //importacion de ngx-soap para hacer peticiones a SERVICIOS SOAP para SAP
 import { NgxSoapService, Client, ISoapMethodResponse, WSSecurity, security } from 'ngx-soap';
 import { NgxXml2jsonService } from 'ngx-xml2json';
+import { Categorias } from '../shared/models/categorias.model';
+import { CategoriasForUser } from '../shared/models/listcategoriesforuser.model';
 
 
 
@@ -675,6 +677,38 @@ export class SolicitudCompraService {
 
   }
 
+  getAllCategoriasforUser(IdUser:number){
+    return this.http.get<Categorias[]>(`/api/categoryforcomprador/${IdUser}`).toPromise();
+  }
+
+  getAllCategorias(){
+    return this.http.get<Categorias[]>('/api/categorias').toPromise();
+  }
+
+  getAllUserCompradores(){
+    return this.http.get<User[]>('/api/userforcat').toPromise();
+  }
+
+  getAllCategoriasnoUsadas(){
+    return this.http.get<Categorias[]>('/api/catnousada').toPromise();
+  }
+
+  getListaCategoriasforUser(IdUser:number){
+    return this.http.get<CategoriasForUser[]>(`/api/listcat/${IdUser}`).toPromise();
+  }
+
+  changedcategoryforsolicitud(IdSol:number, IdCateg:number){
+    return this.http.get(`/api/changcat/${IdSol}/${IdCateg}`).toPromise();
+  }
+
+  InsertNewCategoryforCoprador(IdUser, IdCategori){
+    return this.http.get(`/api/insertcatforuser/${IdUser}/${IdCategori}`).toPromise();
+  }
+
+  DeleteCategoriaforUser(IdUser:number, IdCategoria:number){
+    return this.http.get(`/api/deletecat/${IdUser}/${IdCategoria}`).toPromise();
+  }
+
   getAllImputaciones(): Observable<Imputacion[]> {
     return this.http.get<Imputacion[]>('/api/imputaciones');
   }
@@ -686,6 +720,7 @@ export class SolicitudCompraService {
   getAllPosiciones(): Observable<Posiciones[]> {
     return this.http.get<Posiciones[]>('/api/posicion');
   }
+
   getAllPosicionesByImputacion(Id: Imputacion): Observable<Posiciones[]> {
     return this.http.get<Posiciones[]>(`/api/posicionbyimputacion/${Id.IdTipoSolicitud}`);
   }
@@ -805,6 +840,7 @@ export class SolicitudCompraService {
     });
     return ListMateriales;
   }
+
   getAllmaterialesConsumoInt(Centro: CentrosConsumoInt, Almacen: Almacen): Array<Materiales> {
     //return this.http.get<Materiales[]>('/api/materiales');
     //console.log("---------------------dentro de el Servico para Materiales --------------------" + IdCentro + "  Almacen-->" + IdAlmacen);
@@ -920,7 +956,6 @@ export class SolicitudCompraService {
     });
     return ListMateriales;
   }
-
 
   getAllAlmacen(idplaza: SucursalPlaza): Array<Almacen> {
     // return this.http.get<Almacen[]>('/api/almacen');
@@ -1383,10 +1418,6 @@ export class SolicitudCompraService {
     });
     return ListOrdenInterna;
   }
-
-
-
-
 
   getAllNecesidad(): Observable<Necesidad[]> {
     return this.http.get<Necesidad[]>('/api/necesidad');

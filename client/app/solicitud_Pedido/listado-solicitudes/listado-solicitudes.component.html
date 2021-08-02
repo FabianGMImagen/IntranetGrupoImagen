@@ -295,7 +295,24 @@
               </mat-form-field>
             </div>
           </div>
-
+          <div class="col">
+            <div class="icons">
+              <i class="fa fa-bullseye" aria-hidden="true"></i>
+              <mat-form-field >
+                <mat-label>CATEGORIAS</mat-label>
+                <mat-select
+                  [(ngModel)]="this.DataInsert.Categoria"
+                  name="categoria"
+                  [disabled]="BloqMoreItem">
+                <mat-option
+                  *ngFor="let categoria of ListCategorias"
+                  [value]="categoria"
+                  >{{ categoria.Nombre }}</mat-option>
+                </mat-select>
+                <mat-hint>Selecciona una categoria para el area de compras.</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
           <!-- <div class="col" *ngIf="solpedforitem">
                                 <div class="icons">
                                  <i class="fas fa-clipboard"></i>
@@ -890,6 +907,7 @@
     </div>
 
     <br />
+    <br />
     <div class="row">
       <div class="col">
         <!--NO BORRAR ES PARA ADJUNTAR LA COTIZACION-->
@@ -969,7 +987,6 @@
     </div>
 
     <br />
-    <div></div>
 
     <br />
 

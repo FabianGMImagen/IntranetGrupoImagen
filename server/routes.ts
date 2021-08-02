@@ -119,10 +119,26 @@ export default function setRoutes(app) {
   router.route('/necesidad').get(auth, solicitudCompraCTR.getAllNecesidad);
   //trae el usurio autorizador de el area a la que le espesifico
   router.route('/usrauth/:id').get(auth, solicitudCompraCTR.UsuarioAuth);
+  //recuperamos las categorias de la base de datos.
+  router.route('/categorias').get(auth, solicitudCompraCTR.AllCategorias);
 
+  //recuperamos categorias espesificas para cada Comprador
+  //router.route('/categoryforcomprador/:IdUser').get(auth, solicitudCompraCTR.AllCategoriasforUserComprador);
+  
   //trae todos los activos fijos
   //router.route('/activo').get(solicitudCompraCTR.getAllActivo);
-  
+  //Recuperamos la lista de las categorias no usadas por los compradores para mostrarlas y que se puedan asignar a un compradir distinto
+  router.route('/catnousada').get(auth, solicitudCompraCTR.AllCategoriasnoUsadasporCompradores);
+  //recuperamos todos los usuarios Compradores para mostrarlos en la vista de PERMISOS CAT.
+  router.route('/userforcat').get(auth, solicitudCompraCTR.AllUsersCompradores)
+  //Lista de Categorias asgnadas por Usuario para administrarlas
+  router.route('/listcat/:IdUser').get(auth, solicitudCompraCTR.ListCategoriasforUsuario);
+  //Asignamos una nuveva categoria para adminsitrar por el usuario seleccionado
+  router.route('/insertcatforuser/:IdUser/:IdCategoria').get(auth, solicitudCompraCTR.InsertNewCategoryforComprador)
+  //eliminamos una categoria por usuario, para que pueda quedar libre para su asignacion
+  router.route('/deletecat/:IdUser/:IdCategoria').get(auth, solicitudCompraCTR.DeleteCategoriaForUser);
+  //cambio de categoria , esto por si se llega a quivocar el solicitante lo puedna cambiar la gente de ENIXE
+  router.route('/changcat/:IdSol/:IdCat').get(auth, solicitudCompraCTR.ChangedCategoriForSolicitud)
   //hacemos el insert de una Nueva Solicitud de Tipo A
   router.route('/newsolicitud1').post(auth, solicitudCompraCTR.insertSolicitudNewT1);
   //hacemos el insert de una Nueva Solicitud de Tipo F
@@ -211,7 +227,7 @@ export default function setRoutes(app) {
   router.route('/deleteauth/:IdAuth').get(auth, solicitudCTR.DeleteAuthforRoleandDir);
 
   //usandowebservices
-  router.route('/webSer').get();
+  //router.route('/webSer').get();
  
   //recuperamos el usuario que autoriza de los diferentes rooles por Direccion.
   router.route('/getUserValida/:IdDireccion/:IdRole').get(auth, solicitudCompraCTR.getallDataForUserAuth);
@@ -230,7 +246,7 @@ export default function setRoutes(app) {
 
 
   //ruta para procesar el archivo subido en el front 
-  router.route('/upload/singlefile').post(auth, UploadCTR.upLoadSingleFile);
+  router.route('/upload/singlefile').post(UploadCTR.upLoadSingleFile);
   //crear archivo de excel con informacion de la solicitud para tablas comparativas
   router.route('/getfilecompras/:ID').get(auth, UploadCTR.createFileComrpas);
   
@@ -379,7 +395,7 @@ export default function setRoutes(app) {
                   console.log("pasamos a subir el archivo.....");
                   //'../ImagenFinanzasFabi/'+FileName, '/'+FileName
                   //var upfile = [{local:'../ImagenFinanzasFabi/' + FileName, remote:'/'+FileName}];
-                  ftp.upload('../IntranetProduccion/'+FileName, FileName, function(err){
+                  ftp.upload('../ImagenFinanzasFabi/'+FileName, FileName, function(err){
 
                     if(err) console.log(err);
                     else console.log("Se dejo el Archivo en el 10.29.148.24" + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);

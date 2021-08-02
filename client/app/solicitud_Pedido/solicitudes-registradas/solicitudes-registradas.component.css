@@ -66,6 +66,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 a{
   font-weight: bold;
+  text-decoration: none;;
 }
 
 
@@ -92,14 +93,7 @@ a{
   width: 900px !important;
 }
 
-
-/* .expand{
-  width: 175% !important;
-} */
-.modif{
-  width: 110% !important;
-}
-
 .selestat{
   margin-left: 50px !important
 }
+

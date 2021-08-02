@@ -30,8 +30,8 @@ app.use(morgan('dev'));
 
 app.use (express.json ()); 
 app.use (express.urlencoded ()); 
-app.use(express.static('data'));
-app.use('/public', express.static('data'));
+app.use(express.static('datos'));
+app.use('/public', express.static('datos'));
 
 app.use (function (req, res, next) { 
   res.header ("Access-Control-Allow-Origin", "*"); 

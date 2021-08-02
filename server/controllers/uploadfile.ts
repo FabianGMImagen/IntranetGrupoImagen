@@ -10,7 +10,7 @@ import { read } from 'fs';
 
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
-const DIR = '../ImagenFinanzasFabi/data';
+const DIR = '../ImagenFinanzasPruebaslocal/datos';
 var id = 0;
 let storage = multer.diskStorage({
 
@@ -56,7 +56,7 @@ export default class UploadFilesController {
                 }
                 // Everything went fine.
                 //console.log("GOOOOD------- guardamos la ruta del archivo subido a la DB");
-                var RutaCotizacion = encodeURI('http://solicitud.adgimm.com.mx:3000/public/'+req.headers.idsol+' '+req.file.originalname);
+                var RutaCotizacion = encodeURI('http://localhost:3000/public/'+req.headers.idsol+' '+req.file.originalname);
                 console.log(req.file);
                 console.log("Esta es la ruta del archivo---" + RutaCotizacion);
 
@@ -114,7 +114,7 @@ export default class UploadFilesController {
                 if(Data != undefined || Data != ''){
                   var FileName = 'datos '+dia+'-'+MES+'-'+año+','+hora+':'+minutos+'.csv';
                   console.log( stringify(Data));
-                  var path = path.join(__dirname ,'../../../data/DatosCompras/'+FileName);
+                  var path = path.join(__dirname ,'../../../datos/DatosCompras/'+FileName);
                   stringify(Data, function(err, output){
                     fs.writeFile(path, output, 'utf-8', function(err){
                       if(err){

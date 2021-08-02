@@ -234,14 +234,13 @@ export default class SolicitudConsumoInterno {
   };
 
   SendNewEmailSolConsumoInterno = (req, res) => {
-    console.log(
-      "entrando al metodo para enviar el mail a la persona que autoriza la SolConsumo"
-    );
+    console.log("entrando al metodo para enviar el mail a la persona que autoriza la SolConsumo");
     // console.log(req.body.IdSolicitud);
     // console.log(req.body.StatusSol);
     // console.log(req.body.NameSolicitante);
     // console.log(req.body.Nameauth);
-    // console.log(req.body.EmailAuth)<
+    // console.log(req.body.EmailAuth)
+
     var accessToken: any;
     var statusAutoriza = 2;
     var statusRechaza = 3;
@@ -261,8 +260,7 @@ export default class SolicitudConsumoInterno {
       }
     );
     
-   oauth2Client.getAccessToken()
-      .then((token) => {
+   oauth2Client.getAccessToken().then((token) => {
         //console.log(token.token);
         accessToken = token.token;
         //cuanta de correo de donde se enviaran los diferentes correos
@@ -347,8 +345,7 @@ export default class SolicitudConsumoInterno {
               .end();
           }
         });
-      })
-      .catch((err) => {
+      }).catch((err) => {
         console.log(err);
         res
           .status(401)
@@ -1457,6 +1454,8 @@ export default class SolicitudConsumoInterno {
         resp.end();
       });
     }
+
+    
   };
 
   messageresponseCambioEstatusdesdeEmail(message: string, typealert: string) {
@@ -1513,9 +1512,7 @@ export default class SolicitudConsumoInterno {
         }
       );
 
-      oauth2Client
-        .getAccessToken()
-        .then((token) => {
+      oauth2Client.getAccessToken().then((token) => {
           //console.log("---------------------")
           //console.log(token);
           //console.log("***************")
@@ -1628,4 +1625,7 @@ export default class SolicitudConsumoInterno {
       resp.status(401).json({ message: error });
     });
   }
+
+
+
 }

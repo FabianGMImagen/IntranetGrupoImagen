@@ -7,6 +7,7 @@ export class SolicitudesCompraRegistradas{
     IdSol:number;
     IdStatusSolicitud:number;
     Statname:string;
+    CATEGORIA:string;
     USUARIO:string;
     DIRECCION:string;
     IdEmpresa:number;

@@ -41,6 +41,8 @@ export default class UserCtrl extends BaseCtrl {
           return pool.request().query(Query)
         }).then(result =>{
                 console.log( "----------FFFF----------"+ result.rowsAffected );
+                console.log(req.body.password);
+                console.log(result.recordset);
                 if(result.rowsAffected == 0){
                   return res.sendStatus(403);
                   
@@ -48,6 +50,7 @@ export default class UserCtrl extends BaseCtrl {
                   //console.log("hola como estaaaa");
 
                   if(result.recordset[0].Password != req.body.password){
+                    
                     return res.sendStatus(403);
                   }
 
