@@ -5,8 +5,8 @@ import { connect } from "net";
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
-const SERVER = 'http://localhost:3000';
-const Intranet = 'http://localhost:4200';
+const SERVER = 'http://10.29.148.40:3000';
+const Intranet = 'http://10.29.148.40:4200';
 const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
 const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
 const REDIRECTURL = 'https://developers.google.com/oauthplayground';
@@ -2747,12 +2747,12 @@ export default class SolicitudCompraCTR {
     }
   
     // if(req.params.IdArea == 1){
-    //   Direccion = "Operaciones";  
-    // }else if(req.params.IdArea == 2){
-    //   Direccion = "Finanzas"; 
-    // }else if(req.params.IdArea == 3){
-    //   Direccion = "Presupuestal";
-    // }
+      //   Direccion = "Operaciones";  
+      // }else if(req.params.IdArea == 2){
+        //   Direccion = "Finanzas"; 
+        // }else if(req.params.IdArea == 3){
+          //   Direccion = "Presupuestal";
+        // }
   
     const oauth2Client = new google.auth.OAuth2(
       CLIENTID, //client ID
@@ -2790,7 +2790,7 @@ export default class SolicitudCompraCTR {
       //Opciones de correo para enviar a gerente de area
       var mailOptionAdmin = {
         to: req.params.EmailAutorizador,
-        //cc: 'mmp@gimm.com.mx',
+        cc: 'marco.garcia@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO PENDIENTE',
         html:
           "<head>" +
@@ -2827,7 +2827,7 @@ export default class SolicitudCompraCTR {
       //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
       var mailOptionPresupuestoRechaza = {
         to: EmailSolicitante,
-        //cc: 'mmp@gimm.com.mx',
+        cc: 'marco.garcia@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
@@ -4230,6 +4230,7 @@ export default class SolicitudCompraCTR {
 
     }
   }
+
 
   getIdStatusSolicitud = (req, res) => {
     console.log(req)
