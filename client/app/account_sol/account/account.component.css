@@ -48,31 +48,19 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 .newsc{
-  color: #57BFFF;
+  background-color: #57BFFF !important;
 }
-.gerenaut{
-  color: #11EB59;
+.aut{
+  background-color: #11EB59 !important;
 }
-.gererech{
-  color: #FF0000;
-}
-.diraut{
-  color: #11EB59;
-}
-.dirrech{
-  color: #FF0000;
-}
-.preaut{
-  color: #11EB59;
-}
-.prerech{
-  color: #FF0000 !important;
+.rech{
+  background-color: #FF0000 !important;
 }
 .carsap{
-  color : #FFA74C;
+  background-color : #FFA74C !important;
 }
 .fin{
-  color: #1659FF;
+  background-color: #1659FF !important;
 }
 
 

@@ -1461,13 +1461,13 @@ export class ListadoSolicitudesComponent implements OnInit {
       this.Producto.IdPrduct = Id + 1;
     }
 
+
+
+
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 1) {
       // console.log(this.Producto.UsoProd);
       // console.log(this.Producto.Espf);
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+
       if (
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
@@ -1475,10 +1475,12 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.GrupCompra != undefined &&
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo != undefined &&
-        this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.NumNeces != undefined && 
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1533,10 +1535,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 2) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+
       if (precio >= 30000) {
         console.log("dentro del if para los 30000 debe mostrar ");
         const dialogRef = this.dialog.open(DialogInfoComponent);
@@ -1557,9 +1556,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1616,10 +1617,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 3) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
 
@@ -1637,9 +1635,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1694,10 +1694,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+
       if (
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
@@ -1708,9 +1705,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1765,10 +1764,6 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 5) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
 
@@ -1786,9 +1781,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1859,10 +1856,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       //  console.log(this.Producto.NumActivo);
       //  console.log(this.Producto.NumNeces);
       //  console.log(this.Producto.UsoProd );
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
 
@@ -1881,9 +1875,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.IdOrdenEstadistica != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1948,10 +1944,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       // console.log(this.Producto.IdOrdenEstadistica);
       // console.log(this.Producto.NumActivo);
       // console.log(this.Producto.NumNeces);
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+      // this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+      // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
 
       if (
         this.Producto.CentroCosto == undefined &&
@@ -1964,9 +1958,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         // && this.Producto.IdOrdenEstadistica != undefined
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -2452,16 +2448,15 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log("Empresa-->" + this.DataInsert.Empresa.Butxt);
     // console.log("Plaza-->" + this.DataInsert.Plaza.Nombre);
     // console.log("Tipo Solicitud-->" + this.DataInsert.Imputacion.Nombre);
-    console.log("Centro de costo-->" + this.DataInsert.CentroCostos);
-    console.log("Orden Interna-->" + this.DataInsert.OrdenInterna);
-    console.log("Cuenta de mayor-->" + this.DataInsert.Cuentamayor);
-    console.log("Categorias --->" + this.DataInsert.Categoria)
+    // console.log("Centro de costo-->" + this.DataInsert.CentroCostos);
+    // console.log("Orden Interna-->" + this.DataInsert.OrdenInterna);
+    // console.log("Cuenta de mayor-->" + this.DataInsert.Cuentamayor);
+    // console.log("Categorias --->" + this.DataInsert.Categoria)
     //console.log("Producto-->" + this.DataInsert.Productos);
     this.buscaIdAutorizador(this.DataInsert.Area);
     this.uploader.progress = 0;
     //console.log(this.uploader.queue[0]._file.name);
     //console.log(this.uploader.queue.length);
-    
     if (
       this.Date.value == "" ||
       this.usr.status === "INVALID" ||
@@ -2479,7 +2474,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       this.DataInsert.Plaza === undefined ||
       this.DataInsert.Moneda === undefined ||
       this.DataInsert.Imputacion === undefined ||
-      this.DataInsert.Justificacion === undefined
+      this.DataInsert.Justificacion === undefined 
+
       //  || this.DataInsert.Posicion === undefined
       //|| this.DataInsert.Tipo === undefined
       //|| this.DataInsert.CentroCostos === undefined
@@ -2497,7 +2493,6 @@ export class ListadoSolicitudesComponent implements OnInit {
       //this.uploader._fileSizeFilter;
       //this.uploader._fileTypeFilter;
       if (
-        this.uploader.queue[0]._file.name != undefined &&
         this.uploader.queue.length == 1
       ) {
         var requierente = this.RemoveCaracteresEpeciales(this.usr.value);
