@@ -39,6 +39,6 @@ export class SolicitudesCompraRegistradas{
     isChangeStatus:boolean;
 
     buttonChild:boolean;
-    
+    Comprador:string;
     
 }
