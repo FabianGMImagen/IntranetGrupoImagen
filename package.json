@@ -14,13 +14,9 @@
     "build": "ng build --prod",
     "start": "node dist/server/app.js",
     "predev": "tsc -p server",
-<<<<<<< HEAD
     "dev": "concurrently  \"ng serve --host 10.29.148.40 --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\" ",
     "fab": "concurrently \"ng serve --host 10.29.148.40 --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\"",
-=======
-    "dev": "concurrently  \"ng serve --host localhost --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\" ",
-    "fab": "concurrently \"ng serve --host localhost --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\"",
->>>>>>> 1422813b294c50a7862f77ef3371203e1371dcde
+
     "prod": "concurrently  \"ng build --aot --prod && tsc -p server && node dist/server/app.js\" \"--proxy-config proxy.conf.json\"",
     "test": "ng test",
     "testbe": "tsc -p server && mocha dist/server/test --exit",

@@ -2908,7 +2908,6 @@ export default class SolicitudCompraCTR {
       //   sql.close();
       // });
     }
-<<<<<<< HEAD
   
     // if(req.params.IdArea == 1){
       //   Direccion = "Operaciones";  
@@ -2918,8 +2917,6 @@ export default class SolicitudCompraCTR {
           //   Direccion = "Presupuestal";
         // }
   
-=======
->>>>>>> 1422813b294c50a7862f77ef3371203e1371dcde
     const oauth2Client = new google.auth.OAuth2(
       CLIENTID, //client ID
       CLIENTSECRET, // Client Secret 
@@ -2957,11 +2954,7 @@ export default class SolicitudCompraCTR {
       var mailOptionAdmin = {
         to: req.params.EmailAutorizador,
         cc: 'marco.garcia@gimm.com.mx',
-<<<<<<< HEAD
         subject: 'SOLICITUD DE PEDIDO PENDIENTE',
-=======
-        subject: Nombre,
->>>>>>> 1422813b294c50a7862f77ef3371203e1371dcde
         html:
           "<head>" +
           "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
@@ -2998,13 +2991,8 @@ export default class SolicitudCompraCTR {
       //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
       var mailOptionPresupuestoRechaza = {
         to: EmailSolicitante,
-<<<<<<< HEAD
         cc: 'marco.garcia@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
-=======
-        cc: 'mmp@gimm.com.mx',
-        subject: Nombre,
->>>>>>> 1422813b294c50a7862f77ef3371203e1371dcde
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
           '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
