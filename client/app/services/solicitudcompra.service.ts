@@ -1324,99 +1324,104 @@ export class SolicitudCompraService {
       BUKRS: idempresa.Bukrs,
       SOL_TYPE: SolPed.Acronimo
     };
-
-    this.soap.createClient(url, httpOptions).then(client => {
-      //console.log("***************SERVICEEEEEEEEEEEEEEEEEE**************"+client);
-
-      //client.setEndpoint("/sap/bc/srt/rfc/sap/zws_bukrs/200/zws_bukrs/zws_bukrs");
-      client.setEndpoint("/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in");
-      (<any>client).ZGET_ORDERS(parametros).subscribe((res: ISoapMethodResponse) => {
-
-        //console.log("message ********SERVICIIIO PLAZA******* " + res.responseBody);
-
-
-        var separadorini = '<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">' +
-          '<soap-env:Header/>' +
-          '<soap-env:Body>' +
-          '<n0:ZGET_ORDERSResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">' +
-          '<MENSAJE/>';
-
-        var separadorfin = '</n0:ZGET_ORDERSResponse>' +
-          '</soap-env:Body>' +
-          '</soap-env:Envelope>';
-
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
-
-        listProps(json, 3);
-
-        function listProps(obj, level) {
-          level = level || 0;
-          for (var property in obj) {
-            //console.log(level+' - '.repeat(level) + property);
-
-            if (property == 'AUFNR') {
-              //console.log(Object.entries(obj));
-
-              var idOrden = Object.values(obj)[0];
-              var nameOrden = Object.values(obj)[1].toString();
-              //console.log("ESTE ES EL ID-> " + id + "  ESTE ES EL NOMBRE--> " + name);
-              Listorden.push(idOrden);
-              Listorden.push(nameOrden);
-              //console.log("---------------"+ListPlza.length);
-
-            }
-            if (typeof obj[property] === 'object') {
-              listProps(obj[property], ++level);
-
+    try {
+      this.soap.createClient(url, httpOptions).then(client => {
+        //console.log("***************SERVICEEEEEEEEEEEEEEEEEE**************"+client);
+  
+        //client.setEndpoint("/sap/bc/srt/rfc/sap/zws_bukrs/200/zws_bukrs/zws_bukrs");
+        client.setEndpoint("/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in");
+        (<any>client).ZGET_ORDERS(parametros).subscribe((res: ISoapMethodResponse) => {
+  
+          //console.log("message ********SERVICIIIO PLAZA******* " + res.responseBody);
+  
+  
+          var separadorini = '<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">' +
+            '<soap-env:Header/>' +
+            '<soap-env:Body>' +
+            '<n0:ZGET_ORDERSResponse xmlns:n0="urn:sap-com:document:sap:rfc:functions">' +
+            '<MENSAJE/>';
+  
+          var separadorfin = '</n0:ZGET_ORDERSResponse>' +
+            '</soap-env:Body>' +
+            '</soap-env:Envelope>';
+  
+  
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+  
+          listProps(json, 3);
+  
+          function listProps(obj, level) {
+            level = level || 0;
+            for (var property in obj) {
+              //console.log(level+' - '.repeat(level) + property);
+  
+              if (property == 'AUFNR') {
+                //console.log(Object.entries(obj));
+  
+                var idOrden = Object.values(obj)[0];
+                var nameOrden = Object.values(obj)[1].toString();
+                //console.log("ESTE ES EL ID-> " + id + "  ESTE ES EL NOMBRE--> " + name);
+                Listorden.push(idOrden);
+                Listorden.push(nameOrden);
+                //console.log("---------------"+ListPlza.length);
+  
+              }
+              if (typeof obj[property] === 'object') {
+                listProps(obj[property], ++level);
+  
+              }
             }
           }
-        }
-        //iteramos el arreglo fuera de la funcion para poder pasarlo a un arreglo de modelo y retornar el array para su uso
-
-        var vuelta = 1;
-        for (let val of Listorden) {
-          //console.log("VVVVVVVVVVVVVVVVVVV"+vuelta+"VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
-          if (vuelta % 2 == 1) {
-            //console.log("es impar" + val);
-            var acronimo = val;
-            //console.log(acronimo);
-            vuelta++;
-          } else if (vuelta % 2 == 0) {
-            var orden = new OrdenInterna();
-            //console.log("es par" + val);
-            orden.IdOrdenInterna = acronimo;
-            orden.NombreOrder = val;
-            //console.log(ws.Butxt);
-
-            ListOrdenInterna.push(orden);
-            //console.log("*/*/*/*"+ ListPlaza.length);
-            vuelta++;
+          //iteramos el arreglo fuera de la funcion para poder pasarlo a un arreglo de modelo y retornar el array para su uso
+  
+          var vuelta = 1;
+          for (let val of Listorden) {
+            //console.log("VVVVVVVVVVVVVVVVVVV"+vuelta+"VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
+            if (vuelta % 2 == 1) {
+              //console.log("es impar" + val);
+              var acronimo = val;
+              //console.log(acronimo);
+              vuelta++;
+            } else if (vuelta % 2 == 0) {
+              var orden = new OrdenInterna();
+              //console.log("es par" + val);
+              orden.IdOrdenInterna = acronimo;
+              orden.NombreOrder = val;
+              //console.log(ws.Butxt);
+  
+              ListOrdenInterna.push(orden);
+              //console.log("*/*/*/*"+ ListPlaza.length);
+              vuelta++;
+            }
           }
-        }
-
-
+  
+  
+        });
+  
       });
-
-    });
-    return ListOrdenInterna;
+      return ListOrdenInterna;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+    
   }
 
   getAllNecesidad(): Observable<Necesidad[]> {
@@ -1690,7 +1695,7 @@ export class SolicitudCompraService {
 
   //todas las Solicitudes con el status modificado por direccion
   getAllSolicitudNewSoli(status: number, direccion: number): Observable<SolicitudesCompraRegistradas[]> {
-    return this.http.get<SolicitudesCompraRegistradas[]>(`/api/solreg/${status}/${direccion}`);
+    return this.http.get<SolicitudesCompraRegistradas[]>(`/api/solregcat/${status}/${direccion}`);
   }
 
   getAllSolicitudesForStatusPresupuesto(IdStatus: number): Observable<SolicitudesCompraRegistradas[]> {

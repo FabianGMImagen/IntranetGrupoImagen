@@ -140,6 +140,19 @@ export class AccountComponent implements OnInit {
   );
 
   protected _onDestroy = new Subject<void>();
+      public kalssforstatus = {};
+  //     {newsc: 'S. P. NUEVA PETICION',
+  // aut: 'S. P. AUTORIZADO POR GERENTE',
+  // rech :  'S. P. RECHAZADA POR GERENTE',
+  // //aut : 'S. P. AUTORIZADO POR DIRECCION',
+  // //rech :  'S. P. RECHAZADA POR DIRECCION',
+  // //aut: 'S. P. PRESUPUESTO AUTORIZADO',
+  // //rech : 'S. P. PRESUPUESTO RECHAZADO',
+  // //aut : 'S. P. REVISADA POR COMPRAS',
+  // //rech : 'S. P. RECHAZADA POR COMPRAS',
+  // carsap : 'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP',
+  // //rech : 'S. P. CANCELADA',
+  // fin: 'CONTRATO MARCO'}
 
   CheckSolicitud: number = undefined;
 
@@ -352,6 +365,7 @@ export class AccountComponent implements OnInit {
     this.solicitudComp.getAllSolicitudforusr(this.usr, this.role).subscribe(
       (data) => {
         this.ListSolCompReg = data;
+        this.getcssclas();
         this.DataSource = new MatTableDataSource(this.ListSolCompReg);
       },
       (error) =>{
@@ -378,6 +392,25 @@ export class AccountComponent implements OnInit {
 
       }
     );
+  }
+
+  getcssclas(){
+    this.ListSolCompReg.forEach(element=>{
+      if(element.Statname === "S. P. NUEVA PETICION"){
+        this.kalssforstatus = {'newsc':true}
+      }else if(element.Statname === "S. P. AUTORIZADO POR GERENTE" || element.Statname === "S. P. AUTORIZADO POR DIRECCION" ||
+         element.Statname === "S. P. PRESUPUESTO AUTORIZADO" || element.Statname === "S. P. REVISADA POR COMPRAS"){
+          this.kalssforstatus = {'aut':true}
+      }else if(element.Statname === "S. P. RECHAZADA POR GERENTE" || element.Statname === "S. P. RECHAZADA POR DIRECCION" ||
+                element.Statname === "S. P. PRESUPUESTO RECHAZADO" || element.Statname === "S. P. REVISADA POR COMPRAS" || 
+                element.Statname === "S. P. CANCELADA"){
+          this.kalssforstatus = {'rech':true}
+      }else if(element.Statname === "S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP"){
+        this.kalssforstatus = {'carsap':true}
+      }else if(element.Statname === "CONTRATO MARCO"){
+        this.kalssforstatus = {'fin':true}
+      }
+    })
   }
 
   isPDF(data: SolicitudesCompraRegistradas) {
