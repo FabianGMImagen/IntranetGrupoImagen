@@ -40,5 +40,4 @@ export class SolicitudesCompraRegistradas{
 
     buttonChild:boolean;
     Comprador:string;
-    
 }

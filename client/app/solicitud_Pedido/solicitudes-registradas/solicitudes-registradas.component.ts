@@ -577,8 +577,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.USR = this.auth.currentUser.IdUsuario;
     this.Direcc = Dir.IdDireccion;
     //console.log(status);
-    this.solicitudComp
-      .getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
+    this.solicitudComp.getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
       .subscribe(
         (data) => {
           this.ListSolRegistr = data;

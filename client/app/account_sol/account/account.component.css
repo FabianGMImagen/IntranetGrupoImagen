@@ -49,9 +49,13 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .newsc{
   background-color: #57BFFF !important;
+  color: #f5f5f5;
 }
 .aut{
-  background-color: #11EB59 !important;
+  background-color: #2bd162 ;
+  color: #f5f5f5;
+  padding: 5px;
+  border-radius: 5px;
 }
 .rech{
   background-color: #FF0000 !important;

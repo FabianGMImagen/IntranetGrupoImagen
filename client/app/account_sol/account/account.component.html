@@ -37,21 +37,10 @@
                 <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                   <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                     <div class="example-element-diagram row">
-                      <div class="example-element-position col-4"
-                        [ngClass]="{'newsc': element.Statname === 'S. P. NUEVA PETICION',
-                                                                                'aut' : element.Statname === 'S. P. AUTORIZADO POR GERENTE',
-                                                                                'rech' : element.Statname === 'S. P. RECHAZADA POR GERENTE',
-                                                                                'aut' : element.Statname === 'S. P. AUTORIZADO POR DIRECCION',
-                                                                                'rech' : element.Statname === 'S. P. RECHAZADA POR DIRECCION',
-                                                                                'aut' : element.Statname === 'S. P. PRESUPUESTO AUTORIZADO',
-                                                                                'rech' : element.Statname === 'S. P. PRESUPUESTO RECHAZADO',
-                                                                                'aut' : element.Statname === 'S. P. REVISADA POR COMPRAS',
-                                                                                'rech' : element.Statname === 'S. P. RECHAZADA POR COMPRAS',
-                                                                                'carsap' : element.Statname === 'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP',
-                                                                                'rech' : element.Statname === 'S. P. CANCELADA',
-                                                                                'fin': element.Statname === 'CONTRATO MARCO'}"> {{element.Statname}}
+                      <div class="example-element-position col-4">
+                        <span [ngClass]="kalssforstatus">{{element.Statname}}</span> 
                       </div>
-                      <div class="col-3">ASIGNADO A : {{element.Comprador ? element.Comprador : "Aun no Asignado"}} </div>
+                      <div class="col-3"><span>ASIGNADO A : </span> <span>{{element.Comprador ? element.Comprador : "Aun no Asignado"}}</span> </div>
                       <div class="example-element-position col"
                         *ngIf="(element.Statname == 'S. P. RECHAZADA POR GERENTE') ||
                                     (element.Statname == 'S. P. RECHAZADA POR DIRECCION')||(element.Statname == 'S. P. PRESUPUESTO RECHAZADO')">MOTIVO RECHAZO:

@@ -2017,6 +2017,32 @@ export default class SolicitudCompraCTR {
 
   }
 
+  getSolicitudRegistradasForstatusanCategoria = (req, res) => {
+
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
+    var config = require('../controllers/connections/servers')[env];
+    //console.log("Este es el id de el Usuario -->"+req.params.usr);
+    //  console.log("este es el id de la direccion--->" +req.params.direccion);
+    //  console.log("este es el status de la consulta para el direcctor de area  -->"+ req.params.status)
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdDireccion', sql.Int, req.params.direccion)
+        .input('TipoStatus', sql.Int, req.params.status)
+        .execute('getAllSolRegistradasforStatus')
+    }).then(result => {
+      res.status(201).json(result.recordset);
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+
+      sql.close();
+    });
+
+  }
+
   getSolicitudeRegistradasforstatusPresupuesto = (req, res) => {
     var sql = require("mssql");
     //variable de entorno para realizar la coneccion
