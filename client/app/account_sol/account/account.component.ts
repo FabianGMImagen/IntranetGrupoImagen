@@ -283,7 +283,7 @@ export class AccountComponent implements OnInit {
   AplicaOrdInt: boolean = false;
   /*---fin de datos editables---*/
   newStatus: number;
-
+  isload:boolean = false;
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -358,6 +358,7 @@ export class AccountComponent implements OnInit {
     //console.log(this.auth.currentUser.LoginName);
     //console.log(this.auth.currentUser.IdDireccion);
     //console.log(this.auth.currentUser.IdRole);
+    this.isload = true;
     this.usr = this.auth.currentUser.IdUsuario;
     //this.direccion = this.auth.currentUser.IdDireccion;
     this.role = this.auth.currentUser.IdRole;
@@ -367,6 +368,7 @@ export class AccountComponent implements OnInit {
         this.ListSolCompReg = data;
         this.getcssclas();
         this.DataSource = new MatTableDataSource(this.ListSolCompReg);
+        this.isload = false;
       },
       (error) =>{
         console.log(error);
@@ -374,6 +376,7 @@ export class AccountComponent implements OnInit {
           error.message,
           "danger"
         );
+        this.isload = false;
         if(error.status == 403 || error.status == 404){
           this.toast.setMessage(
             error.message,
@@ -427,6 +430,7 @@ export class AccountComponent implements OnInit {
   EditSolicitud(data: SolicitudesCompraRegistradas) {
     console.log("Dentro de el metodo que permite editar la solicitud ");
     console.log(data);
+    
     if (
       data.Statname === "S. P. PRESUPUESTO RECHAZADO" ||
       data.Statname === "S. P. RECHAZADA POR GERENTE" ||
@@ -468,10 +472,11 @@ export class AccountComponent implements OnInit {
     this.plaza = new SucursalPlaza();
     this.plaza.IdPlaza = this.DataSolReg.IdPlaza;
     this.inielements();
-
+    this.isload = true;
     this.solicitudComp.getDetalleSolicitud(data.ID).subscribe(
       (data) => {
         this.ListDetallesol = data;
+        
       },
       (error) => {
         if(error.status == 403 || error.status == 404){
@@ -486,7 +491,7 @@ export class AccountComponent implements OnInit {
       () => {
         console.log("Esta es el detalle de los items");
         console.log(this.ListDetallesol);
-
+        this.isload = false;
         this.ListDetallesol.forEach((element) => {
           if (data.IdSol == 4 || data.IdSol == 7) {
             element.butonMoreChilds = true;
@@ -643,10 +648,12 @@ export class AccountComponent implements OnInit {
     this.tiposol.Acronimo = this.DataSolReg.Acronimo;
     // console.log("---E---"+this.empresa);
     // console.log("----I.----"+this.tiposol);
+    this.isload = true;
     this.ListOrdenInterna = this.solicitudComp.getAllOrdenInterna(
       this.empresa,
       this.tiposol
     );
+    this.isload = false;
   }
 
   selectedOInterna() {
