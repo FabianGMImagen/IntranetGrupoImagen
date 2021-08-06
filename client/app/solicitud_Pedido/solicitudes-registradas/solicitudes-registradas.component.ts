@@ -368,20 +368,15 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.getAllSolicitudesRegistradasAutFinanzas(this.Direccion);
       } else if (this.auth.isCompras) {
         if (this.SelectedCompras != undefined) {
-          this.getAllSolicitudesRegistradasporUsrCompras(
-            this.Direccion,
-            this.SelectedCompras
-          );
+          this.getAllSolicitudesRegistradasporUsrCompras(this.Direccion,this.SelectedCompras);
         } else {
           this.SelectedCompras = undefined;
         }
       } else if (this.auth.isComprador) {
         if (this.SelectedCompras != undefined) {
-          this.getAllSolicitudesRegistradasporUsrCompras(
-            this.Direccion,
-            this.SelectedCompras
-          );
+          this.getAllSolicitudesRegistradasporUsrComprador(this.Direccion,this.SelectedCompras, this.auth.currentUser.IdUsuario);
         } else {
+          console.log(this.auth.currentUser.IdUsuario);
           this.SelectedCompras = undefined;
         }
       } else {
@@ -390,21 +385,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
       }
     } else {
       console.log("no esta logeado");
-    }
-  }
-
-  SelectionCompras() {
-    if (this.auth.isCompras || this.auth.isComprador) {
-      //console.log(this.SelectedCompras.IdStatusSolicitud);
-      //console.log(this.Direccion.IdDireccion);
-      this.getAllSolicitudesRegistradasporUsrCompras(
-        this.Direccion,
-        this.SelectedCompras
-      );
-    } else if (this.auth.isCheckPresupuesto || this.auth.isIntercambios) {
-      console.log("se selecciono un estatus para el subdirecto de finanzas");
-      //console.log(this.SelectedCompras);
-      this.getSolPedForStatus(this.SelectedCompras.IdStatusSolicitud);
     }
   }
 
@@ -424,21 +404,18 @@ export class SolicitudesRegistradasComponent implements OnInit {
     }
   }
 
-  // async getAllCategoriasForUserComprador(IdUser:number){
-  //   try {
-  //     this.ListCategorysforUser = await this.solicitudComp.getAllCategoriasforUser(IdUser);
-  //     if(!this.ListCategorysforUser){
-  //       this.toast.setMessage("Error al recuperar las categorias", "warning");
-  //     }
-  //   } catch (error) {
-  //     if (error.status == 403 || error.status == 404) {
-  //       this.auth.logout();
-  //     }else{
-  //       this.toast.setMessage(error.message,"danger");
-  //     }
-      
-  //   }
-  // }
+  SelectionStatus() {
+    if (this.auth.isCompras) {
+      this.getAllSolicitudesRegistradasporUsrCompras(this.Direccion, this.SelectedCompras);
+    }else if(this.auth.isComprador){
+      this.getAllSolicitudesRegistradasporUsrComprador(this.Direccion, this.SelectedCompras, this.auth.currentUser.IdUsuario);
+    } else if (this.auth.isCheckPresupuesto || this.auth.isIntercambios) {
+      console.log("se selecciono un estatus para el subdirecto de finanzas");
+      //console.log(this.SelectedCompras);
+      this.getSolPedForStatus(this.SelectedCompras.IdStatusSolicitud);
+    }
+  }
+
 
   getAllSolicitudesRegistradasAutorizadorDir(Dir: Direccion) {
     console.log(
@@ -578,6 +555,26 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.Direcc = Dir.IdDireccion;
     //console.log(status);
     this.solicitudComp.getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
+      .subscribe(
+        (data) => {
+          this.ListSolRegistr = data;
+          //console.log(this.ListSolRegistr);
+        },
+        (error) => console.log("error al recuperar las solicitudes" + error),
+        () => {
+          this.datSource = new MatTableDataSource(this.ListSolRegistr);
+          this.datSource.paginator = this.paginator;
+          this.datSource.sort = this.sort;
+        }
+      );
+  }
+
+  getAllSolicitudesRegistradasporUsrComprador(Dir: Direccion, status: StatusSolicitud, IdUser:number) {
+    //console.log("recuperando el listado de las solicitudes para Compras");
+    this.USR = this.auth.currentUser.IdUsuario;
+    this.Direcc = Dir.IdDireccion;
+    //console.log(status);
+    this.solicitudComp.getAllSolicitudNewSoliforCategori(status.IdStatusSolicitud, this.Direcc,IdUser)
       .subscribe(
         (data) => {
           this.ListSolRegistr = data;
@@ -905,35 +902,25 @@ export class SolicitudesRegistradasComponent implements OnInit {
           .checkdirauthexeption(this.Direccion.IdDireccion)
           .subscribe(
             (data) => {
+              console.log("*/*/*/*/*/*/*/*/*/Validacion de EXCEOCION*/*/*/*/*/*/*/*/*/*/")
               console.log(data[0]);
+              console.log("*/*/*/*/*/*/*/*/*/Validacion de EXCEOCION*/*/*/*/*/*/*/*/*/*/")
               if (data[0] != undefined || data[0] != null) {
                 //si tenemos un registro o Id de Role a excluir lo manejamos para actualizar correctamente el estatus
                 if (data[0].IdRole == 2) {
                   if (this.SelectedStatus.IdStatusSolicitud == 2) {
-                    console.log(
-                      "dentro de la seleccion de Estatus Auotrizado por Gerente"
-                    );
+                    console.log("METODO PENSANDO EN QUE SE DEBE EXCLUIR AL GERENTE Y LO PASAMOS DIRECTO A PLANEACION");
                     this.SelectedStatus.IdStatusSolicitud = 4; //se cambia el estatus a S. P. AUTORIZADO POR DIRECCION para que le aparesca a Planeacion
                     // console.log(this.SelectSolicitud.ID);
                     // console.log(this.SelectSolicitud.DIVISION);
-                    this.solicitudComp.UpdateStatusSolicitud(
-                        this.SelectedStatus.IdStatusSolicitud,
-                        this.SelectedStatus.IdSolicitud,
-                        this.motivo_Rechazo
-                      )
+                    this.solicitudComp.UpdateStatusSolicitud(this.SelectedStatus.IdStatusSolicitud,this.SelectedStatus.IdSolicitud,this.motivo_Rechazo)
                       .subscribe(
                         (res) => {
                           this.toast.setMessage(
                             "Actualizacion de Status Correcta ",
                             "success"
                           );
-                          console.log(
-                            "Se actualizo Correctamente ------Como gerente de Direccion -----" +
-                              res
-                          );
-                          this.getAllSolicitudesRegistradasAutorizadorDir(
-                            this.Direccion
-                          );
+                          this.getAllSolicitudesRegistradasAutorizadorDir(this.Direccion);
                           //Buscamos cual es el Usuario del area de Planeacion para notificarlo a el haciendo la excepcion a DIRECCIon
                           this.solicitudComp
                             .getUserAutorizador(this.Direccion.IdDireccion, 4)
@@ -956,32 +943,17 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                   .subscribe(
                                     (res) => {
                                       this.motivo_Rechazo = "";
-                                      this.toast.setMessage(
-                                        "Error en el envio de el Correo",
-                                        "warning"
-                                      );
-                                      console.log(
-                                        "dento de el metodo para enviar el correo" +
-                                          res
-                                      );
+                                      this.toast.setMessage("Error en el envio de el Correo","warning");
+                                      console.log("dento de el metodo para enviar el correo" +res);
                                     },
                                     (error) => {
-                                      console.log(
-                                        "Error al enviar el correo " + error
-                                      );
-
-                                      this.toast.setMessage(
-                                        "Envio de Email Correcto",
-                                        "success"
-                                      );
+                                      console.log("Error al enviar el correo " + error);
+                                      this.toast.setMessage( "Envio de Email Correcto","success");
                                     }
                                   );
                               },
                               (err) => {
-                                console.log(
-                                  "error al recuperar la informacion del Autorizador" +
-                                    err
-                                );
+                                console.log("error al recuperar la informacion del Autorizador" + err);
                               }
                             );
                         },
@@ -989,6 +961,58 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           console.log("error al actualizar el status" + error)
                       );
                   }
+                }else if(data[0].IdRole == 3){
+                  console.log("entrando a la exepcion de rol 3");
+
+                    console.log("METODO QUE EXCLUYE AL DIR Y SE MANDA DIRECTO A PLANEACION");
+                    this.SelectedStatus.IdStatusSolicitud = 4; //se cambia el estatus a S. P. AUTORIZADO POR DIRECCION para que le aparesca a Planeacion
+                    // console.log(this.SelectSolicitud.ID);
+                    // console.log(this.SelectSolicitud.DIVISION);
+                    this.solicitudComp.UpdateStatusSolicitud(this.SelectedStatus.IdStatusSolicitud,this.SelectedStatus.IdSolicitud,this.motivo_Rechazo)
+                      .subscribe(
+                        (res) => {
+                          this.toast.setMessage("Actualizacion de Status Correcta ","success");
+                          this.getAllSolicitudesRegistradasAutorizadorDir(this.Direccion);
+                          //Buscamos cual es el Usuario del area de Planeacion para notificarlo a el haciendo la excepcion a DIRECCIon
+                          this.solicitudComp
+                            .getUserAutorizador(this.Direccion.IdDireccion, 4)
+                            .subscribe(
+                              (res) => {
+                                console.log(res);
+                                this.UserAuth = res;
+                                console.log(this.UserAuth[0].Email);
+
+                                //Parte donde se envia El correo para los Diferentes autorizadores
+                                this.solicitudComp.SendEmailGerenteFianzas(
+                                    data2.ID,
+                                    this.SelectedStatus.IdStatusSolicitud,
+                                    this.Direccion.IdDireccion,
+                                    data2.NombreUsuario,
+                                    this.auth.currentUser.IdRole,
+                                    this.auth.currentUser.NombreCompleto,
+                                    this.UserAuth[0].Email
+                                  )
+                                  .subscribe(
+                                    (res) => {
+                                      this.motivo_Rechazo = "";
+                                      this.toast.setMessage("Error en el envio de el Correo","warning");
+                                      console.log("dento de el metodo para enviar el correo" +res);
+                                    },
+                                    (error) => {
+                                      console.log("Error al enviar el correo " + error);
+                                      this.toast.setMessage( "Envio de Email Correcto","success");
+                                    }
+                                  );
+                              },
+                              (err) => {
+                                console.log("error al recuperar la informacion del Autorizador" + err);
+                              }
+                            );
+                        },
+                        (error) =>
+                          console.log("error al actualizar el status" + error)
+                      );
+                  
                 } else {
                   this.solicitudComp
                     .UpdateStatusSolicitud(
@@ -1199,54 +1223,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
               );
             }
           );
-        // console.log(this.SelectSolicitud.ID);
-        // console.log(this.SelectSolicitud.DIVISION);
-        // this.solicitudComp.UpdateStatusSolicitud(this.SelectedStatus.IdStatusSolicitud, this.SelectedStatus.IdSolicitud, this.motivo_Rechazo).subscribe(
-        //   res => {
-        //     this.toast.setMessage('Actualizacion de Status Correcta ', 'success');
-        //     console.log("Se actualizo Correctamente ------Como gerente de Direccion -----" + res);
-        //     this.getAllSolicitudesRegistradasAutorizadorDir(this.Direccion);
-        //         //Buscamos cual es el Usuario Director de area para enviar el correo directo a el
-        //         this.solicitudComp.getUserAutorizador(this.Direccion.IdDireccion,3).subscribe(
-        //           res =>{
-        //             console.log(res);
-        //             this.UserAuth = res;
-        //             console.log(this.UserAuth[0].Email);
-
-        //                   //Parte donde se envia El correo para los Diferentes autorizadores
-        //                   //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
-        //                   console.log("Id de usuario Legeeoado-------------->"+this.auth.currentUser.IdUsuario);
-        //                   console.log("Nombre de el Usuario logeado--------->"+this.auth.currentUser.NombreCompleto);
-        //                   console.log("El Role de Usuario---->"+this.auth.currentUser.IdRole);
-        //                   console.log("El mail por usuario --->" + this.auth.currentUser.Email);
-        //                   console.log("Este es el Email de el Autorizador--->" + this.UserAuth[0].Email);
-
-        //                   this.solicitudComp.SendEmailDirectorArea(data2.ID,
-        //                                                     this.SelectedStatus.IdStatusSolicitud,
-        //                                                     this.Direccion.IdDireccion,
-        //                                                     data2.NombreUsuario,
-        //                                                     this.auth.currentUser.IdRole,
-        //                                                     this.auth.currentUser.NombreCompleto,
-        //                                                     this.UserAuth[0].Email).subscribe(
-        //                       res =>{
-
-        //                         this.toast.setMessage('Error en el envio de el Correo','warning');
-        //                         console.log("dento de el metodo para enviar el correo" +res);
-        //                       },
-        //                       error=>{
-        //                         console.log("Error al enviar el correo " + error);
-
-        //                         this.toast.setMessage('Envio de Email Correcto','success');
-        //                       }
-        //                   );
-        //           },
-        //           err =>{
-        //             console.log("error al recuperar la informacion del Autorizador" + err);
-        //           }
-        //         );
-        //   },
-        //   error => console.log("error al actualizar el status"+error)
-        // );
+      
       } else {
         this.toast.setMessage(
           "No tienes permisos para cambiar a este Status",
