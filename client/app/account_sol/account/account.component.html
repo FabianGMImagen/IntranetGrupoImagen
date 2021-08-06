@@ -5,16 +5,20 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon>library_books</mat-icon>
-      Sol. Pedido
+      <div style="padding-left: 5px; padding-right: 5px;">Sol. Pedido</div>
+      <div class="spinner-border text-danger" role="status" *ngIf="isload">
+        <span class="visually-hidden"></span>
+      </div>
     </ng-template>
     <mat-card>
       <div *ngIf="viewcoutn">
           <div class="row">
-            <mat-card-title class="title col">HISTORIAL DE SOLICITUDES DE PEDIDO</mat-card-title>
+            <mat-card-title class="title col-5">HISTORIAL DE SOLICITUDES DE PEDIDO</mat-card-title>
+            
             <mat-card-subtitle class="col">
               <button mat-flat-button color="warn" aria-label="Actualizar la Lista de Sol. de Pedido"
                 (click)="getAllSolicitudforUser()">
-                <mat-icon>cached</mat-icon> ACTUALIZAR
+                <mat-icon>cached</mat-icon>
               </button>
             </mat-card-subtitle>
           </div>

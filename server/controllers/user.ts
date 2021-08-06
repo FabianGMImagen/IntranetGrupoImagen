@@ -35,7 +35,7 @@ export default class UserCtrl extends BaseCtrl {
         var env = process.env.NODE_ENV || 'SERWEB';
         //config es la variable de configuracion y le pide a env (enviroment) que traega el nodo llamado WEB
         var config = require('../controllers/connections/servers')[env];              
-        /*var Query = "select IdEmpresa,Nombre from ImagenFinanzas.dbo.Empresas";*/ 
+        var Query = "select IdEmpresa,Nombre from ImagenFinanzas.dbo.Empresas";
         var Query = "select * from Usuario where Password = '" + req.body.password + "' and Email = '" + req.body.email + "' ;" ; 
         new sql.ConnectionPool(config).connect().then(pool =>{
           return pool.request().query(Query)
