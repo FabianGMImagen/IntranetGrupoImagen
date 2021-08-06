@@ -31,7 +31,7 @@
             <i class="fas fa-boxes"></i>
             <mat-form-field>
               <mat-label>SELECCIONA UN STATUS</mat-label>
-              <mat-select [(ngModel)]="SelectedCompras" name="comp" (selectionChange)="SelectionCompras()">
+              <mat-select [(ngModel)]="SelectedCompras" name="comp" (selectionChange)="SelectionStatus()">
                 <mat-option *ngFor="let status of ListStatusCompras" [value]="status">{{status.Nombre}}</mat-option>
               </mat-select>
             </mat-form-field>
@@ -104,7 +104,7 @@
                 <div class="example-element-position"><a>REQUIRENTE:</a> {{element.NombreUsuario}} </div>
                 <div class="example-element-position"> <a>EMAIL:</a> {{element.Email}} </div>
                 <div class="example-element-name"><a>TIPO DE SOLICITUD:</a> {{element.TSNombre}}</div>
-                <div class="example-element-name"><a>CAEGORIA: </a> {{element.CATEGORIA}}</div>
+                <div class="example-element-name"><a>CATEGORIA: </a> {{element.CATEGORIA}}</div>
                 <!--<div class="example-element-name"><a>Empresa:</a> {{element.Empresa}}</div>-->
               </div>
               <div class="example-element-description">
@@ -294,7 +294,7 @@
                 <div class="example-element-detail"
                   [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                   <div class="row">
-                    <div class="example-element-namespesifications col"><a>ESPESIFICACIONES GENERALES :</a>
+                    <div class="example-element-namespesifications col"><a>ESPECIFICACIONES GENERALES :</a>
                       {{element.EspGenerales}} </div>
                     <div *ngIf="bloqbuttonchild" class="col example-element-namespesifications">
                       <button mat-raised-button color="primary" (click)="ViewChilds(element)"><i

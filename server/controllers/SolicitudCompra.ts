@@ -2037,7 +2037,8 @@ export default class SolicitudCompraCTR {
       return pool.request()
         .input('IdDireccion', sql.Int, req.params.direccion)
         .input('TipoStatus', sql.Int, req.params.status)
-        .execute('getAllSolRegistradasforStatus')
+        .input('IdUsr', sql.Int, req.params.idusr)
+        .execute('getAllSolRegistradasforStatusandCategoria')
     }).then(result => {
       res.status(201).json(result.recordset);
       sql.close();

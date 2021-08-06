@@ -1327,13 +1327,12 @@ export class SolicitudCompraService {
     try {
       this.soap.createClient(url, httpOptions).then(client => {
         //console.log("***************SERVICEEEEEEEEEEEEEEEEEE**************"+client);
-  
+        
         //client.setEndpoint("/sap/bc/srt/rfc/sap/zws_bukrs/200/zws_bukrs/zws_bukrs");
         client.setEndpoint("/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in");
         (<any>client).ZGET_ORDERS(parametros).subscribe((res: ISoapMethodResponse) => {
   
           //console.log("message ********SERVICIIIO PLAZA******* " + res.responseBody);
-  
   
           var separadorini = '<soap-env:Envelope xmlns:soap-env="http://schemas.xmlsoap.org/soap/envelope/">' +
             '<soap-env:Header/>' +
@@ -1346,26 +1345,33 @@ export class SolicitudCompraService {
             '</soap-env:Envelope>';
   
   
-          var split1 = res.responseBody.split(separadorini);
-          //le hacemos un split para quitarle la parte que no nos sirve separadorini
-          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-          var cadena = split1[1].toString();
-          //volvemos a hacer un split para quitar la parte final separador2
-          var split2 = cadena.split(separadorfin);
-          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-          //convertimos de nuevo el arreglo en cadena para quitar las comas
-          var cadena2 = split2[0].toString();
-  
-          var NuevoXML = cadena2.trim();
-          //console.log("---XML FORMATEADO--" + NuevoXML);
-          var parse = new DOMParser();
-          var xml = parse.parseFromString(NuevoXML, 'text/xml');
-  
-          //console.log(xml);
-          var json = this.ngxXml2jsonService.xmlToJson(xml);
-          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
-  
-          listProps(json, 3);
+          
+          try {
+            var split1 = res.responseBody.split(separadorini);
+            //le hacemos un split para quitarle la parte que no nos sirve separadorini
+            //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+            var cadena = split1[1].toString();
+            //volvemos a hacer un split para quitar la parte final separador2
+            var split2 = cadena.split(separadorfin);
+            //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+            //convertimos de nuevo el arreglo en cadena para quitar las comas
+            var cadena2 = split2[0].toString();
+            
+            var NuevoXML = cadena2.trim();
+            //console.log("---XML FORMATEADO--" + NuevoXML);
+            var parse = new DOMParser();
+            var xml = parse.parseFromString(NuevoXML, 'text/xml');
+    
+            //console.log(xml);
+            var json = this.ngxXml2jsonService.xmlToJson(xml);
+            //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+    
+            listProps(json, 3);
+          } catch (error) {
+            console.log(error);
+          }
+          
+         
   
           function listProps(obj, level) {
             level = level || 0;
@@ -1695,7 +1701,11 @@ export class SolicitudCompraService {
 
   //todas las Solicitudes con el status modificado por direccion
   getAllSolicitudNewSoli(status: number, direccion: number): Observable<SolicitudesCompraRegistradas[]> {
-    return this.http.get<SolicitudesCompraRegistradas[]>(`/api/solregcat/${status}/${direccion}`);
+    return this.http.get<SolicitudesCompraRegistradas[]>(`/api/solreg/${status}/${direccion}`);
+  }
+
+  getAllSolicitudNewSoliforCategori(status: number, direccion: number, Idusr): Observable<SolicitudesCompraRegistradas[]> {
+    return this.http.get<SolicitudesCompraRegistradas[]>(`/api/solregcat/${status}/${direccion}/${Idusr}`);
   }
 
   getAllSolicitudesForStatusPresupuesto(IdStatus: number): Observable<SolicitudesCompraRegistradas[]> {

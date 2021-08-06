@@ -10,17 +10,25 @@ import { read } from 'fs';
 
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
+
+const ruta = "http://10.29.148.40:3000/public/"
+//const ruta = "http://10.29.148.40:3000/public/";
+//const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
+
+//const DIR = '../ImagenFinanzasPruebaslocal/datos';
 const DIR = '../IntranetGrupoImagen/datos';
+//const DIR = "../IntranetProduccion/datos";
+console.log(process.env.SECRET_SAP);
+
 var id = 0;
 let storage = multer.diskStorage({
-
+  
     destination: (req, file, cb) => {
-    
       cb(null, DIR);
     }
     ,
     filename: (req, file, cb) => {
-        
+      
         let ext = path.extname(file.originalname);
         let basename = path.basename(file.originalname,ext );
         console.log(file);
@@ -56,7 +64,7 @@ export default class UploadFilesController {
                 }
                 // Everything went fine.
                 //console.log("GOOOOD------- guardamos la ruta del archivo subido a la DB");
-                var RutaCotizacion = encodeURI('http://localhost:3000/public/'+req.headers.idsol+' '+req.file.originalname);
+                var RutaCotizacion = encodeURI(ruta + req.headers.idsol+' '+req.file.originalname);
                 console.log(req.file);
                 console.log("Esta es la ruta del archivo---" + RutaCotizacion);
 
@@ -84,6 +92,7 @@ export default class UploadFilesController {
     }
 
     createFileComrpas = (req, res) => {
+      const ruta = process.env.INTRANET_PATH;
       console.log("creando el archivo para compras");
       console.log(req.params.ID);
       var fs = require('fs');
@@ -121,7 +130,7 @@ export default class UploadFilesController {
                         console.log("ocurrio un error de algun tipo        " + err);
                       }else{
                         console.log(".....Se creo el Archivo CSV.... ");
-                        var RutaCotizacion = 'http://localhost:3000/public/DatosCompras/'+FileName;
+                        var RutaCotizacion = ruta+'DatosCompras/'+FileName;
                         console.log(RutaCotizacion);
                         res.status(201).json(RutaCotizacion);
                       }

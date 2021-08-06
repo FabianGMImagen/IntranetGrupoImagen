@@ -2492,9 +2492,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     } else {
       //this.uploader._fileSizeFilter;
       //this.uploader._fileTypeFilter;
-      if (
-        this.uploader.queue.length == 1
-      ) {
+      if (this.uploader.queue.length == 1) {
         var requierente = this.RemoveCaracteresEpeciales(this.usr.value);
         this.usr.setValue(requierente);
         var justificacion = this.RemoveCaracteresEpeciales(this.DataInsert.Justificacion);
@@ -2621,6 +2619,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.uploader.clearQueue();
                                     //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                     this.isEnviadoSolPed = false;
+                                    this.uploader = new FileUploader({
+                                      url: URL,
+                                      itemAlias: " ",
+                                    });
 
                                     this.ngOnInit();
                                     //si se guardo la Solicitud limpiamos los registros
@@ -2767,6 +2769,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.uploader.clearQueue();
                                     //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                     this.isEnviadoSolPed = false;
+                                    this.uploader = new FileUploader({
+                                      url: URL,
+                                      itemAlias: " ",
+                                    });
 
                                     this.ngOnInit();
                                     //si se guardo la Solicitud limpiamos los registros
@@ -2889,11 +2895,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     "success"
                                   );
                                   //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
-                                  this.isEnviadoSolPed = false;
-                                  this.uploader = new FileUploader({
-                                    url: URL,
-                                    itemAlias: " ",
-                                  });
+                                  this.uploader.clearQueue();
+                                    //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
+                                    this.isEnviadoSolPed = false;
+                                    this.uploader = new FileUploader({
+                                      url: URL,
+                                      itemAlias: " ",
+                                    });
                                   this.ngOnInit();
                                   //si se guardo la Solicitud limpiamos los registros
                                   this.date = "";
@@ -2961,98 +2969,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                     );
                   }
                 );
-
-              //   this.DataInsert.TipoSolicitud = 1;
-              //  this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
-              //     res => {
-              //       console.log("??????????????????????????????????????");
-              //       console.log(res);
-              //       console.log("??????????????????????????????????????");
-              //       //console.log(this.DataInsert.Area.IdDireccion);
-              //       this.IdSoliforFile = res;
-
-              //       this.solicitudComp.checkdirauthexeption(this.DataInsert.Area.IdDireccion).subscribe(data =>{
-              //         //se envia parametro de IdSOlicitud para identificar correctamente la cotizacion
-              //         this.uploader.options.headers=[];
-              //         this.uploader.options.headers.push({name:'IdSol', value:this.IdSoliforFile.toString()});
-              //         this.uploader.options.removeAfterUpload.valueOf();
-              //         this.uploader.setOptions(this.uploader);
-              //         this.uploader.uploadAll();
-
-              //         console.log(data[0]);
-              //         console.log("¡¡¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?");
-              //         console.log(this.DataInsert.Area)
-              //         if(data[0] != undefined || data[0] != null){
-              //           console.log("dentro del if Para mandar mail a Director de Area no a Genrente")
-              //           if(data[0].IdRole == 2){ //caso donde excluimos la Autorizacion de GERENTE
-
-              //           }else if(data[0].IdRole == 3){//caso donde excluimos la Autorizacion de Directo
-
-              //           }
-
-              //         }else{
-              //           console.log("entrando al else para seguir el flujo normal de la solicitud");
-
-              //           Role = 2;
-              //           status = 1;
-              //           console.log(Role);
-              //           console.log(status);
-              //           console.log(this.DataInsert.Area.IdDireccion);
-              //           var Solicitante = this.DataInsert.Usr;
-              //           var IdDIreccion = this.DataInsert.Area.IdDireccion;
-              //           var NombreDir = this.DataInsert.Area.Nombre;
-              //               this.solicitudComp.getUserAutorizador(this.DataInsert.Area.IdDireccion,Role).subscribe(data =>{
-              //                 this.UsrAuthEmail = data;
-              //                 console.log("------------------------------");
-              //                 console.log(this.UsrAuthEmail[0]);
-              //                 console.log("------------------0------------");
-              //                 console.log("Id de la DIreccion a enviar correo"+IdDIreccion);
-              //                 console.log("Nombre de la DIrecion a la que se enviara mail--->" + NombreDir);
-              //                 this.toast.setMessage('Envio de Solicitud Correcto. ', 'success');
-              //                 //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
-              //                 this.isEnviadoSolPed = false;
-              //                 this.uploader = new FileUploader({url: URL, itemAlias:' '});
-              //                 this.ngOnInit();
-              //                 //si se guardo la Solicitud limpiamos los registros
-              //                 this.date = '';
-              //                 this.usr.reset();
-              //                 this.puesto.reset();
-              //                 this.email.reset();
-              //                 this.tel.reset();
-              //                 this.ext.reset();
-              //                 this.nombreProduccion.reset();
-              //                 this.ngOnInit();
-              //                 this.addProdForm.reset();
-              //                 this.BloqMoreItem = false;
-
-              //                 //esta parte es para el envio de correo para el dir de area.
-              //                 this.solicitudComp.SendEmailNewSolicitud(res, status, IdDIreccion,  NombreDir, Solicitante, this.UsrAuthEmail[0].IdRole, this.UsrAuthEmail[0].NombreCompleto, this.UsrAuthEmail[0].Email )
-              //                 .subscribe( res =>{
-              //                   console.log(res);
-              //                   this.toast.setMessage('Se realizo el envio del Email a Dir de Area','success');
-
-              //                 }, err=>{
-              //                   console.log("----ÑÑÑÑÑÑÑÑÑÑ");
-              //                   //location.reload();
-              //                   console.log(err);
-              //                   //this.toast.setMessage('Error en el envio de el Correo','success');
-              //                 })
-              //               },
-              //               err=>{
-              //                 console.log("error al recuperar la informacion del usuario aotorizador por DIreccion" + err);
-              //               });
-              //         }
-              //       }, err=>{
-              //         console.log("error al recuperar la informacion de las Exxcepcions" + err );
-              //       });
-
-              //     },
-              //     error => {
-              //       this.isEnviadoSolPed = false;
-              //       console.log(error)
-              //       this.toast.setMessage('Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ', 'danger');
-              //     }
-              //   );
             } else {
               console.log("entra al else");
               this.toast.setMessage(

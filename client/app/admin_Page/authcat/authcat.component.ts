@@ -35,7 +35,6 @@ export class AuthcatComponent implements OnInit {
   async GetAllUserCompradores(){
     try {
       this.ListUserCompradores = await this.solicitudComp.getAllUserCompradores();
-      //console.log(this.ListUserCompradores)
       if(this.ListUserCompradores.length == 0){
         this.toast.setMessage("La lista de usuarios compradores esta vacia, valida informacion", "warning");
       }
@@ -50,7 +49,7 @@ export class AuthcatComponent implements OnInit {
 
 
   async getAllCategorias(){
-    console.log("buscamos las categorias");
+    // console.log("buscamos las categorias");
     try {
       this.ListCategorias = await this.solicitudComp.getAllCategoriasnoUsadas();
       //console.log(this.ListCategorias)
@@ -84,13 +83,14 @@ export class AuthcatComponent implements OnInit {
   }
 
   async InsertNewcategory(){
-    console.log(this.User);
-    console.log(this.Categoria);
+    // console.log(this.User);
+    // console.log(this.Categoria);
     try {
       let response = await this.solicitudComp.InsertNewCategoryforCoprador(this.User.IdUsuario, this.Categoria.IdCategoria);
       if(response != undefined || response != null){
         this.toast.setMessage(response, "success");
         this.getAllCategoriasAdmiistradasforUserComprador();
+        this.getAllCategorias();
       }
     } catch (error) {
       if (error.status == 403 || error.status == 404) {
@@ -102,11 +102,12 @@ export class AuthcatComponent implements OnInit {
   }
 
   async DeleteCategoria(categoriaselect:CategoriasForUser){
-    console.log(categoriaselect)
+    // console.log(categoriaselect)
     try {
       let response = await this.solicitudComp.DeleteCategoriaforUser(categoriaselect.IdUsuario, categoriaselect.IdCategoria);
       if(response != undefined || response != null){
         this.getAllCategoriasAdmiistradasforUserComprador();
+        this.getAllCategorias();
       }
     } catch (error) {
       if (error.status == 403 || error.status == 404) {

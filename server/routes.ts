@@ -157,7 +157,7 @@ export default function setRoutes(app) {
   //Solicitudes Registradas con status Nueva Solicitud
   router.route('/solreg/:status/:direccion').get(auth, solicitudCompraCTR.getSolicitudRegistradasForstatus);
   //Solicitusdes registradas para los compradores hacemos un filtro extra para las categorias.
-  router.route('/solregcat/:status/:direccion').get(auth, solicitudCompraCTR.getSolicitudRegistradasForstatusanCategoria);
+  router.route('/solregcat/:status/:direccion/:idusr').get(auth, solicitudCompraCTR.getSolicitudRegistradasForstatusanCategoria);
   //Solicitudes registradas por un Estatus espesifico solo para el SubDirector de Finanzas (Presupuesto)
   router.route('/solregpresu/:IdStatus').get(auth, solicitudCompraCTR.getSolicitudeRegistradasforstatusPresupuesto);
   //se actualiza el Status de la SOlciitud a Revisada por Compras
