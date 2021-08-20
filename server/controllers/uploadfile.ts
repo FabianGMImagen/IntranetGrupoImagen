@@ -11,7 +11,7 @@ import { read } from 'fs';
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
 
-const ruta = "http://10.29.148.40:3000/public/"
+const ruta = "http://10.29.148.40:3000/public/";
 //const ruta = "http://10.29.148.40:3000/public/";
 //const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
 
@@ -92,7 +92,6 @@ export default class UploadFilesController {
     }
 
     createFileComrpas = (req, res) => {
-      const ruta = process.env.INTRANET_PATH;
       console.log("creando el archivo para compras");
       console.log(req.params.ID);
       var fs = require('fs');
