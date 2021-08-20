@@ -443,6 +443,27 @@ export default class SolicitudCompraCTR {
     });
   }
 
+  NewCategory = (req, resp)=>{
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('NameCategory', sql.VarChar, req.params.category)
+        .execute('NewCategory')
+    }).then(result => {
+      //console.log(result.recordset);
+      resp.status(201).json({message:"Se agrego correctamente la categoría" + result});
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
+
   AllUsersCompradores = (req, resp) =>{
     console.log("Recuperamos los datos de Usuarios Compradores");
     var sql = require("mssql");
@@ -545,6 +566,28 @@ export default class SolicitudCompraCTR {
       sql.close();
     })
   }
+  
+  DeleteCategoria= (req, resp)=>{
+    var sql = require("mssql");
+    //variable de entorno para realizar la coneccion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdCategoria', sql.Int, req.params.IdCategoria)
+        .execute('DeleteCategory')
+    }).then(result => {
+      console.log(result.recordsets);
+      resp.status(201).json("Se elimino la categoria correctamente la Categoria");
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
+  }
+  
 
   ChangedCategoriForSolicitud = (req, resp) =>{
     //ModificateCategoryforSolicitud
@@ -2418,7 +2461,6 @@ export default class SolicitudCompraCTR {
     });
   }
 
-
   //Envio de Email Cuando se crea una solicitu nueva
   SendEmailNew = (req, res) => {
     //Envio de correo desde la vista de Solicitud de Pedido
@@ -2941,15 +2983,6 @@ export default class SolicitudCompraCTR {
       //   sql.close();
       // });
     }
-  
-    // if(req.params.IdArea == 1){
-      //   Direccion = "Operaciones";  
-      // }else if(req.params.IdArea == 2){
-        //   Direccion = "Finanzas"; 
-        // }else if(req.params.IdArea == 3){
-          //   Direccion = "Presupuestal";
-        // }
-  
     const oauth2Client = new google.auth.OAuth2(
       CLIENTID, //client ID
       CLIENTSECRET, // Client Secret 
@@ -3024,7 +3057,7 @@ export default class SolicitudCompraCTR {
       //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
       var mailOptionPresupuestoRechaza = {
         to: EmailSolicitante,
-        cc: 'marco.garcia@gimm.com.mx',
+        cc: 'mmp@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
@@ -4428,7 +4461,6 @@ export default class SolicitudCompraCTR {
 
     }
   }
-
 
   getIdStatusSolicitud = (req, res) => {
     console.log(req)

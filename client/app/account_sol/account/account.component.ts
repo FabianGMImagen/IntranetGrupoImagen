@@ -366,16 +366,16 @@ export class AccountComponent implements OnInit {
     this.solicitudComp.getAllSolicitudforusr(this.usr, this.role).subscribe(
       (data) => {
         this.ListSolCompReg = data;
+        if(this.ListSolCompReg.length == 0){
+          this.toast.setMessage("Aun no has generado ninguna Sol. de Pedido","warning");
+        }
         this.getcssclas();
         this.DataSource = new MatTableDataSource(this.ListSolCompReg);
         this.isload = false;
       },
       (error) =>{
         console.log(error);
-        this.toast.setMessage(
-          error.message,
-          "danger"
-        );
+        this.toast.setMessage(error.message,"danger");
         this.isload = false;
         if(error.status == 403 || error.status == 404){
           this.toast.setMessage(

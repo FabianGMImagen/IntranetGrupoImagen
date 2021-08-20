@@ -1,0 +1,41 @@
+<div class="text-right " style="padding: 10px; ">
+    <button mat-raised-button class="newdir" (click)="NewCategory()">
+      <span class="material-icons">add</span>
+      New Categoría
+    </button>
+  </div>
+
+<div class="card">
+    <h4 class="card-header">Categorías Registradas ({{countcat}})</h4>
+    
+    <div class="card-body">
+      <table class="table table-bordered">
+        <thead class="thead-light">
+          <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Descripcion</th>
+              <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="this.countcat === 0">
+          <tr>
+            <td colspan="4">Categorías no Registradas.</td>
+          </tr>  
+        </tbody>
+        <tbody>
+          <tr *ngFor="let cat of ListCategorias">
+            <td>{{cat.Nombre}}</td>
+            <td>{{cat.Descripcion}}</td>
+            <td>
+              <button class="btn btn-sm btn-warning" (click)="UpdateDir(cat)">
+                <i class="fa fa-wrench"></i> Update
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="DeleteCategory(cat)" >
+                <i class="fa fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>  
+        </tbody>
+      </table>
+    </div>
+  </div>
