@@ -677,6 +677,11 @@ export class SolicitudCompraService {
 
   }
 
+  InsertNewCategory(categoria:string){
+    console.log(categoria);
+    return this.http.get(`/api/newcate/${categoria}`).toPromise();
+  }
+
   getAllCategoriasforUser(IdUser:number){
     return this.http.get<Categorias[]>(`/api/categoryforcomprador/${IdUser}`).toPromise();
   }
@@ -705,8 +710,12 @@ export class SolicitudCompraService {
     return this.http.get(`/api/insertcatforuser/${IdUser}/${IdCategori}`).toPromise();
   }
 
+  DeleteCategoria(IdCategoria:number){
+    return this.http.get(`/api/catdelete/${IdCategoria}`).toPromise();
+  }
+
   DeleteCategoriaforUser(IdUser:number, IdCategoria:number){
-    return this.http.get(`/api/deletecat/${IdUser}/${IdCategoria}`).toPromise();
+    return this.http.get(`/api/deletecat/${IdCategoria}`).toPromise();
   }
 
   getAllImputaciones(): Observable<Imputacion[]> {
