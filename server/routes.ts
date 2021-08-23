@@ -117,17 +117,18 @@ export default function setRoutes(app) {
   router.route('/activo').get(auth, solicitudCompraCTR.getAllActivos);
   //trae todas la Necesidades
   router.route('/necesidad').get(auth, solicitudCompraCTR.getAllNecesidad);
-  //trae el usurio autorizador de el area a la que le espesifico
+  //trae el usurio autorizador de el area a la que le especifico
   router.route('/usrauth/:id').get(auth, solicitudCompraCTR.UsuarioAuth);
   //recuperamos las categorias de la base de datos.
   router.route('/categorias').get(auth, solicitudCompraCTR.AllCategorias);
-
+  //agregamos una nueva categoría
+  router.route('/newcate/:category').get(auth, solicitudCompraCTR.NewCategory);
   //recuperamos categorias espesificas para cada Comprador
   //router.route('/categoryforcomprador/:IdUser').get(auth, solicitudCompraCTR.AllCategoriasforUserComprador);
   
   //trae todos los activos fijos
   //router.route('/activo').get(solicitudCompraCTR.getAllActivo);
-  //Recuperamos la lista de las categorias no usadas por los compradores para mostrarlas y que se puedan asignar a un compradir distinto
+  //Recuperamos la lista de las categorías no usadas por los compradores para mostrarlas y que se puedan asignar a un comprador distinto
   router.route('/catnousada').get(auth, solicitudCompraCTR.AllCategoriasnoUsadasporCompradores);
   //recuperamos todos los usuarios Compradores para mostrarlos en la vista de PERMISOS CAT.
   router.route('/userforcat').get(auth, solicitudCompraCTR.AllUsersCompradores)
@@ -135,6 +136,8 @@ export default function setRoutes(app) {
   router.route('/listcat/:IdUser').get(auth, solicitudCompraCTR.ListCategoriasforUsuario);
   //Asignamos una nuveva categoria para adminsitrar por el usuario seleccionado
   router.route('/insertcatforuser/:IdUser/:IdCategoria').get(auth, solicitudCompraCTR.InsertNewCategoryforComprador)
+  //Eliminamos una categoria en las 2 tablas
+  router.route('/catdelete/:IdCategoria').get(auth, solicitudCompraCTR.DeleteCategoria);
   //eliminamos una categoria por usuario, para que pueda quedar libre para su asignacion
   router.route('/deletecat/:IdUser/:IdCategoria').get(auth, solicitudCompraCTR.DeleteCategoriaForUser);
   //cambio de categoria , esto por si se llega a quivocar el solicitante lo puedna cambiar la gente de ENIXE

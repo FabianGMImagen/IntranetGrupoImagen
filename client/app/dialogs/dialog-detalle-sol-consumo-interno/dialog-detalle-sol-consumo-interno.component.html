@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>PRODUCTOS POR SOLICITU DE CONSUMO INTERNO :  {{data}}</h1>
+<h1 mat-dialog-title>PRODUCTOS POR SOLICITU DE CONSUMO INTERNO :  {{data.IdSol}}</h1>
 <div mat-dialog-content>
   <div class="row">
     <div class="col">
@@ -30,13 +30,13 @@
     </thead>
     <tbody>
             <tr *ngFor="let Prod of ListProductos">
-              <td width="20">{{Prod.Cantidad}}</td>
-              <td width="20">{{Prod.AlmacenName}}</td>
-              <td width="20">{{Prod.CentroCostosName}}</td>
-              <td width="20">{{Prod.CuentaMayorName}}</td>
-              <td width="20">{{Prod.MaterialName}}</td>
-              <td width="20">{{Prod.UnidadMedidaName}}</td>
-              <td width="10">
+              <td width="auto">{{Prod.Cantidad}}</td>
+              <td width="auto">{{Prod.AlmacenName}}</td>
+              <td width="auto">{{Prod.CentroCostosName}}</td>
+              <td width="auto">{{Prod.CuentaMayorName}}</td>
+              <td width="auto">{{Prod.MaterialName}}</td>
+              <td width="auto">{{Prod.UnidadMedidaName}}</td>
+              <td width="auto" *ngIf="isUpdate">
                 <button class="btn btn-info btn-sm" (click)="UpdateDataProdcuts(Prod)"><i class="fa fa-wrench" aria-hidden="true"></i> Update Prod.</button>
               </td>
             </tr>  

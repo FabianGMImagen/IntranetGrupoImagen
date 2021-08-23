@@ -9,6 +9,8 @@ import { Direccion } from '../../shared/models/directions.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Role } from '../../shared/models/roles.model';
 import { RoleSolConsumo } from '../../shared/models/rolesol_consumo.mode';
+import { DialogDeleteUserComponent } from 'client/app/dialogs/dialog-delete-user/dialog-delete-user.component';
+import { DialogDeleteDirComponent } from 'client/app/dialogs/dialog-delete-dir/dialog-delete-dir.component';
 //import { ConsoleReporter } from 'jasmine';
 
 
@@ -150,14 +152,14 @@ export class AdminComponent implements OnInit {
   }
 
   deleteUser(user: User) {
-    const dialogRef = this.dialog.open(DialogDataExampleDialog, {
-      width: '350px',
+    const dialogRef = this.dialog.open(DialogDeleteUserComponent, {
+      width: '500px',
       data: {name: user.NombreCompleto , IdUser: user.IdUsuario}
     });
     dialogRef.afterClosed().subscribe(result => {
       //console.log(`No esta indefinida la variable, le dieron en si ${result}`);
           if(result == undefined){
-              console.log("le dieron que no no manches");
+              console.log("le dieron que no");
           }else{
             console.log(`No esta indefinida la variable, le dieron en si ${result}`);
             this.userService.deleteUser(user).subscribe(
@@ -483,8 +485,8 @@ export class AdminComponent implements OnInit {
   }
 
   deleteDir(dir:Direccion){
-    const dialogdeletedir = this.dialog.open(DialogDeleteDir, {
-      width: '350px',
+    const dialogdeletedir = this.dialog.open(DialogDeleteDirComponent, {
+      width: '500px',
       data: {name: dir.Nombre , IdDir: dir.IdDireccion}
     });
     dialogdeletedir.afterClosed().subscribe(result => {
@@ -534,34 +536,36 @@ export class AdminComponent implements OnInit {
 }
 
 
-@Component({
-  selector: 'app-admindialog',
-  templateUrl: './admin.component.dialogdelete.html',
-})
-export class DialogDataExampleDialog {
+// @Component({
+//   selector: 'app-admindialog',
+//   templateUrl: './admin.component.dialogdelete.html',
+// })
+// export class DialogDataExampleDialog {
 
-  constructor(public dialogRef: MatDialogRef<DialogDataExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,public toast: ToastComponent) {}
+//   constructor(public dialogRef: MatDialogRef<DialogDataExampleDialog>,
+//     @Inject(MAT_DIALOG_DATA) public data: DialogData,
+//     public toast: ToastComponent) {}
 
-  onNoClick(): void {
-    this.dialogRef.close();
-    console.log("le dimos que no");
-    this.toast.setMessage('Operacion de cancelacion cancelada.', 'warning');
-  }
+//   onNoClick(): void {
+//     this.dialogRef.close();
+//     console.log("le dimos que no");
+//     this.toast.setMessage('Operacion de cancelacion cancelada.', 'warning');
+//   }
   
-}
+// }
 
-@Component({
-  selector: 'app-admindialogdeletedir',
-  templateUrl: './admin.component.dialogdeletedir.html',
-})
-export class DialogDeleteDir{
-  constructor(public dialogdeletedir: MatDialogRef<DialogDeleteDir>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,public toast: ToastComponent) {}
+// @Component({
+//   selector: 'app-admindialogdeletedir',
+//   templateUrl: './admin.component.dialogdeletedir.html',
+// })
+// export class DialogDeleteDir{
+//   constructor(public dialogdeletedir: MatDialogRef<DialogDeleteDir>,
+//     @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    //public toast: ToastComponent) {}
     
-  onCancelClick():void{
-    this.dialogdeletedir.close();
-    console.log("se cancelo la eliminacion de la direccion");
-    this.toast.setMessage('Operacion de eliminacion cancelada.', 'warning');
-  }
-}
+//   onCancelClick():void{
+//     this.dialogdeletedir.close();
+//     console.log("se cancelo la eliminacion de la direccion");
+//     this.toast.setMessage('Operacion de eliminacion cancelada.', 'warning');
+//   }
+// }

@@ -18,8 +18,6 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AccountComponent } from './account_sol/account/account.component';
 import { AdminComponent } from './admin_Page/admin/admin.component';
-import { DialogDataExampleDialog } from './admin_Page/admin/admin.component'
-import { DialogDeleteDir } from './admin_Page/admin/admin.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -78,6 +76,11 @@ import { AccountSolConsumoListComponent } from './account_sol/account-sol-consum
 import { DialogDetalleSolConsumoInternoComponent } from './dialogs/dialog-detalle-sol-consumo-interno/dialog-detalle-sol-consumo-interno.component';
 // import { DialogUpdateDatageneralSolConsumoComponent } from './dialogs/dialog-update-datageneral-sol-consumo/dialog-update-datageneral-sol-consumo.component';
 import { DialogUpdateProductsdataSolConsumoComponent } from './dialogs/dialog-update-productsdata-sol-consumo/dialog-update-productsdata-sol-consumo.component';
+import { AdminCategoriaComponent } from './admin_Page/admin-categoria/admin-categoria.component';
+import { DialogNewCategoryComponent } from './dialogs/dialog-new-category/dialog-new-category.component';
+import { DialogDeleteCategoryComponent } from './dialogs/dialog-delete-category/dialog-delete-category.component';
+import { DialogDeleteUserComponent } from './dialogs/dialog-delete-user/dialog-delete-user.component';
+import { DialogDeleteDirComponent } from './dialogs/dialog-delete-dir/dialog-delete-dir.component';
 
 
 
@@ -96,8 +99,6 @@ export function tokenGetter() {
     LogoutComponent,
     AccountComponent,
     AdminComponent,
-    DialogDataExampleDialog,
-    DialogDeleteDir,
     NotFoundComponent,
     
     ListadoSolicitudesComponent,
@@ -113,6 +114,11 @@ export function tokenGetter() {
     DialogDetalleSolConsumoInternoComponent,
     DialogUpdateProductsdataSolConsumoComponent,
     AuthcatComponent,
+    AdminCategoriaComponent,
+    DialogNewCategoryComponent,
+    DialogDeleteCategoryComponent,
+    DialogDeleteUserComponent,
+    DialogDeleteDirComponent,
   ],
   entryComponents:[
     DialogInfoComponent,

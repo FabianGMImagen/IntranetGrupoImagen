@@ -150,15 +150,16 @@ export default class SolicitudConsumoInterno {
     console.log(
       "dentro del metodo para insertar una nueva solicitud de Consumo Interno"
     );
+    // console.log(req.body.IdRole);
+    // console.log(req.body.IdStatusSolConsumoInt);
     // console.log(req.body.IdUserSolicitante);
+    // console.log(req.body.Fecha);
     // console.log(req.body.Empresa);
     // console.log(req.body.Centro);
     // console.log(req.body.Justificacion);
-    // console.log(req.body.IdRole);
-    // console.log(req.body.Fecha);
-    console.log(req.body.Productos);
-    console.log(req.body.Productos[0].Almacen);
-    console.log(req.body.Productos.Caducidad);
+    // console.log(req.body.Productos);
+    // console.log(req.body.Productos[0].Almacen);
+    // console.log(req.body.Productos.Caducidad);
     var sql = require("mssql");
     var env = process.env.NODE_ENV || "SERWEB";
     var config = require("../controllers/connections/servers")[env];

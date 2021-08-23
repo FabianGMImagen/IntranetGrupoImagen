@@ -25,6 +25,7 @@ export class DialogDetalleSolConsumoInternoComponent implements OnInit {
   canupdate:boolean;
   DataInitial:Object;
   ListProductos: ProductoConsumoInterno[] = [];
+  isUpdate:boolean = false;
   constructor(
     public dialog: MatDialog,
     public toast: ToastComponent,
@@ -36,12 +37,17 @@ export class DialogDetalleSolConsumoInternoComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data);
     this.viewspiner = true;
-    this.idsolicitud = this.data;
-    this.getDataInciialforUpdateProducts();
+    this.idsolicitud = this.data.IdSol;
+    if(this.data.Status != 3 || this.data.Status != 5){
+      this.isUpdate = false
+    }else{
+      this.isUpdate = true;
+    }
+    this.getDataInicialforUpdateProducts();
     this.getAllProductsforSolConsumoInt();
   }
 
-  async getDataInciialforUpdateProducts(){
+  async getDataInicialforUpdateProducts(){
     
     this.DataInitial = await this.solConsumoService.getDataInicialforUpdate(this.idsolicitud);
     console.log(this.DataInitial[0]);
