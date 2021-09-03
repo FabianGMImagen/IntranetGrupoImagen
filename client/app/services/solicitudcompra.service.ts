@@ -1755,6 +1755,7 @@ export class SolicitudCompraService {
     // console.log(OrdenIn);
     return this.http.post('/api/upinfosol', { Id, Nombre, Puesto, Email, Tel, Ext, Produc, Justifi, IdOrInt, OrdenIn, NewStatus });
   }
+  
   updateinfoProd(IdSol, IdProd: number, Precio: number, Cantidad: number, IdAlmacen: string, AlmacenName: string, IdMaterial: string, MaterialName: string, IdCentroCosto: string, CecoName: string, IdCuentaMayor: string, NameCuentaMayor: string, IdGrupComp: number, GrupComprName: string, IdUnidadMedida: string, NameUnidadMedida: string, IdOrdEsta: string, OrdEstaName: string, IdActivo: string, ActivoName: string, IdNecesidad: number, NecesidadName: string, espesifica: string, usobien: string, NewStatus: number) {
     // console.log(IdSol);
     // console.log(IdProd);

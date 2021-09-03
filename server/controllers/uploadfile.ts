@@ -10,8 +10,14 @@ import { read } from 'fs';
 
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
+<<<<<<< HEAD
 
 const ruta = "http://10.29.148.40:3000/public/";
+=======
+const ruta = "http://10.29.148.40:3000/public/"
+//const ruta = "http://10.29.148.40:3000/public/";
+//const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
+>>>>>>> 46bb0b2a987bea56da24fb67c7c28e8eb8d4d3df
 
 //const DIR = '../ImagenFinanzasPruebaslocal/datos';
 const DIR = '../IntranetGrupoImagen/datos';

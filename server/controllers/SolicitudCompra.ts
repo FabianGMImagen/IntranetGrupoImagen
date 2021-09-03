@@ -5,8 +5,8 @@ import { connect } from "net";
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
-const SERVER = 'http://10.29.148.40:3000';
-const Intranet = 'http://10.29.148.40:4200';
+const SERVER = 'http://localhost:3000';
+const Intranet = 'http://localhost:4200';
 const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
 const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
 const REDIRECTURL = 'https://developers.google.com/oauthplayground';
@@ -3020,7 +3020,7 @@ export default class SolicitudCompraCTR {
       var mailOptionAdmin = {
         to: req.params.EmailAutorizador,
         cc: 'marco.garcia@gimm.com.mx',
-        subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+        subject: Nombre,
         html:
           "<head>" +
           "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
@@ -3058,7 +3058,7 @@ export default class SolicitudCompraCTR {
       var mailOptionPresupuestoRechaza = {
         to: EmailSolicitante,
         cc: 'mmp@gimm.com.mx',
-        subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+        subject: Nombre,
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
           '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +

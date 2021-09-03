@@ -354,8 +354,8 @@ export class AccountComponent implements OnInit {
 
   //solo aplica para usuario solicitante
   getAllSolicitudforUser() {
-    //console.log(this.auth.currentUser.IdUsuario);
-    //console.log(this.auth.currentUser.LoginName);
+    console.log(this.auth.currentUser.IdUsuario);
+    //console.log(thi s.auth.currentUser.LoginName);
     //console.log(this.auth.currentUser.IdDireccion);
     //console.log(this.auth.currentUser.IdRole);
     this.isload = true;
@@ -399,21 +399,21 @@ export class AccountComponent implements OnInit {
 
   getcssclas(){
     this.ListSolCompReg.forEach(element=>{
-      if(element.Statname === "S. P. NUEVA PETICION"){
-        this.kalssforstatus = {'newsc':true}
-      }else if(element.Statname === "S. P. AUTORIZADO POR GERENTE" || element.Statname === "S. P. AUTORIZADO POR DIRECCION" ||
-         element.Statname === "S. P. PRESUPUESTO AUTORIZADO" || element.Statname === "S. P. REVISADA POR COMPRAS"){
-          this.kalssforstatus = {'aut':true}
-      }else if(element.Statname === "S. P. RECHAZADA POR GERENTE" || element.Statname === "S. P. RECHAZADA POR DIRECCION" ||
-                element.Statname === "S. P. PRESUPUESTO RECHAZADO" || element.Statname === "S. P. REVISADA POR COMPRAS" || 
-                element.Statname === "S. P. CANCELADA"){
-          this.kalssforstatus = {'rech':true}
-      }else if(element.Statname === "S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP"){
-        this.kalssforstatus = {'carsap':true}
-      }else if(element.Statname === "CONTRATO MARCO"){
-        this.kalssforstatus = {'fin':true}
+      if(element.Statname =="S. P. NUEVA PETICION"){
+        element.status = 'newsc';
+      }else if(element.Statname =="S. P. AUTORIZADO POR GERENTE" || element.Statname == "S. P. AUTORIZADO POR DIRECCION" ||
+         element.Statname == "S. P. PRESUPUESTO AUTORIZADO" || element.Statname == "S. P. REVISADA POR COMPRAS"){
+          element.status = 'aut';
+      }else if(element.Statname == "S. P. RECHAZADA POR GERENTE" || element.Statname == "S. P. RECHAZADA POR DIRECCION" ||
+                element.Statname == "S. P. PRESUPUESTO RECHAZADO" || element.Statname == "S. P. RECHAZADA POR COMPRAS" || 
+                element.Statname == "S. P. CANCELADA"){
+          element.status = 'rech'
+      }else if(element.Statname == "S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP"){
+        element.status = 'carsap';
+      }else if(element.Statname == "CONTRATO MARCO"){
+          element.status = 'fin'
       }
-    })
+    });
   }
 
   isPDF(data: SolicitudesCompraRegistradas) {
@@ -437,13 +437,13 @@ export class AccountComponent implements OnInit {
       data.Statname === "S. P. RECHAZADA POR DIRECCION"||
       data.Statname === "S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP"
     ) {
-      this.iseditsolped = true;
-      this.iseditproductbutton = true;
-      this.iseditchilds = true;
-    } else {
-      this.iseditproductbutton = false;
       this.iseditsolped = false;
+      this.iseditproductbutton = false;
       this.iseditchilds = false;
+    } else {
+      this.iseditproductbutton = true;
+      this.iseditsolped = true;
+      this.iseditchilds = true;
     }
 
     this.viewcoutn = false;

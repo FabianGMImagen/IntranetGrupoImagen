@@ -263,7 +263,7 @@ export default function setRoutes(app) {
   
   router.route("/hellosign").get(auth, solicitudCompraCTR.gethelloSing);
   router.route("/callback").get(auth, solicitudCompraCTR.callback);
-//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------CONSUMO INTERNO---------------------------------------------------------------------------------------------
   //recuperamos las diferentes areas que puede realizar solicitudes de Consumo Interno
   router.route('/areaconsumoInt/:IdUser').get(auth, solicitudCompraCTR.getArea);
   //seccion donde se agregan las rutas para solicitar infromacion para la Solicitud de Consumo Interno
@@ -271,24 +271,36 @@ export default function setRoutes(app) {
   //role para mostrar en la seccion de administracion
   router.route("/roleconsumo").get(auth, solconsumoInterno.getRolesSolicitudConsumo);
   //Solicitudes de consumo interno por Direccion y estatus de User 
-  router.route("/allsolconsumoint/:IdRole/:IdDireccion/:IdStatus").get(auth ,solconsumoInterno.getAllSolicitudConsumoIntfor_Dir_Role);
+  router.route("/allsolconsumointforstatusrole/:IdRole/:IdDireccion/:IdStatus").get(auth ,solconsumoInterno.getAllSolicitudConsumoIntfor_Dir_Role);
   //usuario autorizador para envio de correo primer nivel
   router.route("/alldatauserauthsolconsumo/:IdUser/:IdRole").get(auth ,solconsumoInterno.getUserAuthSolConsumo);
-  //envio de correo de Nueva solciitud de Consumo interno
-  router.route("/sendnewemailsolconsumo").post(auth ,solconsumoInterno.SendNewEmailSolConsumoInterno);
   //recuperamos el Id del role que se escluira si es que se tiene alguno para la direccion que se consulta
   router.route("/dirauthforauthconsumoInt/:IdDireccion").get(auth, solconsumoInterno.AuthExceptionforDireccion);
   //insertar una nueva solicitude de Consumo Interno
   router.route("/insertnewsolconsumo").post(auth ,solconsumoInterno.InsertNewSolConsumoInterno);
+  //Actualizacion de Status Solciitud consumo interno
+  router.route("/updatesatussolconfromlocal/:IdSolicitud/:IdNewStatus").get(auth, solconsumoInterno.UpdateSstatusSolcitudConsumoInterno);
+  //envio de correo de Nueva solciitud de Consumo interno
+  router.route("/sendnewemailsolconsumo").post(auth ,solconsumoInterno.SendNewEmailSolConsumoInterno);
+  //envio de correso para gerente director dependiendo el estatus de la solciitud y del role
+  router.route("/sendemailsforroles").post(auth, solconsumoInterno.SendEmailSolConsumoInternoforRole);
   //envio de autorizacion o rechazo a nivel correo electronico para la actualizacion del estatus
-  router.route("/upstatusconsumo/:IdSolicitud/:Solicitante/:IdStatus").get(auth ,solconsumoInterno.UpStatusConsumoInterno);
+  router.route("/upstatusconsumofromemail/:IdSolicitud/:Solicitante/:IdStatus").get(auth ,solconsumoInterno.UpStatusConsumoInternofromEmail);
   //recuperamos las solicitudes de consumo iterno creadas por el usuario
   router.route("/solconsumointforuser/:IdUser/:IdRole").get(auth ,solconsumoInterno.GetAllSolicitudsConsumoInternoporUsuario);
   //recuperamos los datos como la empresa y el centro seleccionado para el Id de la solicitud para despues mostrar datos actualizables para el Usuario solicitnate
   router.route("/inicialdataforupdate/:IdSol").get(auth ,solconsumoInterno.GetDataSolicitudConsumoDataInitial);
   //recuperando Productos por solicitud de consumo interno
   router.route("/productosforsolconsumoint/:IdSolConsumo").get(auth ,solconsumoInterno.GetAllProductosPorSolicitudConsumoInterno);
-
+  //recuperamos list de status para cambiar de estatus una solicitude de consumo interno por role.
+  router.route("/statusforrole/:IdRole").get(auth, solconsumoInterno.GetAllStatusforRole);
+  //lista de todas las solicitudes de consumo interno ingresadas para visualizar por el administrador
+  router.route("/allsolconsumoadmin").get(auth, solconsumoInterno.GetAllSolConsumoInternoForAdmin);
+  //lista de todos los estatus creados para la solicitud de consumo interno
+  router.route("/allstatusadmin").get(auth, solconsumoInterno.GetAllStatusConsumoInternoForAdmin);
+  //actualizacion de estatus para el usuario administrador
+  router.route("/changedstatusadmin/:IdSolicitud/:IdStatus").get(auth, solconsumoInterno.UpdateStatusforAdmin)
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   
 
@@ -400,7 +412,7 @@ export default function setRoutes(app) {
                   console.log("pasamos a subir el archivo.....");
                   //'../ImagenFinanzasFabi/'+FileName, '/'+FileName
                   //var upfile = [{local:'../ImagenFinanzasFabi/' + FileName, remote:'/'+FileName}];
-                  ftp.upload('../IntranetGrupoImagen/'+FileName, FileName, function(err){
+                  ftp.upload('../ImagenFinanzasPruebaslocal/'+FileName, FileName, function(err){
 
                     if(err) console.log(err);
                     else console.log("Se dejo el Archivo en el 10.29.148.24" + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);

@@ -6158,7 +6158,10 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   //validacion de campos
   RemoveCaracteresEpeciales(str) {
-    var j: number;
+    var j: number;var format = cadena.replace(/['"]+/g, ' ');
+    format = format.replace(/[´´]+/g, ' ');
+    format = format.replace(/[``]+/g, ' '); 
+    format = format.replace(/[¨]+/g, ' ');
 
     //console.log(str)
     var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
@@ -6177,7 +6180,13 @@ export class ListadoSolicitudesComponent implements OnInit {
       else ret.push(c);
     }
     //console.log(ret.join( '' ).toString());
-    return ret.join("").toString();
+    
+    var cadena = ret.join("").toString();
+    var format = cadena.replace(/['"]+/g, ' ');
+    format = format.replace(/[´´]+/g, ' ');
+    format = format.replace(/[``]+/g, ' '); 
+    format = format.replace(/[¨]+/g, ' ');
+    return format;
   }
 
   //Mensajes de validacion

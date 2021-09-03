@@ -81,6 +81,8 @@ import { DialogNewCategoryComponent } from './dialogs/dialog-new-category/dialog
 import { DialogDeleteCategoryComponent } from './dialogs/dialog-delete-category/dialog-delete-category.component';
 import { DialogDeleteUserComponent } from './dialogs/dialog-delete-user/dialog-delete-user.component';
 import { DialogDeleteDirComponent } from './dialogs/dialog-delete-dir/dialog-delete-dir.component';
+import { AdminSolicitudesComponent } from './admin_Page/admin-solicitudes/admin-solicitudes.component';
+import { SolconsumointEditComponent } from './admin_Page/solconsumoint-edit/solconsumoint-edit.component';
 
 
 
@@ -119,6 +121,8 @@ export function tokenGetter() {
     DialogDeleteCategoryComponent,
     DialogDeleteUserComponent,
     DialogDeleteDirComponent,
+    AdminSolicitudesComponent,
+    SolconsumointEditComponent,
   ],
   entryComponents:[
     DialogInfoComponent,

@@ -25,7 +25,9 @@ export class AuthServices {
   isCheckPresupuesto = false;
   isIntercambios = false;
 
+  isSolicitanteCI = false;
   isJefeAreaConsumoInt = false;
+  isDirectorConsumoInt = false;
   isAlmacenistaConsumoInt = false;
   // private expiresAt: number;
 
@@ -62,7 +64,9 @@ export class AuthServices {
     localStorage.removeItem('token');
     this.loggedIn = false;
     //====================Solicitud Consumo Interno ==============================
+    this.isSolicitanteCI = false
     this.isJefeAreaConsumoInt = false;
+    this.isDirectorConsumoInt = false;
     this.isAlmacenistaConsumoInt = false;
     //====================Solicitud Pedido ==============================
     this.isIntercambios = false;
@@ -95,8 +99,10 @@ export class AuthServices {
     //this.currentUser.IdDireccion = decodedUser.IdDireccion;
     this.currentUser.NombreCompleto = decodedUser.NombreCompleto;
     //====================Solicitud Consumo Interno ==============================
-    decodedUser.IdRoleConsumoInterno === 3 ? this.isAlmacenistaConsumoInt = true : this.isAlmacenistaConsumoInt = false;
+    decodedUser.IdRoleConsumoInterno === 4 ? this.isAlmacenistaConsumoInt = true : this.isAlmacenistaConsumoInt = false;
+    decodedUser.IdRoleConsumoInterno === 3 ? this.isDirectorConsumoInt = true : this.isDirectorConsumoInt = false;
     decodedUser.IdRoleConsumoInterno === 2 ? this.isJefeAreaConsumoInt = true : this.isJefeAreaConsumoInt = false;
+    decodedUser.IdRoleConsumoInterno === 1 ? this.isSolicitanteCI = true : this.isSolicitanteCI = false;
   //====================Solicitud Pedido ==============================
     decodedUser.IdRole === 9 ? this.isIntercambios = true : this.isIntercambios = false;
     decodedUser.IdRole === 8 ? this.isCheckPresupuesto = true : this.isCheckPresupuesto = false;

@@ -13,5 +13,5 @@ export class SolicitudesConsumoIntRegistradas {
     NameCentro: string;
     Justificacion:string;
     MotivoRechazo:string;
-
+    USERSOLICITANTE?:string
 }
