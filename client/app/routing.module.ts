@@ -23,6 +23,7 @@ import { SolicitudesRegistradasComponent } from './solicitud_Pedido/solicitudes-
 import { SolicitudConsumo_Interno} from './solicitud_ConsumoInt/solicitud-consumo_Interno/solicitud-consumo_Interno.component';
 import { DialogInfoComponent } from './solicitud_Pedido/dialog-info/dialog-info.component';
 import { AuthcatComponent } from './admin_Page/authcat/authcat.component';
+import { AdminSolicitudesComponent } from './admin_Page/admin-solicitudes/admin-solicitudes.component';
 //import { SolicitudesTransitoComponent} from './solicitudes-transito/solicitudes-transito.component'
 
 
@@ -38,7 +39,7 @@ const routes: Routes = [
   { path: 'account', component: AccountComponent, canActivate: [AuthGuardLogin] },
   { path: 'admin', component: AdminComponent, canActivate:[AuthGuardLogin, AuthGuardAdmin] },
   { path: 'notfound', component: NotFoundComponent},
-  { path: 'solicitud', component: SolicitudComponent, canActivate:[AuthGuardLogin] },
+  { path: 'solicitud', component: AdminSolicitudesComponent, canActivate:[AuthGuardLogin] },
   { path: 'solicituderegistradasconsumoint', component: SolicitudesComponent, canActivate:[AuthGuardLogin] },  
   { path: 'listadoSolicitudes', component: ListadoSolicitudesComponent, canActivate:[AuthGuardLogin]},
   { path: 'solicitudesRegistradas', component: SolicitudesRegistradasComponent, canActivate:[AuthGuardLogin]},

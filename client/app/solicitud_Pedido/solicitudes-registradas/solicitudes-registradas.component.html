@@ -1,7 +1,7 @@
 <app-toast [message]="toast.message"></app-toast>
 
 <div class="mat-app-background basic-container">
-  <br>
+  <br />
   <mat-card class="example-card">
     <mat-card-header>
       <div mat-card-avatar class="example-header-image"></div>
@@ -18,21 +18,33 @@
               <mat-label>DIRECCIONES A CONSULTAR SOLICITUDES</mat-label>
               <mat-select [(ngModel)]="this.Direccion" name="dir" (selectionChange)="SelectedDireccion()">
                 <mat-option *ngFor="let dir of ListDirforUser" [value]="dir">
-                  <p *ngIf="!this.auth.isCompras && !this.auth.isComprador">{{dir.Nombre}}</p>
-                  <p *ngIf="this.auth.isCompras || this.auth.isComprador || this.auth.isIntercambios">{{dir.Nombre}},
-                    S.P Nuevas : {{dir.Total}}</p>
+                  <p *ngIf="!this.auth.isCompras && !this.auth.isComprador">
+                    {{ dir.Nombre }}
+                  </p>
+                  <p *ngIf="
+                      this.auth.isCompras ||
+                      this.auth.isComprador ||
+                      this.auth.isIntercambios
+                    ">
+                    {{ dir.Nombre }}, S.P Nuevas : {{ dir.Total }}
+                  </p>
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
-        <div class="col-3" *ngIf="this.auth.isCompras || this.auth.isComprador || this.auth.isCheckPresupuesto || this.auth.isIntercambios">
+        <div class="col-3" *ngIf="
+            this.auth.isCompras ||
+            this.auth.isComprador ||
+            this.auth.isCheckPresupuesto ||
+            this.auth.isIntercambios
+          ">
           <div class="icons">
-            <i class="fas fa-boxes"></i>
             <mat-form-field>
+              <i class="fas fa-boxes"></i>
               <mat-label>SELECCIONA UN STATUS</mat-label>
               <mat-select [(ngModel)]="SelectedCompras" name="comp" (selectionChange)="SelectionStatus()">
-                <mat-option *ngFor="let status of ListStatusCompras" [value]="status">{{status.Nombre}}</mat-option>
+                <mat-option *ngFor="let status of ListStatusCompras" [value]="status">{{ status.Nombre }}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -79,47 +91,62 @@
     </mat-card-content>
   </mat-card>
 
-
-
   <div class="mat-app-background basic-container" *ngIf="isViewListSolicitudes">
     <mat-form-field>
-      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="FILTRO DE SOLICITUDES DE PEDIDO.">
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="FILTRO DE SOLICITUDES DE PEDIDO." />
     </mat-form-field>
-
 
     <div class="mat-elevation-z8">
       <!--TABLA DINAMICA -->
       <table mat-table [dataSource]="datSource" multiTemplateDataRows class="mat-elevation-z8">
-
-        <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
-          <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-          <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+        <ng-container matColumnDef="{{ column }}" *ngFor="let column of columnsToDisplay">
+          <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+          <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
         </ng-container>
-
 
         <ng-container matColumnDef="expandedDetail">
           <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+            <div class="example-element-detail" [@detailExpand]="
+                element == expandedElement ? 'expanded' : 'collapsed'
+              ">
               <div class="example-element-diagram">
-                <div class="example-element-position"><a>REQUIRENTE:</a> {{element.NombreUsuario}} </div>
-                <div class="example-element-position"> <a>EMAIL:</a> {{element.Email}} </div>
-                <div class="example-element-name"><a>TIPO DE SOLICITUD:</a> {{element.TSNombre}}</div>
-                <div class="example-element-name"><a>CATEGORIA: </a> {{element.CATEGORIA}}</div>
+                <div class="example-element-position">
+                  <a class="titles">REQUIRENTE:</a> {{ element.NombreUsuario }}
+                </div>
+                <div class="example-element-position">
+                  <a class="titles">EMAIL:</a> {{ element.Email }}
+                </div>
+                <div class="example-element-name">
+                  <a class="titles">TIPO DE SOLICITUD:</a>
+                  {{ element.TSNombre }}
+                </div>
+                <div class="example-element-name">
+                  <a class="titles">CATEGORIA: </a> {{ element.CATEGORIA }}
+                </div>
                 <!--<div class="example-element-name"><a>Empresa:</a> {{element.Empresa}}</div>-->
               </div>
               <div class="example-element-description">
                 <div>
-                  <a>DIVISION: </a> <a>{{element.DIVISION}}</a>
-                  <span class="example-element-description-attribution"> --- {{element.Statname}}</span>
-                  <br>
-                  <div class="example-element-name"><a>JUSTIFICACION:</a> {{element.Justificacion}} </div>
-                  <br>
+                  <a class="titles">DIVISION: </a> <a>{{ element.DIVISION }}</a>
+                  <span class="example-element-description-attribution">
+                    --- {{ element.Statname }}</span>
+                  <br />
+                  <div class="example-element-name">
+                    <a class="titles">JUSTIFICACION:</a>
+                    {{ element.Justificacion }}
+                  </div>
+                  <br />
                   <div class="icons" *ngIf="this.auth.isCheckPresupuesto">
                     <i class="fas fa-user-tie"></i>
-                    <mat-label> AUTORIZADOR DE PRESUPUESTO ASIGNADO: <a>{{element.NAMEAUTH}}</a></mat-label>
+                    <mat-label>
+                      AUTORIZADOR DE PRESUPUESTO ASIGNADO:
+                      <a>{{ element.NAMEAUTH }}</a></mat-label>
                   </div>
-                  <mat-label *ngIf="this.auth.isCheckPresupuesto && element.Statname == 'S. P. PRESUPUESTO RECHAZADO'">
-                    MOTIVO DE RECHAZO: <a>{{element.MotivoRechazo}}</a>
+                  <mat-label *ngIf="
+                      this.auth.isCheckPresupuesto &&
+                      element.Statname == 'S. P. PRESUPUESTO RECHAZADO'
+                    ">
+                    MOTIVO DE RECHAZO: <a>{{ element.MotivoRechazo }}</a>
                   </mat-label>
                 </div>
                 <div class="row">
@@ -129,8 +156,8 @@
                       DETALLES SOLICITUD
                     </button>
                   </div>
-                  <div class="col" *ngIf="isEditing" style="font-size: 15px;">
-                    <a [href]='element.RutaCotizacion' target="_blank">
+                  <div class="col" *ngIf="isEditing" style="font-size: 15px">
+                    <a [href]="element.RutaCotizacion" target="_blank">
                       <i class="fa fa-file-text" aria-hidden="true"></i>
                       ESPECIFICACIONES
                     </a>
@@ -152,7 +179,7 @@
                       Revisar Solicitud.
                     </button>
                   </div> -->
-                
+
                 <!-- <div> 
                       <button mat-button (click)="openDialog()"><i class="fas fa-signature"></i>FIRMAR</button>
                       <div class="firma" *ngIf="isfirma">
@@ -169,73 +196,68 @@
                       <!-- <img [src]="SignatureImage" *ngIf="SignatureImage"> -->
                 <!--</div> -->
                 <div class="row">
-                  <div class="col" *ngIf="element.Statname != 'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP'  ">
+                  <div class="col" *ngIf="
+                      element.Statname !=
+                      'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP'">
                     <div *ngIf="element.Statname != 'S. P. RECHAZADA POR COMPRAS'">
                       <div *ngIf="is_persona_coprador">
-                        <div style="max-width: 380px; padding: 5px;">
+                        <div style="max-width: 380px; padding: 5px">
                           <mat-form-field>
                             <mat-label>CAMBIAR ESTATUS</mat-label>
                             <mat-select [(ngModel)]="SelectedStatus" name="status" (selectionChange)="selectedStatus()">
-                              <mat-option *ngFor="let status of ListStatus" [value]="status">{{status.Nombre}}
+                              <mat-option *ngFor="let status of ListStatus" [value]="status">{{ status.Nombre }}
                               </mat-option>
                             </mat-select>
                           </mat-form-field>
                           <div class="example-element-description motjust" *ngIf="isrechazada">
                             <textarea matInput placeholder="MOTIVO DE RECHAZO" [(ngModel)]="motivo_Rechazo"
-                            class="example-element-description-attribution" maxlength="250"></textarea>
+                              class="example-element-description-attribution" maxlength="250"></textarea>
                           </div>
                         </div>
                         <div>
-                          <button class="btn btn-success ml-1" (click)="validaStatus(element)">
+                          <button class="btn btn-success btn-sm" (click)="validaStatus(element)">
                             <i class="fa fa-floppy-o"></i>
                             GUARDAR
                           </button>
                         </div>
-                        </div>
                       </div>
                     </div>
-                    <div class="col" *ngIf="this.auth.isComprador || this.auth.isCompras">
-                      <div>
-                        <div class="icons">
-                          <mat-form-field >
-                            <mat-label>CATEGORIAS</mat-label>
-                            <mat-select
-                              [(ngModel)]="SelectCategory"
-                              name="categoria">
-                            <mat-option
-                              *ngFor="let categoria of ListCategorys"
-                              [value]="categoria"
-                              >{{ categoria.Nombre }}</mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                        </div>
-                      </div>
-                      <div>
-                        <button mat-raised-button color="primary" (click)="changedCategorySol(element)">
-                          <i class="fa fa-bullseye" aria-hidden="true"></i>
-                          CAMBIAR CAT.
-                        </button>
+                  </div>
+                  <div class="col" *ngIf="this.auth.isComprador || this.auth.isCompras">
+                    <div>
+                      <div class="icons">
+                        <mat-form-field>
+                          <mat-label>CATEGORIAS</mat-label>
+                          <mat-select [(ngModel)]="SelectCategory" name="categoria">
+                            <mat-option *ngFor="let categoria of ListCategorys" [value]="categoria">
+                              {{ categoria.Nombre }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
                       </div>
                     </div>
+                    <div>
+                      <button mat-raised-button color="primary" (click)="changedCategorySol(element)">
+                        <i class="fa fa-bullseye" aria-hidden="true"></i>
+                        CAMBIAR CAT.
+                      </button>
+                    </div>
+                  </div>
                 </div>
-                
               </div>
 
-              <br>
+              <br />
             </div>
           </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-        <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
-          [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = element">
-        </tr>
+        <tr mat-row *matRowDef="let element; columns: columnsToDisplay" class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = element"></tr>
         <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
       </table>
       <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
     </div>
   </div>
-
 
   <div *ngIf="isData">
     <mat-card class="example-card">
@@ -248,24 +270,22 @@
         <div class="row">
           <div class="col">
             <mat-form-field>
-              <input matInput placeholder="NOMBRE REQUIRENTE" [(ngModel)]="SelectedDataList.NombreUsuario" disabled>
+              <input matInput placeholder="NOMBRE REQUIRENTE" [(ngModel)]="SelectedDataList.NombreUsuario" disabled />
             </mat-form-field>
           </div>
           <div class="col">
             <mat-form-field>
-              <input matInput placeholder="ESTATUS DE SOLICITUD" [(ngModel)]="SelectedDataList.Statname" disabled>
+              <input matInput placeholder="ESTATUS DE SOLICITUD" [(ngModel)]="SelectedDataList.Statname" disabled />
             </mat-form-field>
           </div>
           <div class="col">
             <mat-form-field>
-              <input matInput placeholder="FECHA DE CREACION" [(ngModel)]="SelectedDataList.FECHASOLICITUD" disabled>
+              <input matInput placeholder="FECHA DE CREACION" [(ngModel)]="SelectedDataList.FECHASOLICITUD" disabled />
             </mat-form-field>
           </div>
         </div>
-
       </mat-card-content>
     </mat-card>
-
 
     <mat-card class="example-card">
       <mat-card-header>
@@ -279,26 +299,27 @@
       </mat-card-header>
       <mat-card-content>
         <div class="mat-elevation-z8">
-
-
           <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
-
-            <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
-              <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-              <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+            <ng-container matColumnDef="{{ column }}" *ngFor="let column of displayedColumns">
+              <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+              <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
             </ng-container>
 
             <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
             <ng-container matColumnDef="expandedDetail">
               <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
-                <div class="example-element-detail"
-                  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                <div class="example-element-detail" [@detailExpand]="
+                    element == expandedElement ? 'expanded' : 'collapsed'
+                  ">
                   <div class="row">
-                    <div class="example-element-namespesifications col"><a>ESPECIFICACIONES GENERALES :</a>
-                      {{element.EspGenerales}} </div>
+                    <div class="example-element-namespesifications col">
+                      <a>ESPECIFICACIONES GENERALES :</a>
+                      {{ element.EspGenerales }}
+                    </div>
                     <div *ngIf="bloqbuttonchild" class="col example-element-namespesifications">
-                      <button mat-raised-button color="primary" (click)="ViewChilds(element)"><i
-                          class="fas fa-shapes"></i> Ver Sub Conceptos</button>
+                      <button mat-raised-button color="primary" (click)="ViewChilds(element)">
+                        <i class="fas fa-shapes"></i> Ver Sub Conceptos
+                      </button>
                     </div>
                     <div class="col" *ngIf="element.isOpen">
                       <table class="table table-bordered">
@@ -316,14 +337,24 @@
                         </thead>
                         <tbody>
                           <tr *ngFor="let childs of ListChilds">
-                            <td width="15">{{childs.CantidadChild}}</td>
-                            <td width="15">{{childs.PrecioChild}}</td>
-                            <td width="15">{{childs.IdOrdenEstadisticaChild}}</td>
-                            <td width="15">{{childs.NameOrdenEstadisticaChild}}</td>
-                            <td width="15">{{childs.NameUnidadMedidaChild}}</td>
-                            <td width="15">{{childs.NameCentroCostoChild}}</td>
-                            <td width="15">{{childs.NameCuentaMayorChild}}</td>
-                            <td>{{childs.TextoBreve}}</td>
+                            <td width="15">{{ childs.CantidadChild }}</td>
+                            <td width="15">{{ childs.PrecioChild }}</td>
+                            <td width="15">
+                              {{ childs.IdOrdenEstadisticaChild }}
+                            </td>
+                            <td width="15">
+                              {{ childs.NameOrdenEstadisticaChild }}
+                            </td>
+                            <td width="15">
+                              {{ childs.NameUnidadMedidaChild }}
+                            </td>
+                            <td width="15">
+                              {{ childs.NameCentroCostoChild }}
+                            </td>
+                            <td width="15">
+                              {{ childs.NameCuentaMayorChild }}
+                            </td>
+                            <td>{{ childs.TextoBreve }}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -334,36 +365,32 @@
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
-              [class.example-expanded-row]="expandedElement === element"
-              (click)="expandedElement = expandedElement === element ? null : element">
-            </tr>
+            <tr mat-row *matRowDef="let element; columns: displayedColumns" class="example-element-row"
+              [class.example-expanded-row]="expandedElement === element" (click)="
+                expandedElement = expandedElement === element ? null : element
+              "></tr>
             <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
           </table>
-
         </div>
 
         <div class="row">
+          <div class="col"></div>
+          <div class="col"></div>
           <div class="col">
-
-          </div>
-          <div class="col">
-
-          </div>
-          <div class="col">
-            <br>
-            <br>
+            <br />
+            <br />
             <!--<button class="btn btn-sm btn-primary mr-2" type="submit" (click)="guardaGerente()"><i class="fa fa-floppy-o"></i> Save</button>-->
-            <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-arrow-circle-left"
-                aria-hidden="true"></i>
-              REGRESAR</button>
+            <button class="btn btn-sm btn-warning" (click)="cancelEditing()">
+              <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+              REGRESAR
+            </button>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
 
-
     <ng-container *ngFor="let val of ListMessageInsertSAP">
-      <label>{{val.success}}</label>
+      <label>{{ val.success }}</label>
     </ng-container>
   </div>
+</div>

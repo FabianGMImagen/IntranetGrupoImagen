@@ -11,7 +11,7 @@ const CLIENTSECRET = "8EVBFB3CsQGdl1hmo8Ga1RjC";
 const REDIRECTURL = "https://developers.google.com/oauthplayground";
 const REFRESH_TOKEN = "1//04w28OpEOrPHuCgYIARAAGAQSNwF-L9IrHcNzNa8vxh6WaGYbRy5D2XriXNuB8lZAOCctLI5JH_D9ossGPyTphZjYpE9xyNKrQ28";
 export default class SolicitudConsumoInterno {
-    
+     
 
   getAllSolicitudesConsumoInternoForUser = (req, res) => {
     console.log(
@@ -26,7 +26,7 @@ export default class SolicitudConsumoInterno {
       .then((pool) => {
         return pool
           .request()
-          .input("IdUser", sql.Int, req.params.IdSolicitud)
+          .input("IdUser", sql.Int, req.params.IdUser)
           .execute("GetAllSolConsumoInterno");
       })
       .then((result) => {
@@ -83,10 +83,30 @@ export default class SolicitudConsumoInterno {
   };
 
   getAllSolicitudConsumoIntfor_Dir_Role = (req, res) => {
-    console.log(req.params.IdRole);
     console.log(req.params.IdDireccion);
     console.log(req.params.IdStatus);
-    return "los datos de la solicitud de consumo interno ";
+    console.log(req.params.IdRole);
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || "SERWEB";
+    var config = require("../controllers/connections/servers")[env];
+    new sql.ConnectionPool(config)
+      .connect()
+      .then((pool) => {
+        return pool
+          .request()
+          .input("IdStatus", sql.Int, req.params.IdStatus)
+          .input("IdDireccion", sql.Int, req.params.IdDireccion)
+          .input("IdRole", sql.Int, req.params.IdRole)
+          .execute("GetAllSolConsumoIntforDirandRole");
+      })
+      .then((result) => {
+        //console.log(result)
+        res.status(201).json(result.recordset);
+      }).catch((err) => {
+        console.log("Error al recuperar las sol. Consumo Int." + err);
+        res
+          .status(401).json({ message: "Error al recuperar las sol. Consumo Int."+ err });
+      });
   };
 
   getArea = (req, res) => {
@@ -234,6 +254,31 @@ export default class SolicitudConsumoInterno {
     sql.close();
   };
 
+  UpdateSstatusSolcitudConsumoInterno = (req, res)=>{
+    console.log( req.params.IdSolicitud);
+    console.log(req.params.IdNewStatus);
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || "SERWEB";
+    var config = require("../controllers/connections/servers")[env];
+    new sql.ConnectionPool(config)
+      .connect()
+      .then((pool) => {
+        return pool
+          .request()
+          .input("IdSolicitud", sql.Int, req.params.IdSolicitud)
+          .input("IdNewStatus", sql.Int, req.params.IdNewStatus)
+          .execute("UpdatEstatusSolConsumoInt");
+      })
+      .then((result) => {
+        console.log(result.recordset)
+        res.status(201).json(result.recordset);
+      }).catch((err) => {
+        console.log("Error al recuperar las sol. Consumo Int." + err);
+        res
+          .status(401).json({ message: "Error al recuperar las sol. Consumo Int."+ err });
+      });
+  }
+
   SendNewEmailSolConsumoInterno = (req, res) => {
     console.log("entrando al metodo para enviar el mail a la persona que autoriza la SolConsumo");
     // console.log(req.body.IdSolicitud);
@@ -310,7 +355,7 @@ export default class SolicitudConsumoInterno {
             //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
             '<button type="button" style="text-decoration: none; border: 1px solid #90caf9;  border-radius: 5px; padding-rigth: 5px; background-color: #90caf9; "><a href="' +
             SERVER +
-            "/api/upstatusconsumo/" +
+            "/api/upstatusconsumofromemail/" +
             req.body.IdSolicitud +
             "/" +
             req.body.NameSolicitante +
@@ -319,7 +364,7 @@ export default class SolicitudConsumoInterno {
             '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
             '<button type="button" style="text-decoration: none; border: 1px solid #f48fb1;  border-radius: 5px; padding-rigth: 5px; background-color: #f48fb1; "><a href="' +
             SERVER +
-            "/api/upstatusconsumo/" +
+            "/api/upstatusconsumofromemail/" +
             req.body.IdSolicitud +
             "/" +
             req.body.NameSolicitante +
@@ -358,16 +403,214 @@ export default class SolicitudConsumoInterno {
       });
   };
 
-  UpStatusConsumoInterno = (req, resp) => {
+  SendEmailSolConsumoInternoforRole = async (req, resp) =>{
+    console.log(req.body.IdSolcitud);
+    console.log(req.body.StatusSol);
+    console.log(req.body.NameStatus);
+    console.log(req.body.NameSolicitante);
+    console.log(req.body.NameAuth);
+    console.log(req.body.EmailAuth);
+    console.log(req.body.EmailSolicitante);
+    //se enviá el correo a GERENTE 
+    if (req.body.StatusSol == 2 || req.body.StatusSol == 3) {
+      console.log("-------------------Email a nivel GERENTE");
+      if(req.body.StatusSol == 2){
+        var EnvioStatusAutoriza = 4;
+        var EnvioStatusRechaza = 5;
+        var mailOptionAutorizaAlmacenista = {
+          to: req.body.EmailAuth,
+          cc: "marco.garcia@gimm.com.mx",
+          subject: "SOLICITUD DE CONSUMO INTERNO PENDIENTE",
+          html:
+            "<head>" +
+            "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' " +
+            "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+            "</head>" +
+            "<body>" +
+            "<Strong>TIENES UNA SOLICITUD PENDIENTE POR REVISAR DE : </Strong>" +
+            req.body.NameSolicitante +
+            "<br>" +
+            "<Strong>CON UN ID DE SOLICITUD : </Strong>" +
+            req.body.IdSolcitud +
+            "<br><br>" +
+            "<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>" +
+            "<br>" +
+            "<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERÁ ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>" +
+            "<br>" +
+            "<br>" +
+            "<div>" +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="' +
+            Intranet +
+            '">ENTRAR A INTRANET</a>' +
+            "<div>" +
+            "<br>" +
+            "<br>" +
+            // Envio de botones para aprovar o un denegar la solicitud de pedido
+            '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatusconsumofromemail/' + req.body.IdSolcitud + '/' + req.body.NameSolicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
+            '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #F48FB1; "><a href="'+SERVER+'/api/upstatusconsumofromemail/' + req.body.IdSolcitud + '/' + req.body.NameSolicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
+            "<br>" +
+            "<br>" +
+            "<p> Porfavor no Responder a este Mensaje, Este es un Mensaje Automatico<p/>" +
+            "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' " +
+            "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+            "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' " +
+            "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+            "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' " +
+            "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+            "</body>",
+        };
+        const isSend = await this.SendEmail(mailOptionAutorizaAlmacenista);
+        if(isSend == true){
+          resp.status(200).json({message:"Se envio correctamente el Email"});
+          resp.end();
+        }else{
+          resp.status(404);
+          resp.end();
+        }
+      }else{
+        var mailOptionRechaza = {
+          to: req.body.EmailSolicitante,
+          cc: "marco.garcia@gimm.com.mx",
+          subject: "SOLICITUD DE CONSUMO INTERNO RECHAZADA",
+          html:
+            "<h3>" +
+            req.body.NameStatus +
+            "</h3> : " +
+            req.body.NameAuth +
+            "<br>" +
+            "<Strong>CON UN ID DE SOLICITUD : </Strong>" +
+            req.body.IdSolcitud +
+            "<br><br>" +
+            "<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>" +
+            "<br>" +
+            "<br>" +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="' +
+            Intranet +
+            '">ENTRAR A INTRANT</a>' +
+            "<br>" +
+            "<br>" +
+            //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+            //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+
+            //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+            "<br>" +
+            "<br>" +
+            "<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>",
+        };
+        const isSend = await this.SendEmail(mailOptionRechaza);
+        if(isSend == true){
+          resp.status(200).json({message:"Se envio correctamente el Email"});
+          resp.end();
+        }else{
+          resp.status(404);
+          resp.end();
+        }
+      }
+    }
+
+    if(req.body.StatusSol == 4 || req.body.StatusSol == 5){
+      console.log("-------------------Email a nivel DIRECTOR")
+      if(req.body.StatusSol == 4){
+        var mailOptionAutorizaAlmacenista = {
+          to: req.body.EmailAuth,
+          cc: "marco.garcia@gimm.com.mx",
+          subject: "SOLICITUD DE CONSUMO INTERNO PENDIENTE",
+          html:
+            "<head>" +
+            "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' " +
+            "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+            "</head>" +
+            "<body>" +
+            "<Strong>TIENES UNA SOLICITUD PENDIENTE POR REVISAR DE : </Strong>" +
+            req.body.NameSolicitante +
+            "<br>" +
+            "<Strong>CON UN ID DE SOLICITUD : </Strong>" +
+            req.body.IdSolcitud +
+            "<br><br>" +
+            "<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>" +
+            //"<br>" +
+            //"<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERÁ ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>" +
+            "<br>" +
+            "<br>" +
+            "<div>" +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="' +
+            Intranet +
+            '">ENTRAR A INTRANET</a>' +
+            "<div>" +
+            "<br>" +
+            "<br>" +
+            // Envio de botones para aprovar o un denegar la solicitud de pedido
+            // '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatusconsumofromemail/' + req.body.IdSolicitud + '/' + req.body.NameSolicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
+            // '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #F48FB1; "><a href="'+SERVER+'/api/upstatusconsumofromemail/' + req.body.IdSolicitud + '/' + req.body.NameSolicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
+            "<br>" +
+            "<br>" +
+            "<p> Porfavor no Responder a este Mensaje, Este es un Mensaje Automatico<p/>" +
+            "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' " +
+            "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+            "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' " +
+            "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+            "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' " +
+            "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+            "</body>",
+        };
+        const isSend = await this.SendEmail(mailOptionAutorizaAlmacenista);
+        if(isSend == true){
+          resp.status(200).json({message:"Se envio correctamente el Email"});
+          resp.end();
+        }else{
+          resp.status(404);
+          resp.end();
+        }
+      }else{
+        var mailOptionRechaza = {
+          to: req.body.EmailSolicitante,
+          cc: "marco.garcia@gimm.com.mx",
+          subject: "SOLICITUD DE CONSUMO INTERNO RECHAZADA",
+          html:
+            "<h3>" +
+            req.body.NameStatus +
+            "</h3> : " +
+            req.body.NameAuth +
+            "<br>" +
+            "<Strong>CON UN ID DE SOLICITUD : </Strong>" +
+            req.body.IdSolcitud +
+            "<br><br>" +
+            "<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>" +
+            "<br>" +
+            "<br>" +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="' +
+            Intranet +
+            '">ENTRAR A INTRANT</a>' +
+            "<br>" +
+            "<br>" +
+            //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+            //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+
+            //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+            "<br>" +
+            "<br>" +
+            "<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>",
+        };
+        const isSend = await this.SendEmail(mailOptionRechaza);
+        if(isSend == true){
+          resp.status(200).json({message:"Se envio correctamente el Email"});
+          resp.end();
+        }else{
+          resp.status(404);
+          resp.end();
+        }
+      }
+
+    }
+  }
+
+
+  UpStatusConsumoInternofromEmail = (req, resp) => {
     //nivel de autorizacion para Gerente pero se valida los caso de excepcion para Gerente y Director
     if (req.params.IdStatus == 2 || req.params.IdStatus == 3) {
       console.log("-------------------Autoriza a nivel GERENTE");
       var sql = require("mssql");
       var env = process.env.NODE_ENV || "SERWEB";
       var config = require("../controllers/connections/servers")[env];
-      console.log(
-        "este es el id de la SOlicitud---->" + req.params.IdSolicitud
-      );
+      console.log("este es el id de la SOlicitud---->" + req.params.IdSolicitud);
       new sql.ConnectionPool(config)
         .connect()
         .then((pool) => {
@@ -378,14 +621,13 @@ export default class SolicitudConsumoInterno {
         })
         .then((resultExclution) => {
           console.log(resultExclution.recordsets);
-          console.log(resultExclution.recordsets);
           console.log("/*/*/*/*/*/*/*/*/*/*/*/*//*/*/");
           let roleaexcluir = (resultExclution.recordsets[2][0].IdRoleConsumoInterno == 0 || resultExclution.recordsets[2][0].IdRoleConsumoInterno == undefined)
               ? 0
               : resultExclution.recordsets[2][0].IdRoleConsumoInterno;
           var EstatusSolicitud = resultExclution.recordsets[1][0].IdStatusSolicitud;
 
-          //validamos el estatus de la solicitd de consumo
+          //Revalidamos el estatus de la solicitd de consumo
           if (EstatusSolicitud === 1) {
             if (roleaexcluir === 3) {
               //el role que se excluye es el de direccion
@@ -1497,15 +1739,14 @@ export default class SolicitudConsumoInterno {
     return new Promise(async (resolve) => {
       var accessToken;
       const oauth2Client = new google.auth.OAuth2(
-        "149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com", //client ID
-        "8EVBFB3CsQGdl1hmo8Ga1RjC", // Client Secret
-        "https://developers.google.com/oauthplayground" // Redirect URL
+        CLIENTID, //client ID
+        CLIENTSECRET, // Client Secret
+        REDIRECTURL// Redirect URL
       );
 
       oauth2Client.setCredentials(
         {
-          refresh_token:
-            "1//04w28OpEOrPHuCgYIARAAGAQSNwF-L9IrHcNzNa8vxh6WaGYbRy5D2XriXNuB8lZAOCctLI5JH_D9ossGPyTphZjYpE9xyNKrQ28",
+          refresh_token:REFRESH_TOKEN,
         },
         (err) => {
           console.log("error al recuperar el token");
@@ -1529,11 +1770,9 @@ export default class SolicitudConsumoInterno {
               // clientId: '544106101605-rovj6b5vibmu9i8o6gt7f4ug08bc9sq0.apps.googleusercontent.com',
               // clienteSecret: '1qoVyt-wBMWxfP1y1-mgB0OS',
               // refreshToken: '1//0462blb5qVoUqCgYIARAAGAQSNwF-L9IreGtA-FOLTrvYbj_8Y0iwK5HOfm_MbpJO-NaKYuYlT0drUZM55A5jiYltqbf5mcVDr0M',
-              clientId:
-                "149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com",
-              clienteSecret: "8EVBFB3CsQGdl1hmo8Ga1RjC",
-              refreshToken:
-                "1//04w28OpEOrPHuCgYIARAAGAQSNwF-L9IrHcNzNa8vxh6WaGYbRy5D2XriXNuB8lZAOCctLI5JH_D9ossGPyTphZjYpE9xyNKrQ28",
+              clientId:CLIENTID,
+              clienteSecret: CLIENTSECRET,
+              refreshToken:REFRESH_TOKEN,
               accessToken: accessToken,
               //expires: 1494388182480
             },
@@ -1627,6 +1866,97 @@ export default class SolicitudConsumoInterno {
     });
   }
 
+  GetAllStatusforRole = (req, resp)=>{
+    console.log(req.params.IdRole);
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || "SERWEB";
+    var config = require("../controllers/connections/servers")[env];
+    new sql.ConnectionPool(config)
+      .connect()
+      .then((pool) => {
+        return pool
+          .request()
+          .input("IdRole", sql.Int, req.params.IdRole)
+          .execute("StatusforRoleConsumoInterno");
+      })
+      .then((result) => {
+        resp.status(201).json(result.recordset);
+        resp.end();
+      })
+      .catch((err) => {
+        console.log(err);
+        resp.status(401).json({ message: err });
+      });
+  }
 
+  GetAllSolConsumoInternoForAdmin = (req, res) =>{
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || "SERWEB";
+    var config = require("../controllers/connections/servers")[env];
+    new sql.ConnectionPool(config)
+      .connect()
+      .then((pool) => {
+        return pool
+          .request()
+          .input("IdUser", sql.Int, 0)
+          .execute("GetAllSolConsumoInterno");
+      })
+      .then((result) => {
+        //console.log(result);
+        res.status(201).json(result.recordset);
+        sql.close();
+      })
+      .catch((err) => {
+        res.json(err);
+        sql.close();
+      });
+  }
 
+  GetAllStatusConsumoInternoForAdmin = (req, res) =>{
+    console.log(req.params.IdRole);
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || "SERWEB";
+    var config = require("../controllers/connections/servers")[env];
+    new sql.ConnectionPool(config)
+      .connect()
+      .then((pool) => {
+        return pool
+          .request()
+          .input("IdRole", sql.Int, 0)
+          .execute("StatusforRoleConsumoInterno");
+      })
+      .then((result) => {
+        //console.log(result);
+        res.status(201).json(result.recordset);
+        res.end();
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).json({ message: err });
+      });
+  }
+
+  UpdateStatusforAdmin = (req, res) =>{
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || "SERWEB";
+    var config = require("../controllers/connections/servers")[env];
+    new sql.ConnectionPool(config)
+      .connect()
+      .then((pool) => {
+        return pool
+          .request()
+          .input("IdSolicitud", sql.Int, req.params.IdSolicitud)
+          .input("IdUpdateStatus", sql.Int, req.params. IdStatus)
+          .execute("ChangedStatusSolicitudConsumoIntAdmin");
+      })
+      .then((result) => {
+        //console.log(result);
+        res.status(201).json("se actualizo el estatus correctamente");
+        res.end();
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(401).json(err);
+      });
+  }
 }

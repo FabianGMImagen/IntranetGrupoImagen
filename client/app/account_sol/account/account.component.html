@@ -6,9 +6,6 @@
     <ng-template mat-tab-label>
       <mat-icon>library_books</mat-icon>
       <div style="padding-left: 5px; padding-right: 5px;">Sol. Pedido</div>
-      <div class="spinner-border text-danger" role="status" *ngIf="isload">
-        <span class="visually-hidden"></span>
-      </div>
     </ng-template>
     <mat-card>
       <div *ngIf="viewcoutn">
@@ -41,8 +38,8 @@
                 <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
                   <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
                     <div class="example-element-diagram row">
-                      <div class="example-element-position col-4">
-                        <span [ngClass]="kalssforstatus">{{element.Statname}}</span> 
+                      <div class="example-element-position col-5">
+                        <span [ngClass]="element.status">{{element.Statname}}</span> 
                       </div>
                       <div class="col-3"><span>ASIGNADO A : </span> <span>{{element.Comprador ? element.Comprador : "Aun no Asignado"}}</span> </div>
                       <div class="example-element-position col"
@@ -85,12 +82,17 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon>library_books</mat-icon>
-      Sol. Consumo Interno
+      <div style="padding-left: 5px; padding-right: 5px;"> Sol. Consumo Int</div>
+      <!-- <div class="spinner-border text-danger" role="status" *ngIf="isload">
+        <span class="visually-hidden"></span>
+      </div> -->
     </ng-template>
     
     <app-account-sol-consumo-list></app-account-sol-consumo-list>
   </mat-tab>
-  <!-- <mat-tab label="Third"> Content 3 </mat-tab> -->
+  <div class="spinner-border text-danger" role="status" *ngIf="isload">
+    <span class="visually-hidden"></span>
+  </div>
 </mat-tab-group>
 
 

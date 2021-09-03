@@ -40,4 +40,5 @@ export class SolicitudesCompraRegistradas{
 
     buttonChild:boolean;
     Comprador:string;
+    status:string;
 }

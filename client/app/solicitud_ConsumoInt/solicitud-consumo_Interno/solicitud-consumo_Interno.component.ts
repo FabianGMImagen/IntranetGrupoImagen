@@ -575,20 +575,25 @@ export class SolicitudConsumo_Interno implements OnInit {
       
       //Preguntamos si existe algun role para la direccion asociada al usr, si requiere que se excluya a un autorizador y que nivel es el que se exluira
       console.log(this.DataConsumInt.Productos);
-      
-      const IdExcepctionRole = await this.ValidateExeptionforDireccion(this.DataConsumInt.Area.IdDireccion);
-        
-      console.log("000000000000000")
-      console.log(IdExcepctionRole);
+      try {
+        const IdExcepctionRole = await this.ValidateExeptionforDireccion(this.DataConsumInt.Area.IdDireccion);
+        console.log("000000000000000")
+        console.log(IdExcepctionRole);
 
-      if(IdExcepctionRole === null || IdExcepctionRole === 0){
-        this.SendInsertandCheckoutUserAutorization(2, "S. C. I. NUEVA PETICION", 1);
-      }else if(IdExcepctionRole === 2){
-        this.SendInsertandCheckoutUserAutorization(3, "S. C. I. AUTORIZADA POR GERENTE", 2);
-      }else if(IdExcepctionRole === 3){
-        this.SendInsertandCheckoutUserAutorization(2, "S. C. I. NUEVA PETICION", 1);
+        if(IdExcepctionRole === null || IdExcepctionRole === 0){
+          this.SendInsertandCheckoutUserAutorization(2, "S. C. I. NUEVA PETICION", 1);
+        }else if(IdExcepctionRole === 2){
+          this.SendInsertandCheckoutUserAutorization(3, "S. C. I. AUTORIZADA POR GERENTE", 2);
+        }else if(IdExcepctionRole === 3){
+          this.SendInsertandCheckoutUserAutorization(2, "S. C. I. NUEVA PETICION", 1);
+        }
+      } catch (error) {
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
+          this.auth.logout();
+        }
+        this.toast.setMessage( error.message, "danger");
       }
-      
     }
   }
 
@@ -685,29 +690,35 @@ export class SolicitudConsumo_Interno implements OnInit {
       );
   }
 
-  RemoveCaracteresEpeciales(str){
-    
-    var j:number;
-   
+  RemoveCaracteresEpeciales(str) {
+    var j: number;var format = cadena.replace(/['"]+/g, ' ');
+    format = format.replace(/[´´]+/g, ' ');
+    format = format.replace(/[``]+/g, ' '); 
+    format = format.replace(/[¨]+/g, ' ');
+
     //console.log(str)
-    var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç", 
-      to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
+    var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
+      to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
       mapping = {};
- 
-  for(var i = 0, j = from.length; i < j; i++ )
-      mapping[ from.charAt( i ) ] = to.charAt( i );
+
+    for (var i = 0, j = from.length; i < j; i++)
+      mapping[from.charAt(i)] = to.charAt(i);
 
     var ret = [];
+
+    for (var i = 0, tamaño = str.length; i < tamaño; i++) {
+      var c = str.charAt(i);
+      //console.log(tamaño);
+      if (mapping.hasOwnProperty(str.charAt(i))) ret.push(mapping[c]);
+      else ret.push(c);
+    }
+    //console.log(ret.join( '' ).toString());
     
-      for( var i = 0, tamaño = str.length; i < tamaño; i++ ) {
-          var c = str.charAt( i );
-          //console.log(tamaño);
-          if( mapping.hasOwnProperty( str.charAt( i ) ) )
-              ret.push( mapping[ c ] );
-          else
-              ret.push( c );
-      }
-      //console.log(ret.join( '' ).toString());
-      return ret.join( '' ).toString();
+    var cadena = ret.join("").toString();
+    var format = cadena.replace(/['"]+/g, ' ');
+    format = format.replace(/[´´]+/g, ' ');
+    format = format.replace(/[``]+/g, ' '); 
+    format = format.replace(/[¨]+/g, ' ');
+    return format;
   }
 }
