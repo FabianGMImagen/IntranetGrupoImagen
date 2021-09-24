@@ -10,13 +10,14 @@ import { read } from 'fs';
 
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
-const ruta = "http://10.29.148.40:3000/public/";
+const ruta = "http://solicitud.adgimm.com.mx:3000/public/";
 
 
 //const DIR = '../ImagenFinanzasPruebaslocal/datos';
-const DIR = '../IntranetGrupoImagen/datos';
+const DIR = '../IntranetProduccion/datos';
 //const DIR = "../IntranetProduccion/datos";
 console.log(process.env.SECRET_SAP);
+
 var id = 0;
 let storage = multer.diskStorage({
   
