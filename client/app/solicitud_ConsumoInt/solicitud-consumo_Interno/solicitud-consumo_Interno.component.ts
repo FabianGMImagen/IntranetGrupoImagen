@@ -691,34 +691,44 @@ export class SolicitudConsumo_Interno implements OnInit {
   }
 
   RemoveCaracteresEpeciales(str) {
-    var j: number;var format = cadena.replace(/['"]+/g, ' ');
-    format = format.replace(/[´´]+/g, ' ');
-    format = format.replace(/[``]+/g, ' '); 
-    format = format.replace(/[¨]+/g, ' ');
-
-    //console.log(str)
-    var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
-      to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
-      mapping = {};
-
-    for (var i = 0, j = from.length; i < j; i++)
-      mapping[from.charAt(i)] = to.charAt(i);
-
-    var ret = [];
-
-    for (var i = 0, tamaño = str.length; i < tamaño; i++) {
-      var c = str.charAt(i);
-      //console.log(tamaño);
-      if (mapping.hasOwnProperty(str.charAt(i))) ret.push(mapping[c]);
-      else ret.push(c);
+    if(str == undefined || str == null){
+      this.toast.setMessage("El campo de justificacion es requerido, favor de validar la informacion", "warning");
+    }else{
+      var j: number;
+      var format = str.replace(/['"]+/g, ' ');
+      format = format.replace(/[´´]+/g, ' ');
+      format = format.replace(/[``]+/g, ' '); 
+      format = format.replace(/[¨]+/g, ' ');
+  
+      //console.log(str)
+      var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
+        to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
+        mapping = {};
+  
+      for (var i = 0, j = from.length; i < j; i++)
+        mapping[from.charAt(i)] = to.charAt(i);
+  
+      var ret = [];
+  
+      for (var i = 0, tamaño = format.length; i < tamaño; i++) {
+        var c = format.charAt(i);
+        //console.log(tamaño);
+        if (mapping.hasOwnProperty(format.charAt(i))) ret.push(mapping[c]);
+        else ret.push(c);
+      }
+      //console.log(ret.join( '' ).toString());
+      
+      var cadena = ret.join("").toString();
+      format = cadena.replace(/['"]+/g, ' ');
+      format = format.replace(/[´´]+/g, ' ');
+      format = format.replace(/[``]+/g, ' '); 
+      format = format.replace(/[¨]+/g, ' ');
+      format = format.replace(/[|]+/g, ' ');
+      format = format.replace(/[~]+/g, ' ');
+      format = format.replace(/[#]+/g, ' ');
+      return format;
     }
-    //console.log(ret.join( '' ).toString());
-    
-    var cadena = ret.join("").toString();
-    var format = cadena.replace(/['"]+/g, ' ');
-    format = format.replace(/[´´]+/g, ' ');
-    format = format.replace(/[``]+/g, ' '); 
-    format = format.replace(/[¨]+/g, ' ');
-    return format;
   }
+
 }
+

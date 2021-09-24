@@ -250,7 +250,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //metodo que nos regresa filtado las autorizaciones o tipos de status por Nivel
         this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
       } else if (this.auth.isCompras) {
-        console.log("Este es el Id del Usuario logeado------->    " +this.auth.currentUser.IdUsuario +"--" +this.auth.isCompras);
+        //console.log("Este es el Id del Usuario logeado------->    " +this.auth.currentUser.IdUsuario +"--" +this.auth.isCompras);
         this.getAllCategorias();
         this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
         this.isEditing = true;
@@ -260,14 +260,14 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
       } else if (this.auth.isComprador) {
         //this.getAllCategoriasForUserComprador(this.auth.currentUser.IdUsuario);
+        this.getStatusCompras(this.auth.currentUser.IdRole, 1);
         this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
-        this.getAllCategorias();
+        //this.getAllCategorias();
         this.is_persona_coprador = false;
         this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
         this.isEditing = true;
         this.isViewListSolicitudes = true;
         this.is_persona_coprador = true;
-        this.getStatusCompras(this.auth.currentUser.IdRole, 1);
       } else if (this.auth.isCheckPresupuesto) {
         this.isViewListSolicitudes = true;
         this.isEditing = true;
@@ -574,11 +574,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.USR = this.auth.currentUser.IdUsuario;
     this.Direcc = Dir.IdDireccion;
     //console.log(status);
-    this.solicitudComp.getAllSolicitudNewSoliforCategori(status.IdStatusSolicitud, this.Direcc,IdUser)
+    this.solicitudComp.getAllSolicitudNewSoliforCategori(status.IdStatusSolicitud, this.Direcc, IdUser)
       .subscribe(
         (data) => {
           this.ListSolRegistr = data;
-          //console.log(this.ListSolRegistr);
+          console.log(this.ListSolRegistr);
         },
         (error) => console.log("error al recuperar las solicitudes" + error),
         () => {

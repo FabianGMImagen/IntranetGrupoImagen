@@ -35,8 +35,7 @@ import {
 } from "@angular/animations";
 import * as jsPDF from "jspdf";
 
-
-import { ToastComponent } from '../../shared/toast/toast.component';
+import { ToastComponent } from "../../shared/toast/toast.component";
 import { AuthServices } from "../../services/auth.service";
 import { UserService } from "../../services/user.service";
 import { SolicitudCompraService } from "../../services/solicitudcompra.service";
@@ -60,6 +59,9 @@ import { GrupoCompra } from "../../shared/models/grupocompra.model";
 import { UnidadMedida } from "../../shared/models/umedida.model";
 import { Necesidad } from "../../shared/models/necesidad.model";
 import { Activo } from "../../shared/models/activo.model";
+import { DialogAdvertenciaUpdateSolpedidoComponent } from "client/app/dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component";
+
+
 
 @Component({
   selector: "app-account",
@@ -121,16 +123,14 @@ export class AccountComponent implements OnInit {
   protected ListUnidadMedida: UnidadMedida[];
   public UnidadMedidaCtrl: FormControl = new FormControl();
   public UnidadMedidaFilterCtrl: FormControl = new FormControl();
-  public filteredUnidadMedida: ReplaySubject<
-    UnidadMedida[]
-  > = new ReplaySubject<UnidadMedida[]>(1);
+  public filteredUnidadMedida: ReplaySubject<UnidadMedida[]> =
+    new ReplaySubject<UnidadMedida[]>(1);
 
   protected ListOrdEstadistica: OrdenInterna[];
   public OrdenEstadisticaCrtl: FormControl = new FormControl();
   public OrdenEstadisticaFilterCtrl: FormControl = new FormControl();
-  public filteredOrdenEstadistica: ReplaySubject<
-    OrdenInterna[]
-  > = new ReplaySubject<OrdenInterna[]>(1);
+  public filteredOrdenEstadistica: ReplaySubject<OrdenInterna[]> =
+    new ReplaySubject<OrdenInterna[]>(1);
 
   protected ListActivo: Activo[];
   public ActivoCrtl: FormControl = new FormControl();
@@ -140,7 +140,7 @@ export class AccountComponent implements OnInit {
   );
 
   protected _onDestroy = new Subject<void>();
-      public kalssforstatus = {};
+  public kalssforstatus = {};
   //     {newsc: 'S. P. NUEVA PETICION',
   // aut: 'S. P. AUTORIZADO POR GERENTE',
   // rech :  'S. P. RECHAZADA POR GERENTE',
@@ -283,7 +283,8 @@ export class AccountComponent implements OnInit {
   AplicaOrdInt: boolean = false;
   /*---fin de datos editables---*/
   newStatus: number;
-  isload:boolean = false;
+  isload: boolean = false;
+  openedDataSol:boolean=false;
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -335,21 +336,8 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  //Validamos que contenido quieren visualizar antes de mostrar el contenido
-  //igual se cargan los datos desd el ngOinit
-  // SelectedTypeSol() {
-  //   //if (this.CheckSolicitud == 1) {
-  //     this.isSolPed = true;
-  //     //this.isSolConInt = false;
-
-  //     //this.isSolPed = false;
-  //   //this.isSolConInt = true;
-  //   // } else {
-  //   //   this.toast.setMessage(
-  //   //     "Necesitas elegir una opcion para poder mostrar informacion",
-  //   //     "warning"
-  //   //   );
-  //   // }
+  // setStep(index: number) {
+  //   this.openedDataSol = index;
   // }
 
   //solo aplica para usuario solicitante
@@ -366,22 +354,22 @@ export class AccountComponent implements OnInit {
     this.solicitudComp.getAllSolicitudforusr(this.usr, this.role).subscribe(
       (data) => {
         this.ListSolCompReg = data;
-        if(this.ListSolCompReg.length == 0){
-          this.toast.setMessage("Aun no has generado ninguna Sol. de Pedido","warning");
+        if (this.ListSolCompReg.length == 0) {
+          this.toast.setMessage(
+            "Aun no has generado ninguna Sol. de Pedido",
+            "warning"
+          );
         }
         this.getcssclas();
         this.DataSource = new MatTableDataSource(this.ListSolCompReg);
         this.isload = false;
       },
-      (error) =>{
+      (error) => {
         console.log(error);
-        this.toast.setMessage(error.message,"danger");
+        this.toast.setMessage(error.message, "danger");
         this.isload = false;
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
       },
@@ -392,26 +380,35 @@ export class AccountComponent implements OnInit {
         //console.log(this.DataSource.paginator);
         this.DataSource.paginator = this.paginator;
         this.DataSource.sort = this.sort;
-
       }
     );
   }
 
-  getcssclas(){
-    this.ListSolCompReg.forEach(element=>{
-      if(element.Statname =="S. P. NUEVA PETICION"){
-        element.status = 'newsc';
-      }else if(element.Statname =="S. P. AUTORIZADO POR GERENTE" || element.Statname == "S. P. AUTORIZADO POR DIRECCION" ||
-         element.Statname == "S. P. PRESUPUESTO AUTORIZADO" || element.Statname == "S. P. REVISADA POR COMPRAS"){
-          element.status = 'aut';
-      }else if(element.Statname == "S. P. RECHAZADA POR GERENTE" || element.Statname == "S. P. RECHAZADA POR DIRECCION" ||
-                element.Statname == "S. P. PRESUPUESTO RECHAZADO" || element.Statname == "S. P. RECHAZADA POR COMPRAS" || 
-                element.Statname == "S. P. CANCELADA"){
-          element.status = 'rech'
-      }else if(element.Statname == "S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP"){
-        element.status = 'carsap';
-      }else if(element.Statname == "CONTRATO MARCO"){
-          element.status = 'fin'
+  getcssclas() {
+    this.ListSolCompReg.forEach((element) => {
+      if (element.Statname == "S. P. NUEVA PETICION") {
+        element.status = "newsc";
+      } else if (
+        element.Statname == "S. P. AUTORIZADO POR GERENTE" ||
+        element.Statname == "S. P. AUTORIZADO POR DIRECCION" ||
+        element.Statname == "S. P. PRESUPUESTO AUTORIZADO" ||
+        element.Statname == "S. P. REVISADA POR COMPRAS"
+      ) {
+        element.status = "aut";
+      } else if (
+        element.Statname == "S. P. RECHAZADA POR GERENTE" ||
+        element.Statname == "S. P. RECHAZADA POR DIRECCION" ||
+        element.Statname == "S. P. PRESUPUESTO RECHAZADO" ||
+        element.Statname == "S. P. RECHAZADA POR COMPRAS" ||
+        element.Statname == "S. P. CANCELADA"
+      ) {
+        element.status = "rech";
+      } else if (
+        element.Statname == "S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP"
+      ) {
+        element.status = "carsap";
+      } else if (element.Statname == "CONTRATO MARCO") {
+        element.status = "fin";
       }
     });
   }
@@ -430,20 +427,18 @@ export class AccountComponent implements OnInit {
   EditSolicitud(data: SolicitudesCompraRegistradas) {
     console.log("Dentro de el metodo que permite editar la solicitud ");
     console.log(data);
-    
+
     if (
-      data.Statname === "S. P. PRESUPUESTO RECHAZADO" ||
       data.Statname === "S. P. RECHAZADA POR GERENTE" ||
-      data.Statname === "S. P. RECHAZADA POR DIRECCION"||
-      data.Statname === "S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP"
+      data.Statname === "S. P. RECHAZADA POR DIRECCION"
     ) {
-      this.iseditsolped = false;
-      this.iseditproductbutton = false;
-      this.iseditchilds = false;
-    } else {
-      this.iseditproductbutton = true;
       this.iseditsolped = true;
+      this.iseditproductbutton = true;
       this.iseditchilds = true;
+    } else {
+      this.iseditproductbutton = false;
+      this.iseditsolped = false;
+      this.iseditchilds = false;
     }
 
     this.viewcoutn = false;
@@ -476,17 +471,13 @@ export class AccountComponent implements OnInit {
     this.solicitudComp.getDetalleSolicitud(data.ID).subscribe(
       (data) => {
         this.ListDetallesol = data;
-        
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("error al traer el detalle de la solicitud")
+        console.log("error al traer el detalle de la solicitud");
       },
       () => {
         console.log("Esta es el detalle de los items");
@@ -530,6 +521,17 @@ export class AccountComponent implements OnInit {
     this.getAllSolicitudforUser();
   }
 
+  EndEditingAndChangedStatus(){
+    this.viewcoutn = true;
+    this.isViewEditingSol = false;
+    this.isviewChilds = false;
+    this.iseditproduct = false;
+    this.iseditsolped = false;
+    this.iseditproduct = false;
+    this.toast.setMessage("Los datos fueron actualizados correctamente y la solicitud cambios a un estatus S. P. NUEVA PETICION.", "success");
+    this.getAllSolicitudforUser();
+  }
+
   VieEditProductos(products) {
     console.log("-------*************--------");
     console.log(products);
@@ -539,10 +541,13 @@ export class AccountComponent implements OnInit {
       this.DataSolReg.Statname === "S. P. NUEVA PETICION" ||
       this.DataSolReg.Statname === "S. P. PRESUPUESTO RECHAZADO" ||
       this.DataSolReg.Statname === "S. P. RECHAZADA POR GERENTE" ||
-      this.DataSolReg.Statname === "S. P. RECHAZADA POR DIRECCION"
+      this.DataSolReg.Statname === "S. P. RECHAZADA POR DIRECCION" ||
+      this.DataSolReg.Statname === "S. P. PRESUPUESTO RECHAZADO" ||
+      this.DataSolReg.Statname === "S. P. RECHAZADA POR COMPRAS"
     ) {
       this.iseditproduct = true;
     }
+
     if (this.DataSolReg.IdSol == 5) {
       console.log("dentro de Orden intera IF");
       this.getunidadMedida(" ");
@@ -607,11 +612,8 @@ export class AccountComponent implements OnInit {
         });
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log("error al recuperar la informacion de los Hijos");
@@ -622,6 +624,10 @@ export class AccountComponent implements OnInit {
         // this.dataChilds = new MatTableDataSource(this.ListChilds);
       }
     );
+  }
+
+  closeViewChilds(){
+    this.viewChilds = false;
   }
 
   viewEditSubProducts(childs) {
@@ -943,14 +949,11 @@ export class AccountComponent implements OnInit {
     this.solicitudComp.getAllNecesidad().subscribe(
       (data) => (this.ListNecesidad = data),
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log(error)
+        console.log(error);
       }
     );
   }
@@ -1081,9 +1084,9 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  viewModalandCheckfinishUpdate() {}
+ 
 
-  updateLVLSOlcitud() {
+  async updateLVLSOlcitud() {
     if (
       this.requirente == undefined &&
       this.puesto == undefined &&
@@ -1100,7 +1103,6 @@ export class AccountComponent implements OnInit {
         "warning"
       );
     } else {
-      
       if (
         this.requirente == undefined ||
         this.requirente == null ||
@@ -1155,7 +1157,7 @@ export class AccountComponent implements OnInit {
       console.log(
         "este es el else se quedara el estatus de la solicitud hasta que se termine de actualizar los datos de toda la solicitud"
       );
-      
+
       this.solicitudComp
         .updateinfoSol(
           this.DataSolReg.ID,
@@ -1173,7 +1175,7 @@ export class AccountComponent implements OnInit {
         .subscribe(
           (data) => {
             console.log(data);
-            this.cancelEditing();
+            this.openedDataSol = false;
             this.requirente = "";
             this.puesto = "";
             this.email = "";
@@ -1183,21 +1185,15 @@ export class AccountComponent implements OnInit {
             this.justificacion = "";
             this.SelectedOInvercion.IdOrdenInterna = "";
             this.SelectedOInvercion.NombreOrder = "";
-            this.toast.setMessage(
-              "Si existe algun dato sin ningun valor, se guardara con el valor que ya se tiene registrado.",
-              "warning"
-            );
+            this.toast.setMessage('Puedes seguir editando',"success");
           },
           (error) => {
-            if(error.status == 403 || error.status == 404){
-              this.toast.setMessage(
-                error.message,
-                "danger"
-              );
+            if (error.status == 403 || error.status == 404) {
+              this.toast.setMessage(error.message, "danger");
               this.auth.logout();
             }
             console.log(error);
-            this.ngOnInit();
+            //this.ngOnInit();
             this.getOrdenInterna();
             this.requirente = "";
             this.puesto = "";
@@ -1209,7 +1205,6 @@ export class AccountComponent implements OnInit {
             this.SelectedOInvercion.IdOrdenInterna = "";
             this.SelectedOInvercion.NombreOrder = "";
             this.toast.setMessage("Error desde el componente", "warning");
-            
           }
         );
     }
@@ -1305,7 +1300,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.CECO.length != 0
         ) {
           console.log("dentro del else if");
-          this.SelectedCentroCost.IdCentroCosto = this.detalle_producto.IdCentroCostos;
+          this.SelectedCentroCost.IdCentroCosto =
+            this.detalle_producto.IdCentroCostos;
           this.SelectedCentroCost.Nombre = this.detalle_producto.CECO;
         } else {
           console.log("se tomaran los valores del select");
@@ -1324,7 +1320,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor.length != 0 &&
           this.detalle_producto.CMAYOR.length != 0
         ) {
-          this.SelectedCuentaMayor.IdCuentaMayor = this.detalle_producto.IdCuentaMayor;
+          this.SelectedCuentaMayor.IdCuentaMayor =
+            this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
@@ -1346,7 +1343,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.GrupoCompraName.length != 0
         ) {
           console.log("dentro del else de griupo de compra");
-          this.SelectedGrupoComp.IdGrupoCompra = this.detalle_producto.IdGrupoCompra;
+          this.SelectedGrupoComp.IdGrupoCompra =
+            this.detalle_producto.IdGrupoCompra;
           this.SelectedGrupoComp.Nombre = this.detalle_producto.GrupoCompraName;
         }
 
@@ -1364,8 +1362,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdUnidadMedida.length != 0 &&
           this.detalle_producto.MEDIDA.length != 0
         ) {
-          this.SelectedUnidadMed.IdUnidadMedida = this.detalle_producto.IdUnidadMedida;
-          this.SelectedUnidadMed.NombreUnidadMedida = this.detalle_producto.MEDIDA;
+          this.SelectedUnidadMed.IdUnidadMedida =
+            this.detalle_producto.IdUnidadMedida;
+          this.SelectedUnidadMed.NombreUnidadMedida =
+            this.detalle_producto.MEDIDA;
         }
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
@@ -1383,8 +1383,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.OrdenEstadisiticaName.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna = this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder = this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =
+            this.detalle_producto.IdOrdenEstadisitica;
+          this.SelectOrdenEstadisitica.NombreOrder =
+            this.detalle_producto.OrdenEstadisiticaName;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -1400,7 +1402,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNumeroActivo.length != 0 &&
           this.detalle_producto.ACTFIJ.length != 0
         ) {
-          this.SelectedNumActivo.IdActivo = this.detalle_producto.IdNumeroActivo;
+          this.SelectedNumActivo.IdActivo =
+            this.detalle_producto.IdNumeroActivo;
           this.SelectedNumActivo.Nombre = this.detalle_producto.ACTFIJ;
         }
         if (
@@ -1417,18 +1420,13 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNecesidad.length != 0 &&
           this.detalle_producto.NumeroNecesidadName.length != 0
         ) {
-          this.SelectedNecesidad.IdNecesidad = this.detalle_producto.IdNecesidad;
-          this.SelectedNecesidad.Nombre = this.detalle_producto.NumeroNecesidadName;
+          this.SelectedNecesidad.IdNecesidad =
+            this.detalle_producto.IdNecesidad;
+          this.SelectedNecesidad.Nombre =
+            this.detalle_producto.NumeroNecesidadName;
         }
-
-        var newStatus;
-        console.log(
-          "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
-        );
-        newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-
+        //console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
         var IdSol = this.DataSolReg.ID;
-
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
           .updateinfoProd(
@@ -1475,18 +1473,15 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "se Actualizo correctamente el Producto",
+                "Puedes seguir editndo",
                 "success"
               );
-              this.cancelEditing();
+              //this.cancelEditing();
             },
             (error) => {
               console.log(error);
-              if(error.status == 403 || error.status == 404){
-                this.toast.setMessage(
-                  error.message,
-                  "danger"
-                );
+              if (error.status == 403 || error.status == 404) {
+                this.toast.setMessage(error.message, "danger");
                 this.auth.logout();
               }
               this.precio = 0;
@@ -1599,7 +1594,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.CECO.length != 0
         ) {
           console.log("dentro del else if");
-          this.SelectedCentroCost.IdCentroCosto = this.detalle_producto.IdCentroCostos;
+          this.SelectedCentroCost.IdCentroCosto =
+            this.detalle_producto.IdCentroCostos;
           this.SelectedCentroCost.Nombre = this.detalle_producto.CECO;
         } else {
           console.log("se tomaran los valores del select");
@@ -1618,7 +1614,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor.length != 0 &&
           this.detalle_producto.CMAYOR.length != 0
         ) {
-          this.SelectedCuentaMayor.IdCuentaMayor = this.detalle_producto.IdCuentaMayor;
+          this.SelectedCuentaMayor.IdCuentaMayor =
+            this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
@@ -1640,7 +1637,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.GrupoCompraName.length != 0
         ) {
           console.log("dentro del else de griupo de compra");
-          this.SelectedGrupoComp.IdGrupoCompra = this.detalle_producto.IdGrupoCompra;
+          this.SelectedGrupoComp.IdGrupoCompra =
+            this.detalle_producto.IdGrupoCompra;
           this.SelectedGrupoComp.Nombre = this.detalle_producto.GrupoCompraName;
         }
 
@@ -1658,8 +1656,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdUnidadMedida.length != 0 &&
           this.detalle_producto.MEDIDA.length != 0
         ) {
-          this.SelectedUnidadMed.IdUnidadMedida = this.detalle_producto.IdUnidadMedida;
-          this.SelectedUnidadMed.NombreUnidadMedida = this.detalle_producto.MEDIDA;
+          this.SelectedUnidadMed.IdUnidadMedida =
+            this.detalle_producto.IdUnidadMedida;
+          this.SelectedUnidadMed.NombreUnidadMedida =
+            this.detalle_producto.MEDIDA;
         }
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
@@ -1677,8 +1677,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.OrdenEstadisiticaName.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna = this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder = this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =
+            this.detalle_producto.IdOrdenEstadisitica;
+          this.SelectOrdenEstadisitica.NombreOrder =
+            this.detalle_producto.OrdenEstadisiticaName;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -1694,7 +1696,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNumeroActivo.length != 0 &&
           this.detalle_producto.ACTFIJ.length != 0
         ) {
-          this.SelectedNumActivo.IdActivo = this.detalle_producto.IdNumeroActivo;
+          this.SelectedNumActivo.IdActivo =
+            this.detalle_producto.IdNumeroActivo;
           this.SelectedNumActivo.Nombre = this.detalle_producto.ACTFIJ;
         }
         if (
@@ -1711,8 +1714,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNecesidad.length != 0 &&
           this.detalle_producto.NumeroNecesidadName.length != 0
         ) {
-          this.SelectedNecesidad.IdNecesidad = this.detalle_producto.IdNecesidad;
-          this.SelectedNecesidad.Nombre = this.detalle_producto.NumeroNecesidadName;
+          this.SelectedNecesidad.IdNecesidad =
+            this.detalle_producto.IdNecesidad;
+          this.SelectedNecesidad.Nombre =
+            this.detalle_producto.NumeroNecesidadName;
         }
 
         console.log(
@@ -1734,14 +1739,10 @@ export class AccountComponent implements OnInit {
         //  console.log(this.SelectOrdenEstadisitica);
         //  console.log(this.SelectedNumActivo);
         //  console.log(this.SelectedNecesidad);
-        var newStatus;
         console.log(
           "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
         );
-        newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-
         var IdSol = this.DataSolReg.ID;
-
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
           .updateinfoProd(
@@ -1789,10 +1790,10 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "se Actualizo correctamente el Producto",
+                "Puedes seguir editando",
                 "success"
               );
-              this.cancelEditing();
+              //this.cancelEditing();
             },
             (err) => {
               console.log(err);
@@ -1906,7 +1907,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.CECO.length != 0
         ) {
           console.log("dentro del else if");
-          this.SelectedCentroCost.IdCentroCosto = this.detalle_producto.IdCentroCostos;
+          this.SelectedCentroCost.IdCentroCosto =
+            this.detalle_producto.IdCentroCostos;
           this.SelectedCentroCost.Nombre = this.detalle_producto.CECO;
         } else {
           console.log("se tomaran los valores del select");
@@ -1925,7 +1927,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor.length != 0 &&
           this.detalle_producto.CMAYOR.length != 0
         ) {
-          this.SelectedCuentaMayor.IdCuentaMayor = this.detalle_producto.IdCuentaMayor;
+          this.SelectedCuentaMayor.IdCuentaMayor =
+            this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
@@ -1947,7 +1950,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.GrupoCompraName.length != 0
         ) {
           console.log("dentro del else de griupo de compra");
-          this.SelectedGrupoComp.IdGrupoCompra = this.detalle_producto.IdGrupoCompra;
+          this.SelectedGrupoComp.IdGrupoCompra =
+            this.detalle_producto.IdGrupoCompra;
           this.SelectedGrupoComp.Nombre = this.detalle_producto.GrupoCompraName;
         }
 
@@ -1965,8 +1969,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdUnidadMedida.length != 0 &&
           this.detalle_producto.MEDIDA.length != 0
         ) {
-          this.SelectedUnidadMed.IdUnidadMedida = this.detalle_producto.IdUnidadMedida;
-          this.SelectedUnidadMed.NombreUnidadMedida = this.detalle_producto.MEDIDA;
+          this.SelectedUnidadMed.IdUnidadMedida =
+            this.detalle_producto.IdUnidadMedida;
+          this.SelectedUnidadMed.NombreUnidadMedida =
+            this.detalle_producto.MEDIDA;
         }
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
@@ -1984,8 +1990,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.OrdenEstadisiticaName.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna = this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder = this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =
+            this.detalle_producto.IdOrdenEstadisitica;
+          this.SelectOrdenEstadisitica.NombreOrder =
+            this.detalle_producto.OrdenEstadisiticaName;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -2001,7 +2009,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNumeroActivo.length != 0 &&
           this.detalle_producto.ACTFIJ.length != 0
         ) {
-          this.SelectedNumActivo.IdActivo = this.detalle_producto.IdNumeroActivo;
+          this.SelectedNumActivo.IdActivo =
+            this.detalle_producto.IdNumeroActivo;
           this.SelectedNumActivo.Nombre = this.detalle_producto.ACTFIJ;
         }
         if (
@@ -2018,8 +2027,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNecesidad.length != 0 &&
           this.detalle_producto.NumeroNecesidadName.length != 0
         ) {
-          this.SelectedNecesidad.IdNecesidad = this.detalle_producto.IdNecesidad;
-          this.SelectedNecesidad.Nombre = this.detalle_producto.NumeroNecesidadName;
+          this.SelectedNecesidad.IdNecesidad =
+            this.detalle_producto.IdNecesidad;
+          this.SelectedNecesidad.Nombre =
+            this.detalle_producto.NumeroNecesidadName;
         }
 
         console.log(
@@ -2041,14 +2052,8 @@ export class AccountComponent implements OnInit {
         // console.log(this.SelectOrdenEstadisitica);
         // console.log(this.SelectedNumActivo);
         // console.log(this.SelectedNecesidad);
-        var newStatus;
-        console.log(
-          "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
-        );
-        newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-
+        //console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
         var IdSol = this.DataSolReg.ID;
-
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
           .updateinfoProd(
@@ -2095,10 +2100,10 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "se Actualizo correctamente el Producto",
+                "Puedes seguir editando, datos guardados",
                 "success"
               );
-              this.cancelEditing();
+              //this.cancelEditing();
             },
             (err) => {
               console.log(err);
@@ -2210,7 +2215,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.CECO != undefined
         ) {
           console.log("dentro del else if");
-          this.SelectedCentroCost.IdCentroCosto = this.detalle_producto.IdCentroCostos;
+          this.SelectedCentroCost.IdCentroCosto =
+            this.detalle_producto.IdCentroCostos;
           this.SelectedCentroCost.Nombre = this.detalle_producto.CECO;
         } else {
           console.log("se tomaran los valores del select");
@@ -2229,7 +2235,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor != 0 &&
           this.detalle_producto.CMAYOR != 0
         ) {
-          this.SelectedCuentaMayor.IdCuentaMayor = this.detalle_producto.IdCuentaMayor;
+          this.SelectedCuentaMayor.IdCuentaMayor =
+            this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
@@ -2251,7 +2258,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.GrupoCompraName != undefined
         ) {
           console.log("dentro del else de griupo de compra");
-          this.SelectedGrupoComp.IdGrupoCompra = this.detalle_producto.IdGrupoCompra;
+          this.SelectedGrupoComp.IdGrupoCompra =
+            this.detalle_producto.IdGrupoCompra;
           this.SelectedGrupoComp.Nombre = this.detalle_producto.GrupoCompraName;
         }
 
@@ -2269,8 +2277,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdUnidadMedida.length != 0 &&
           this.detalle_producto.MEDIDA.length != 0
         ) {
-          this.SelectedUnidadMed.IdUnidadMedida = this.detalle_producto.IdUnidadMedida;
-          this.SelectedUnidadMed.NombreUnidadMedida = this.detalle_producto.MEDIDA;
+          this.SelectedUnidadMed.IdUnidadMedida =
+            this.detalle_producto.IdUnidadMedida;
+          this.SelectedUnidadMed.NombreUnidadMedida =
+            this.detalle_producto.MEDIDA;
         }
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
@@ -2288,8 +2298,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.OrdenEstadisiticaName.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna = this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder = this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =
+            this.detalle_producto.IdOrdenEstadisitica;
+          this.SelectOrdenEstadisitica.NombreOrder =
+            this.detalle_producto.OrdenEstadisiticaName;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -2305,7 +2317,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNumeroActivo != undefined &&
           this.detalle_producto.ACTFIJ != undefined
         ) {
-          this.SelectedNumActivo.IdActivo = this.detalle_producto.IdNumeroActivo;
+          this.SelectedNumActivo.IdActivo =
+            this.detalle_producto.IdNumeroActivo;
           this.SelectedNumActivo.Nombre = this.detalle_producto.ACTFIJ;
         }
         if (
@@ -2322,8 +2335,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNecesidad.length != 0 &&
           this.detalle_producto.NumeroNecesidadName.length != 0
         ) {
-          this.SelectedNecesidad.IdNecesidad = this.detalle_producto.IdNecesidad;
-          this.SelectedNecesidad.Nombre = this.detalle_producto.NumeroNecesidadName;
+          this.SelectedNecesidad.IdNecesidad =
+            this.detalle_producto.IdNecesidad;
+          this.SelectedNecesidad.Nombre =
+            this.detalle_producto.NumeroNecesidadName;
         }
 
         console.log(
@@ -2345,14 +2360,9 @@ export class AccountComponent implements OnInit {
         // console.log(this.SelectOrdenEstadisitica);
         // console.log(this.SelectedNumActivo);
         // console.log(this.SelectedNecesidad);
-        var newStatus;
-        console.log(
-          "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
-        );
-        newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
+        //console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
 
         var IdSol = this.DataSolReg.ID;
-
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
           .updateinfoProd(
@@ -2399,10 +2409,10 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "se Actualizo correctamente el Producto",
+                "Puedes seguir editando, datos guardados",
                 "success"
               );
-              this.cancelEditing();
+              
             },
             (err) => {
               console.log(err);
@@ -2524,7 +2534,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.CECO.length != 0
         ) {
           console.log("dentro del else if");
-          this.SelectedCentroCost.IdCentroCosto = this.detalle_producto.IdCentroCostos;
+          this.SelectedCentroCost.IdCentroCosto =
+            this.detalle_producto.IdCentroCostos;
           this.SelectedCentroCost.Nombre = this.detalle_producto.CECO;
         } else {
           console.log("se tomaran los valores del select");
@@ -2543,7 +2554,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor.length != 0 &&
           this.detalle_producto.CMAYOR.length != 0
         ) {
-          this.SelectedCuentaMayor.IdCuentaMayor = this.detalle_producto.IdCuentaMayor;
+          this.SelectedCuentaMayor.IdCuentaMayor =
+            this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
@@ -2565,7 +2577,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.GrupoCompraName.length != 0
         ) {
           console.log("dentro del else de griupo de compra");
-          this.SelectedGrupoComp.IdGrupoCompra = this.detalle_producto.IdGrupoCompra;
+          this.SelectedGrupoComp.IdGrupoCompra =
+            this.detalle_producto.IdGrupoCompra;
           this.SelectedGrupoComp.Nombre = this.detalle_producto.GrupoCompraName;
         }
 
@@ -2583,8 +2596,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdUnidadMedida.length != 0 &&
           this.detalle_producto.MEDIDA.length != 0
         ) {
-          this.SelectedUnidadMed.IdUnidadMedida = this.detalle_producto.IdUnidadMedida;
-          this.SelectedUnidadMed.NombreUnidadMedida = this.detalle_producto.MEDIDA;
+          this.SelectedUnidadMed.IdUnidadMedida =
+            this.detalle_producto.IdUnidadMedida;
+          this.SelectedUnidadMed.NombreUnidadMedida =
+            this.detalle_producto.MEDIDA;
         }
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
@@ -2602,8 +2617,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.OrdenEstadisiticaName.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna = this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder = this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =
+            this.detalle_producto.IdOrdenEstadisitica;
+          this.SelectOrdenEstadisitica.NombreOrder =
+            this.detalle_producto.OrdenEstadisiticaName;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -2619,7 +2636,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNumeroActivo.length != 0 &&
           this.detalle_producto.ACTFIJ.length != 0
         ) {
-          this.SelectedNumActivo.IdActivo = this.detalle_producto.IdNumeroActivo;
+          this.SelectedNumActivo.IdActivo =
+            this.detalle_producto.IdNumeroActivo;
           this.SelectedNumActivo.Nombre = this.detalle_producto.ACTFIJ;
         }
         if (
@@ -2636,8 +2654,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNecesidad.length != 0 &&
           this.detalle_producto.NumeroNecesidadName.length != 0
         ) {
-          this.SelectedNecesidad.IdNecesidad = this.detalle_producto.IdNecesidad;
-          this.SelectedNecesidad.Nombre = this.detalle_producto.NumeroNecesidadName;
+          this.SelectedNecesidad.IdNecesidad =
+            this.detalle_producto.IdNecesidad;
+          this.SelectedNecesidad.Nombre =
+            this.detalle_producto.NumeroNecesidadName;
         }
 
         console.log(
@@ -2659,14 +2679,8 @@ export class AccountComponent implements OnInit {
         // console.log(this.SelectOrdenEstadisitica);
         // console.log(this.SelectedNumActivo);
         // console.log(this.SelectedNecesidad);
-        var newStatus;
-        console.log(
-          "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
-        );
-        newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-
+        console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
         var IdSol = this.DataSolReg.ID;
-
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
           .updateinfoProd(
@@ -2713,10 +2727,10 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "se Actualizo correctamente el Producto",
+                "Puedes seguir editando , datos guardados",
                 "sucsess"
               );
-              this.cancelEditing();
+              //this.cancelEditing();
             },
             (err) => {
               console.log(err);
@@ -2829,7 +2843,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.CECO.length != 0
         ) {
           console.log("dentro del else if");
-          this.SelectedCentroCost.IdCentroCosto = this.detalle_producto.IdCentroCostos;
+          this.SelectedCentroCost.IdCentroCosto =
+            this.detalle_producto.IdCentroCostos;
           this.SelectedCentroCost.Nombre = this.detalle_producto.CECO;
         } else {
           console.log("se tomaran los valores del select");
@@ -2848,7 +2863,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor.length != 0 &&
           this.detalle_producto.CMAYOR.length != 0
         ) {
-          this.SelectedCuentaMayor.IdCuentaMayor = this.detalle_producto.IdCuentaMayor;
+          this.SelectedCuentaMayor.IdCuentaMayor =
+            this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
@@ -2870,7 +2886,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.GrupoCompraName.length != 0
         ) {
           console.log("dentro del else de griupo de compra");
-          this.SelectedGrupoComp.IdGrupoCompra = this.detalle_producto.IdGrupoCompra;
+          this.SelectedGrupoComp.IdGrupoCompra =
+            this.detalle_producto.IdGrupoCompra;
           this.SelectedGrupoComp.Nombre = this.detalle_producto.GrupoCompraName;
         }
 
@@ -2888,8 +2905,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdUnidadMedida.length != 0 &&
           this.detalle_producto.MEDIDA.length != 0
         ) {
-          this.SelectedUnidadMed.IdUnidadMedida = this.detalle_producto.IdUnidadMedida;
-          this.SelectedUnidadMed.NombreUnidadMedida = this.detalle_producto.MEDIDA;
+          this.SelectedUnidadMed.IdUnidadMedida =
+            this.detalle_producto.IdUnidadMedida;
+          this.SelectedUnidadMed.NombreUnidadMedida =
+            this.detalle_producto.MEDIDA;
         }
         console.log(this.SelectOrdenEstadisitica);
         if (
@@ -2908,8 +2927,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.OrdenEstadisiticaName.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna = this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder = this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =
+            this.detalle_producto.IdOrdenEstadisitica;
+          this.SelectOrdenEstadisitica.NombreOrder =
+            this.detalle_producto.OrdenEstadisiticaName;
         }
         console.log("NUMERO DE ACTIVO   " + this.SelectedNumActivo);
         if (
@@ -2926,7 +2947,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNumeroActivo != undefined &&
           this.detalle_producto.ACTFIJ != undefined
         ) {
-          this.SelectedNumActivo.IdActivo = this.detalle_producto.IdNumeroActivo;
+          this.SelectedNumActivo.IdActivo =
+            this.detalle_producto.IdNumeroActivo;
           this.SelectedNumActivo.Nombre = this.detalle_producto.ACTFIJ;
         }
         console.log("NUMERO NECESIDAD   " + this.SelectedNecesidad);
@@ -2944,8 +2966,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNecesidad != undefined &&
           this.detalle_producto.NumeroNecesidadName.length != 0
         ) {
-          this.SelectedNecesidad.IdNecesidad = this.detalle_producto.IdNecesidad;
-          this.SelectedNecesidad.Nombre = this.detalle_producto.NumeroNecesidadName;
+          this.SelectedNecesidad.IdNecesidad =
+            this.detalle_producto.IdNecesidad;
+          this.SelectedNecesidad.Nombre =
+            this.detalle_producto.NumeroNecesidadName;
         }
 
         console.log(
@@ -2967,14 +2991,8 @@ export class AccountComponent implements OnInit {
         // console.log(this.SelectOrdenEstadisitica);
         // console.log(this.SelectedNumActivo);
         // console.log(this.SelectedNecesidad);
-        var newStatus;
-        console.log(
-          "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
-        );
-        newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-
+        //console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
         var IdSol = this.DataSolReg.ID;
-
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
           .updateinfoProd(
@@ -3021,10 +3039,10 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "se Actualizo correctamente el Producto",
+                "Puedes seguir editando , datos guardados",
                 "sucsess"
               );
-              this.cancelEditing();
+              //this.cancelEditing();
             },
             (err) => {
               console.log(err);
@@ -3138,7 +3156,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.CECO != undefined
         ) {
           console.log("dentro del else if");
-          this.SelectedCentroCost.IdCentroCosto = this.detalle_producto.IdCentroCostos;
+          this.SelectedCentroCost.IdCentroCosto =
+            this.detalle_producto.IdCentroCostos;
           this.SelectedCentroCost.Nombre = this.detalle_producto.CECO;
         } else {
           console.log("se tomaran los valores del select");
@@ -3157,7 +3176,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor != undefined &&
           this.detalle_producto.CMAYOR != undefined
         ) {
-          this.SelectedCuentaMayor.IdCuentaMayor = this.detalle_producto.IdCuentaMayor;
+          this.SelectedCuentaMayor.IdCuentaMayor =
+            this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
@@ -3179,7 +3199,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.GrupoCompraName.length != 0
         ) {
           console.log("dentro del else de griupo de compra");
-          this.SelectedGrupoComp.IdGrupoCompra = this.detalle_producto.IdGrupoCompra;
+          this.SelectedGrupoComp.IdGrupoCompra =
+            this.detalle_producto.IdGrupoCompra;
           this.SelectedGrupoComp.Nombre = this.detalle_producto.GrupoCompraName;
         }
 
@@ -3197,8 +3218,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdUnidadMedida.length != 0 &&
           this.detalle_producto.MEDIDA.length != 0
         ) {
-          this.SelectedUnidadMed.IdUnidadMedida = this.detalle_producto.IdUnidadMedida;
-          this.SelectedUnidadMed.NombreUnidadMedida = this.detalle_producto.MEDIDA;
+          this.SelectedUnidadMed.IdUnidadMedida =
+            this.detalle_producto.IdUnidadMedida;
+          this.SelectedUnidadMed.NombreUnidadMedida =
+            this.detalle_producto.MEDIDA;
         }
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
@@ -3216,8 +3239,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.OrdenEstadisiticaName.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna = this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder = this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =
+            this.detalle_producto.IdOrdenEstadisitica;
+          this.SelectOrdenEstadisitica.NombreOrder =
+            this.detalle_producto.OrdenEstadisiticaName;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -3233,7 +3258,8 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNumeroActivo != undefined &&
           this.detalle_producto.ACTFIJ != undefined
         ) {
-          this.SelectedNumActivo.IdActivo = this.detalle_producto.IdNumeroActivo;
+          this.SelectedNumActivo.IdActivo =
+            this.detalle_producto.IdNumeroActivo;
           this.SelectedNumActivo.Nombre = this.detalle_producto.ACTFIJ;
         }
         if (
@@ -3250,8 +3276,10 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdNecesidad.length != 0 &&
           this.detalle_producto.NumeroNecesidadName.length != 0
         ) {
-          this.SelectedNecesidad.IdNecesidad = this.detalle_producto.IdNecesidad;
-          this.SelectedNecesidad.Nombre = this.detalle_producto.NumeroNecesidadName;
+          this.SelectedNecesidad.IdNecesidad =
+            this.detalle_producto.IdNecesidad;
+          this.SelectedNecesidad.Nombre =
+            this.detalle_producto.NumeroNecesidadName;
         }
 
         console.log(
@@ -3273,11 +3301,7 @@ export class AccountComponent implements OnInit {
         // console.log(this.SelectOrdenEstadisitica);
         // console.log(this.SelectedNumActivo);
         // console.log(this.SelectedNecesidad);
-        var newStatus;
-        console.log(
-          "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
-        );
-        newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
+        //console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
         var IdSol = this.DataSolReg.ID;
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
@@ -3325,10 +3349,10 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "se Actualizo correctamente el Producto",
+                "Puedes seguir editando , datos guardados",
                 "sucsess"
               );
-              this.cancelEditing();
+              //this.cancelEditing();
             },
             (err) => {
               console.log(err);
@@ -3361,16 +3385,9 @@ export class AccountComponent implements OnInit {
     );
     console.log(this.cantidadchild);
     console.log(this.preciochild);
-    console.log(
-      this.SelectOrdenEstadisiticaChild.IdOrdenInterna.length +
-        " Orden Interna " +
-        this.SelectOrdenEstadisiticaChild.NombreOrder.length
-    );
-    console.log(
-      this.SelectedCentroCostChild.IdCentroCosto.length +
-        " Centro Cosotos " +
-        this.SelectedCentroCostChild.Nombre.length
-    );
+    console.log(this.SelectOrdenEstadisiticaChild.IdOrdenInterna.length);
+    console.log(" Orden Interna " + this.SelectOrdenEstadisiticaChild.NombreOrder.length);
+    console.log(this.SelectedCentroCostChild.IdCentroCosto.length +" Centro Cosotos " +this.SelectedCentroCostChild.Nombre.length);
     console.log(
       this.SelectedCuentaMayorChild.IdCuentaMayor.length +
         " CunetaMeyor " +
@@ -3384,18 +3401,17 @@ export class AccountComponent implements OnInit {
     console.log(this.textbreve);
 
     if (
-      this.cantidadchild === undefined ||
-      (this.cantidadchild == 0 && this.preciochild === undefined) ||
-      (this.preciochild == 0 &&
-        this.SelectOrdenEstadisiticaChild.IdOrdenInterna.length === 0 &&
-        this.SelectOrdenEstadisiticaChild.NombreOrder.length === 0 &&
-        this.SelectedCentroCostChild.Nombre.length === 0 &&
-        this.SelectedCentroCostChild.IdCentroCosto.length === 0 &&
-        this.SelectedCuentaMayorChild.IdCuentaMayor.length === 0 &&
-        this.SelectedCuentaMayorChild.Nombre.length === 0 &&
+      
+      this.preciochild == 0 &&
+        this.SelectOrdenEstadisiticaChild.IdOrdenInterna.length == 0 &&
+        this.SelectOrdenEstadisiticaChild.NombreOrder.length == 0 &&
+        this.SelectedCentroCostChild.Nombre.length == 0 &&
+        this.SelectedCentroCostChild.IdCentroCosto.length == 0 &&
+        this.SelectedCuentaMayorChild.IdCuentaMayor.length == 0 &&
+        this.SelectedCuentaMayorChild.Nombre.length == 0 &&
         this.SelectedUnidadMedChild.IdUnidadMedida === undefined &&
         this.SelectedUnidadMedChild.NombreUnidadMedida === undefined &&
-        this.textbreve === undefined)
+        this.textbreve === undefined
     ) {
       this.toast.setMessage(
         "si se requiere actualizar un SubProducto, se debe de llenar almenos un campo o seleccionar una opcion",
@@ -3437,8 +3453,10 @@ export class AccountComponent implements OnInit {
         this.detalle_subproducts.IdOrdenEstadisticaChild != undefined &&
         this.detalle_subproducts.NameOrdenEstadisticaChild != undefined
       ) {
-        this.SelectOrdenEstadisiticaChild.IdOrdenInterna = this.detalle_subproducts.IdOrdenEstadisticaChild;
-        this.SelectOrdenEstadisiticaChild.NombreOrder = this.detalle_subproducts.NameOrdenEstadisticaChild;
+        this.SelectOrdenEstadisiticaChild.IdOrdenInterna =
+          this.detalle_subproducts.IdOrdenEstadisticaChild;
+        this.SelectOrdenEstadisiticaChild.NombreOrder =
+          this.detalle_subproducts.NameOrdenEstadisticaChild;
       } else {
         console.log(
           "deberia de tomar los valores que se seleccionaron de Orden Estadisitica ****"
@@ -3467,8 +3485,10 @@ export class AccountComponent implements OnInit {
         this.detalle_subproducts.NameCentroCostoChild != undefined
       ) {
         console.log("dentro del else if de centro de cosotos ");
-        this.SelectedCentroCostChild.IdCentroCosto = this.detalle_subproducts.IdCentoCostoChild;
-        this.SelectedCentroCostChild.Nombre = this.detalle_subproducts.NameCentroCostoChild;
+        this.SelectedCentroCostChild.IdCentroCosto =
+          this.detalle_subproducts.IdCentoCostoChild;
+        this.SelectedCentroCostChild.Nombre =
+          this.detalle_subproducts.NameCentroCostoChild;
       } else {
         console.log(
           "Se deben de tomar los datos seleccionado de Centro de Costos"
@@ -3491,8 +3511,10 @@ export class AccountComponent implements OnInit {
         this.detalle_subproducts.NameCuentaMayorChild != undefined
       ) {
         console.log("dentro del else if de cuenta de mayor ");
-        this.SelectedCuentaMayorChild.IdCuentaMayor = this.detalle_subproducts.IdCuentaMayorChild;
-        this.SelectedCuentaMayorChild.Nombre = this.detalle_subproducts.NameCuentaMayorChild;
+        this.SelectedCuentaMayorChild.IdCuentaMayor =
+          this.detalle_subproducts.IdCuentaMayorChild;
+        this.SelectedCuentaMayorChild.Nombre =
+          this.detalle_subproducts.NameCuentaMayorChild;
       } else {
         console.log("Se tomand los datos seleccionados de Cuneta de mayor");
       }
@@ -3520,8 +3542,10 @@ export class AccountComponent implements OnInit {
         this.detalle_subproducts.NameUnidadMedidaChild != undefined
       ) {
         console.log("dentro del else if de unidad de medida");
-        this.SelectedUnidadMedChild.IdUnidadMedida = this.detalle_subproducts.IdUnidadMedidaChild;
-        this.SelectedUnidadMedChild.NombreUnidadMedida = this.detalle_subproducts.NameUnidadMedidaChild;
+        this.SelectedUnidadMedChild.IdUnidadMedida =
+          this.detalle_subproducts.IdUnidadMedidaChild;
+        this.SelectedUnidadMedChild.NombreUnidadMedida =
+          this.detalle_subproducts.NameUnidadMedidaChild;
       } else {
         console.log("Se deben de tomar los datos de Unidad de medida");
       }
@@ -3555,11 +3579,7 @@ export class AccountComponent implements OnInit {
       );
       console.log(this.textbreve);
 
-      var newStatus;
-      console.log(
-        "-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud
-      );
-      newStatus = this.ChecknextStatus(this.auth.currentUser.IdUsuario);
+      //console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
 
       var IdSol = this.DataSolReg.ID;
 
@@ -3596,18 +3616,16 @@ export class AccountComponent implements OnInit {
             this.SelectedUnidadMedChild.NombreUnidadMedida = "";
             this.textbreve = "";
             this.iseditsubProduct = false;
+            this.closeViewChilds();
             this.toast.setMessage(
-              "se Actualizo correctamente el SubProducto",
+              "Puedes seguir editando , datos guardados",
               "success"
             );
-            this.cancelEditing();
+            //this.cancelEditing();
           },
           (error) => {
-            if(error.status == 403 || error.status == 404){
-              this.toast.setMessage(
-                error.message,
-                "danger"
-              );
+            if (error.status == 403 || error.status == 404) {
+              this.toast.setMessage(error.message, "danger");
               this.auth.logout();
             }
             console.log(error);
@@ -3632,90 +3650,92 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  ChecknextStatus(IdUser: number){
-    this.solicitudComp.getRoleExcepcionDir(IdUser).subscribe(
-      (data) => {
-        console.log(data);
-        var exceptAuth = data;
-        if (
-          (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuth == 3) ||
-          exceptAuth == 0 ||
-          exceptAuth == undefined
-        ) {
-          //si el a excluir es null o vacio o igual a 3 que es el de Direccion se debe retornar un role 1 (nueva solicitud)
-          //para que el gerente de area pueda visualizar la solicitud en su bandeja DENTRO DE LA INTRANET
-          this.newStatus = 1;
-        } else if (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuth == 2) {
-          //si entra en este if quiere decir que el role excluido es el del gerente por lo que se tiene retornar con un estatus 2 (autorizado por gerente)
-          //para que lo puedea visualizar el director de area DENTRO DE LA INTRANET
-          this.newStatus = 2;
-        } else if (
-          (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 3) ||
-          exceptAuth == 0 ||
-          exceptAuth == undefined
-        ) {
-          this.newStatus = 1;
-        } else if (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 2) {
-          this.newStatus = 2;
-        } else if (
-          (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 3) ||
-          exceptAuth == 0 ||
-          exceptAuth == undefined
-        ) {
-          this.newStatus = 1;
-        } else if (this.DataSolReg.IdStatusSolicitud === 7 && exceptAuth == 2) {
-          this.newStatus = 2;
-        }
-      },
-      (err) => {
-        console.log("Error en ChecknextStatus");
-        console.log(err);
-      }
-    );
-  }
+  // ChecknextStatus(IdUser: number) {
+  //   this.solicitudComp.getRoleExcepcionDir(IdUser).subscribe(
+  //     (data) => {
+  //       console.log(data);
+  //       var exceptAuth = data;
+  //       if (
+  //         (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuth == 3) ||
+  //         exceptAuth == 0 ||
+  //         exceptAuth == undefined
+  //       ) {
+  //         //si el a excluir es null o vacio o igual a 3 que es el de Direccion se debe retornar un role 1 (nueva solicitud)
+  //         //para que el gerente de area pueda visualizar la solicitud en su bandeja DENTRO DE LA INTRANET
+  //         this.newStatus = 1;
+  //       } else if (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuth == 2) {
+  //         //si entra en este if quiere decir que el role excluido es el del gerente por lo que se tiene retornar con un estatus 2 (autorizado por gerente)
+  //         //para que lo puedea visualizar el director de area DENTRO DE LA INTRANET
+  //         this.newStatus = 2;
+  //       } else if (
+  //         (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 3) ||
+  //         exceptAuth == 0 ||
+  //         exceptAuth == undefined
+  //       ) {
+  //         this.newStatus = 1;
+  //       } else if (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 2) {
+  //         this.newStatus = 2;
+  //       } else if (
+  //         (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 3) ||
+  //         exceptAuth == 0 ||
+  //         exceptAuth == undefined
+  //       ) {
+  //         this.newStatus = 1;
+  //       } else if (this.DataSolReg.IdStatusSolicitud === 7 && exceptAuth == 2) {
+  //         this.newStatus = 2;
+  //       }
+  //     },
+  //     (err) => {
+  //       console.log("Error en ChecknextStatus");
+  //       console.log(err);
+  //     }
+  //   );
+  // }
 
   openDialog(typeUpdate: number) {
-    const dialogRef = this.dialog.open(AcountComponentDialog, {
+    const dialogRef = this.dialog.open(DialogAdvertenciaUpdateSolpedidoComponent, {
       width: "450px",
+      data:typeUpdate
     });
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       console.log("The dialog was closed");
       console.log(result);
       if (typeUpdate === 0) {
         //esta opcion manda a llamar a meotodo update a nivel datos generales
-        if (result === true) {
-          this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-        } else {
-          this.newStatus = this.DataSolReg.IdStatusSolicitud;
+        try {
+          this.newStatus = (result === true) ? this.newStatus = 1 : this.newStatus = this.DataSolReg.IdStatusSolicitud;
+          await this.updateLVLSOlcitud();
+          if(result === true){
+            this.EndEditingAndChangedStatus();
+          }
+        } catch (error) {
+          console.log(error);
         }
-        setTimeout(()=>{
-          this.updateLVLSOlcitud();
-        }, 3000);
+
       } else if (typeUpdate === 1) {
         //manda a llamar metodo par actualizar datos de producto
-        if (result === true) {
-          console.log("------------------");
-          this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-        } else {
-          console.log("==========================");
-          this.newStatus = this.DataSolReg.IdStatusSolicitud;
+        try {
+          this.newStatus = (result === true) ? this.newStatus = 1 : this.newStatus = this.DataSolReg.IdStatusSolicitud;
+          await this.UpdateLVLProducts();
+          if(result === true){
+            this.EndEditingAndChangedStatus();
+          }
+        } catch (error) {
+          console.log(error);
         }
-        setTimeout(() => {
-          this.UpdateLVLProducts();
-        }, 3000);
-        console.log("es el if que actualiza los datos de producto");
+        
       } else if (typeUpdate === 2) {
         //madna a llamar metodo para actualizar datos de subprodcuto
-        if (result === true) {
-          console.log("------------------");
-          this.ChecknextStatus(this.auth.currentUser.IdUsuario);
-        } else {
-          console.log("==========================");
-          this.newStatus = this.DataSolReg.IdStatusSolicitud;
+        try {
+          this.newStatus = (result === true) ? this.newStatus = 1 : this.newStatus = this.DataSolReg.IdStatusSolicitud;
+          await this.UpdateLVLProducts();
+          if(result === true){
+            this.EndEditingAndChangedStatus();
+          }
+        } catch (error) {
+          console.log(error);
         }
-        setTimeout(() => {
-          this.updateLVLChilds();
-        }, 3000);
+        
       }
     });
   }
@@ -4056,18 +4076,3 @@ export class AccountComponent implements OnInit {
   }
 }
 
-@Component({
-  selector: "dialog-overview-example-dialog",
-  templateUrl: "acount.component.dialogaccount.html",
-})
-export class AcountComponentDialog {
-  constructor(public dialogRef: MatDialogRef<AcountComponentDialog>) {}
-
-  onNoClick(): void {
-    this.dialogRef.close(false);
-  }
-
-  onYesClick(): void {
-    this.dialogRef.close(true);
-  }
-}

@@ -135,19 +135,19 @@
                     <a class="titles">JUSTIFICACION:</a>
                     {{ element.Justificacion }}
                   </div>
-                  <br />
-                  <div class="icons" *ngIf="this.auth.isCheckPresupuesto">
+                  <mat-label *ngIf="
+                      this.auth.isCheckPresupuesto || this.auth.isCompras ||this.auth.isComprador &&
+                      element.Statname == 'S. P. PRESUPUESTO RECHAZADO' || 
+                      element.Statname == 'S. P. RECHAZADA POR COMPRAS'">
+                      <a class="titles">MOTIVO DE RECHAZO:</a> {{ element.MotivoRechazo }}
+                  </mat-label>
+                  <br>
+                  <div class="icons" *ngIf="this.auth.isCheckPresupuesto ">
                     <i class="fas fa-user-tie"></i>
                     <mat-label>
                       AUTORIZADOR DE PRESUPUESTO ASIGNADO:
                       <a>{{ element.NAMEAUTH }}</a></mat-label>
                   </div>
-                  <mat-label *ngIf="
-                      this.auth.isCheckPresupuesto &&
-                      element.Statname == 'S. P. PRESUPUESTO RECHAZADO'
-                    ">
-                    MOTIVO DE RECHAZO: <a>{{ element.MotivoRechazo }}</a>
-                  </mat-label>
                 </div>
                 <div class="row">
                   <div class="col" *ngIf="isEditing">
@@ -162,10 +162,6 @@
                       ESPECIFICACIONES
                     </a>
                   </div>
-                </div>
-                <mat-divider></mat-divider>
-                <mat-divider></mat-divider>
-                <div class="row">
                   <div class="col" *ngIf="this.auth.isComprador">
                     <button class="btn btn-sm btn-primary" (click)="getdownloadFile(element)">
                       <i class="fa fa-file-excel-o" aria-hidden="true"></i>
@@ -173,13 +169,15 @@
                     </button>
                   </div>
                 </div>
+                <br>
+                <mat-divider></mat-divider>
+                <mat-divider></mat-divider>
                 <!-- <div *ngIf="element.Statname == 'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP'">
                     <button class="btn btn-sm btn-primary" (click)="changedStatusCompras(element)">
                       <i class="fa fa-check-square-o" aria-hidden="true"></i> 
                       Revisar Solicitud.
                     </button>
                   </div> -->
-
                 <!-- <div> 
                       <button mat-button (click)="openDialog()"><i class="fas fa-signature"></i>FIRMAR</button>
                       <div class="firma" *ngIf="isfirma">
@@ -210,9 +208,15 @@
                             </mat-select>
                           </mat-form-field>
                           <div class="example-element-description motjust" *ngIf="isrechazada">
-                            <textarea matInput placeholder="MOTIVO DE RECHAZO" [(ngModel)]="motivo_Rechazo"
-                              class="example-element-description-attribution" maxlength="250"></textarea>
+                            <!-- <textarea matInput placeholder="MOTIVO DE RECHAZO" [(ngModel)]="motivo_Rechazo"
+                              class="example-element-description-attribution" maxlength="250"></textarea> -->
+
+                              <mat-form-field class="example-full-width" *ngIf="isrechazada">
+                                <mat-label>MOTIVO DE RECHAZO</mat-label>
+                                <textarea matInput [(ngModel)]="motivo_Rechazo"  maxlength="250"></textarea>
+                              </mat-form-field>
                           </div>
+                          
                         </div>
                         <div>
                           <button class="btn btn-success btn-sm" (click)="validaStatus(element)">
@@ -223,7 +227,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col" *ngIf="this.auth.isComprador || this.auth.isCompras">
+                  <div class="col" *ngIf="this.auth.isCompras && element.Statname != 'S. P. RECHAZADA POR COMPRAS'">
                     <div>
                       <div class="icons">
                         <mat-form-field>
@@ -243,6 +247,7 @@
                     </div>
                   </div>
                 </div>
+                
               </div>
 
               <br />

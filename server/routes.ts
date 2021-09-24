@@ -226,7 +226,7 @@ export default function setRoutes(app) {
   //ruta de api para la administracion de permisos para validaciones por direccion
   router.route('/dirauth').get(auth, solicitudCTR.getAllDirectionsforAutorizations);
   router.route('/roleauth').get(auth, solicitudCTR.getAllRolesforAuth);
-  router.route('/insertexeptionauth/:IdDireccion/:IdRole').get(auth, solicitudCTR.InsertnewexceptionAuth);
+  router.route('/insertexeptionauth/:TipoSolicitud/:IdDireccion/:IdRole').get(auth, solicitudCTR.InsertnewexceptionAuth);
   router.route('/lisrdirauth').get(auth, solicitudCTR.listDirAuth);
   router.route('/dirauthforauth/:IdDireccion').get(auth, solicitudCTR.AuthExeptionforDirection);
   router.route('/deleteauth/:IdAuth').get(auth, solicitudCTR.DeleteAuthforRoleandDir);
@@ -403,7 +403,7 @@ export default function setRoutes(app) {
                     type:"",
                     port:"",
                     username:"solpedidossap",
-                    password:"d1nosauri0Z!"
+                    password:"grup0imagensap"
                     // username:"dalet",
                     // password:"ps1dalet" 
                   };
@@ -412,12 +412,13 @@ export default function setRoutes(app) {
                   console.log("pasamos a subir el archivo.....");
                   //'../ImagenFinanzasFabi/'+FileName, '/'+FileName
                   //var upfile = [{local:'../ImagenFinanzasFabi/' + FileName, remote:'/'+FileName}];
-                  ftp.upload('../ImagenFinanzasPruebaslocal/'+FileName, FileName, function(err){
-
-                    if(err) console.log(err);
-                    else console.log("Se dejo el Archivo en el 10.29.148.24" + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);
-                    ftp.close();
-                  });
+                  ftp.cd("/Capacitacion", function(err, path){
+                    ftp.upload('../IntranetGrupoImagen/'+FileName, FileName, function(err){
+                      if(err) console.log(err);
+                      else console.log("Se dejo el Archivo en el //10.29.148.24/Capacitacion " + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);
+                      ftp.close();
+                    });
+                  });	
   
                   //creacion de update para las solicitudes que se envian a sap-
                   //recorrer los valores de las solicitudes para hacer updates por cada solicitud ingresada

@@ -120,7 +120,10 @@ export class AdminComponent implements OnInit {
 
   getUsers() {
     this.userService.getUsers().subscribe(
-      data => this.users = data,
+      data => {
+        this.users = data
+        console.log(data);
+      },
       error =>{
         console.log(error);
         if(error.status == 403 || error.status == 404){
@@ -137,7 +140,7 @@ export class AdminComponent implements OnInit {
 
   getDirecciones(){
     this.userService.alldirection().subscribe(data=>{
-      console.log(data);
+      //console.log(data);
       this.direcciones = data;
     }, error=>{
       console.log(error);

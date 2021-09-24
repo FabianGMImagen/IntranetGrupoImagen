@@ -28,6 +28,7 @@ export class AuthServices {
   isSolicitanteCI = false;
   isJefeAreaConsumoInt = false;
   isDirectorConsumoInt = false;
+  isAdminPresupuestoConInt = false;
   isAlmacenistaConsumoInt = false;
   // private expiresAt: number;
 
@@ -67,6 +68,7 @@ export class AuthServices {
     this.isSolicitanteCI = false
     this.isJefeAreaConsumoInt = false;
     this.isDirectorConsumoInt = false;
+    this.isAdminPresupuestoConInt = false;
     this.isAlmacenistaConsumoInt = false;
     //====================Solicitud Pedido ==============================
     this.isIntercambios = false;
@@ -99,7 +101,9 @@ export class AuthServices {
     //this.currentUser.IdDireccion = decodedUser.IdDireccion;
     this.currentUser.NombreCompleto = decodedUser.NombreCompleto;
     //====================Solicitud Consumo Interno ==============================
-    decodedUser.IdRoleConsumoInterno === 4 ? this.isAlmacenistaConsumoInt = true : this.isAlmacenistaConsumoInt = false;
+    console.log(decodedUser.IdRoleConsumoInterno);
+    (decodedUser.IdRoleConsumoInterno === 5 && decodedUser.IdRole != 5) ? this.isAlmacenistaConsumoInt = true : this.isAlmacenistaConsumoInt = false;
+    decodedUser.IdRoleConsumoInterno === 4 ? this.isAdminPresupuestoConInt = true : this.isAdminPresupuestoConInt = false;
     decodedUser.IdRoleConsumoInterno === 3 ? this.isDirectorConsumoInt = true : this.isDirectorConsumoInt = false;
     decodedUser.IdRoleConsumoInterno === 2 ? this.isJefeAreaConsumoInt = true : this.isJefeAreaConsumoInt = false;
     decodedUser.IdRoleConsumoInterno === 1 ? this.isSolicitanteCI = true : this.isSolicitanteCI = false;
@@ -113,7 +117,7 @@ export class AuthServices {
     decodedUser.IdRole === 3 ? this.isDirArea = true : this.isDirArea = false;
     decodedUser.IdRole === 2 ? this.isJefeArea = true : this.isJefeArea = false;
     decodedUser.IdRole === 1 ? this.isStandardUser = true : this.isStandardUser = false;
-    delete decodedUser.IdRole;
+    //delete decodedUser.IdRole;
   }
 
 

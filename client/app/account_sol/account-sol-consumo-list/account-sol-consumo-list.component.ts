@@ -43,7 +43,7 @@ export class AccountSolConsumoListComponent implements OnInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   ListSolConsumoReg: SolicitudesConsumoIntRegistradas[];
   DATASOURCEFIRST: MatTableDataSource<SolicitudesConsumoIntRegistradas>;
-  columnsToDisplayFirst = ["ID","FECHASOLICITUD","STATUSNAME","USERSOLICITANTE","EMPRESA"];
+  columnsToDisplayFirst = ["ID","FECHASOLICITUD","USERSOLICITANTE","EMPRESA", "JUSTIFICACION"];
 
   constructor(
     public dialog: MatDialog,

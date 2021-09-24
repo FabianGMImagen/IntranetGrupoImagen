@@ -135,7 +135,7 @@
                   maxlength="10"
                 />
                 <mat-error *ngIf="tel.invalid">{{
-                  getErrorMensajeInt()
+                  getErrorMensajeTel()
                 }}</mat-error>
               </mat-form-field>
             </div>
@@ -149,17 +149,15 @@
               <!--<input class="form-control" type="text" placeholder="Ext" name="ext" [(ngModel)]="ext">-->
               <mat-form-field class="example-full-width">
                 <input
-                  type="tel"
                   matInput
                   placeholder="EXT."
                   name="ext"
                   required
+                  type="number"
                   [formControl]="ext"
                   maxlength="4"
                 />
-                <mat-error *ngIf="tel.invalid">{{
-                  getErrorMensajeInt()
-                }}</mat-error>
+                <mat-error *ngIf="ext.invalid">{{getErrorMensajeExt()}}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -171,11 +169,8 @@
                 <mat-select
                   [(ngModel)]="this.DataInsert.Area"
                   name="area"
-                  (selectionChange)="selectedArea()"
-                >
-                  <mat-option *ngFor="let area of ListAreas" [value]="area">{{
-                    area.Nombre
-                  }}</mat-option>
+                  (selectionChange)="selectedArea()">
+                  <mat-option *ngFor="let area of ListAreas" [value]="area">{{area.Nombre}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -189,8 +184,7 @@
                 <mat-select
                   [(ngModel)]="this.DataInsert.Autorizador"
                   name="usr"
-                  disabled="true"
-                >
+                  disabled="true">
                   <mat-option *ngFor="let usr of ListUser" [value]="usr">{{
                     usr.NombreCompleto
                   }}</mat-option>
@@ -1015,7 +1009,13 @@
                 </button> -->
 
       <!-- [disabled]="!uploader.getNotUploadedItems().length" -->
+      <div class="progressbar" *ngIf="progressbar">
+        <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar>
+      </div>
     </div>
+    <br>
+
+    
   </mat-card-content>
 </mat-card>
 

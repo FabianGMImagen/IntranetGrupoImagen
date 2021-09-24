@@ -115,24 +115,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
 
         listProps(json, 3);
 
@@ -231,25 +236,30 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
 
         listProps(json, 3);
 
@@ -354,25 +364,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          
+        } catch (error) {
+          
+        }
 
         listProps(json, 3);
 
@@ -477,25 +491,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        } catch (error) {
+          
+        }
 
         listProps(json, 3);
 
@@ -600,25 +618,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          
+        } catch (error) {
+          
+        }
 
         listProps(json, 3);
 
@@ -713,9 +735,9 @@ export class SolicitudCompraService {
   DeleteCategoria(IdCategoria:number){
     return this.http.get(`/api/catdelete/${IdCategoria}`).toPromise();
   }
-
+  
   DeleteCategoriaforUser(IdUser:number, IdCategoria:number){
-    return this.http.get(`/api/deletecat/${IdCategoria}`).toPromise();
+    return this.http.get(`/api/deletecat/${IdUser}/${IdCategoria}`).toPromise();
   }
 
   getAllImputaciones(): Observable<Imputacion[]> {
@@ -775,25 +797,30 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        } catch (error) {
+          console.log(error);
+          return null;
+        }
         
         listProps(json, 3);
 
@@ -891,25 +918,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          
+        } catch (error) {
+          
+        }
         //console.log(json);
         listProps(json, 3);
 
@@ -1006,25 +1037,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          
+        } catch (error) {
+          console.log(error);
+        }
         //console.log(json);
         listProps(json, 3);
 
@@ -1122,25 +1157,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          
+        } catch (error) {
+          console.log(error);
+        }
         //console.log(json);
         listProps(json, 3);
 
@@ -1238,25 +1277,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
-
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
-
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        try {
+          
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
+  
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
+  
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        } catch (error) {
+          console.log(error);
+        }
 
         listProps(json, 3);
 
@@ -1490,25 +1533,29 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
 
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
 
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
-        //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
+        } catch (error) {
+          console.log(error);
+        }
+        
 
         listProps(json, 3);
 
@@ -1609,24 +1656,28 @@ export class SolicitudCompraService {
           '</soap-env:Body>' +
           '</soap-env:Envelope>';
 
+        try {
+          var split1 = res.responseBody.split(separadorini);
+          //le hacemos un split para quitarle la parte que no nos sirve separadorini
+          //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
+          var cadena = split1[1].toString();
+          //volvemos a hacer un split para quitar la parte final separador2
+          var split2 = cadena.split(separadorfin);
+          //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
+          //convertimos de nuevo el arreglo en cadena para quitar las comas
+          var cadena2 = split2[0].toString();
 
-        var split1 = res.responseBody.split(separadorini);
-        //le hacemos un split para quitarle la parte que no nos sirve separadorini
-        //console.log("SPLIIITEADOOO 1111111111     "+split1[0] + "------------" + split1[1]);
-        var cadena = split1[1].toString();
-        //volvemos a hacer un split para quitar la parte final separador2
-        var split2 = cadena.split(separadorfin);
-        //console.log("SPLITEEEADOOO 2222222222    " + split2[0] + "-------------" + split2[0]);
-        //convertimos de nuevo el arreglo en cadena para quitar las comas
-        var cadena2 = split2[0].toString();
+          var NuevoXML = cadena2.trim();
+          //console.log("---XML FORMATEADO--" + NuevoXML);
+          var parse = new DOMParser();
+          var xml = parse.parseFromString(NuevoXML, 'text/xml');
 
-        var NuevoXML = cadena2.trim();
-        //console.log("---XML FORMATEADO--" + NuevoXML);
-        var parse = new DOMParser();
-        var xml = parse.parseFromString(NuevoXML, 'text/xml');
-
-        //console.log(xml);
-        var json = this.ngxXml2jsonService.xmlToJson(xml);
+          //console.log(xml);
+          var json = this.ngxXml2jsonService.xmlToJson(xml);
+        } catch (error) {
+            console.log(error);
+        }
+        
         //FUNCION PARA RECORRER LAS LLAVEZ DE EL OBJETO Y AL ENCONTRAR UN NOMBRE DE LLAVE CORRECTO AGREGA LOS VALORES A UN NUEVO ARREGLO
 
         listProps(json, 3);

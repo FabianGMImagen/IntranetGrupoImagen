@@ -43,3 +43,6 @@ Thumbs.db
 
 package.json
 proxy.conf.json
+package-lock.json
+#datos archivos de excel o csv
+/datos

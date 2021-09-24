@@ -127,6 +127,27 @@ tr.example-element-row:not(.example-expanded-row):active {
   width: 450px !important;
 }
 
-.spiner{
+.titles{
+  font-weight: bold;
+  text-decoration: none;
+}
 
+
+.asigandrechazo{
+  display: inline-block;
+  height: auto;
+  width: auto;
+}
+
+.caracteristicas{
+  min-width: 250px;
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: auto;
+  width: 850px;
+}
+
+.movebutton{
+  text-align: right;
 }

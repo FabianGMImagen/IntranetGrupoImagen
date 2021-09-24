@@ -38,10 +38,10 @@ export class DialogDetalleSolConsumoInternoComponent implements OnInit {
     console.log(this.data);
     this.viewspiner = true;
     this.idsolicitud = this.data.IdSol;
-    if(this.data.Status != 3 || this.data.Status != 5){
-      this.isUpdate = false
+    if(this.data.Status != 3 || this.data.Status != 5 || this.data.Status != 7){
+      this.isUpdate = true
     }else{
-      this.isUpdate = true;
+      this.isUpdate = false;
     }
     this.getDataInicialforUpdateProducts();
     this.getAllProductsforSolConsumoInt();

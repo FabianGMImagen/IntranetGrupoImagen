@@ -5,8 +5,8 @@ import { connect } from "net";
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
-const SERVER = 'http://localhost:3000';
-const Intranet = 'http://localhost:4200';
+const SERVER = 'http://10.29.148.40:3000';
+const Intranet = 'http://10.29.148.40:4200';
 const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
 const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
 const REDIRECTURL = 'https://developers.google.com/oauthplayground';
@@ -547,6 +547,8 @@ export default class SolicitudCompraCTR {
 
   DeleteCategoriaForUser = (req, resp)=>{
     var sql = require("mssql");
+    console.log(req.params.IdUser);
+    console.log(req.params.IdCategoria)
     //variable de entorno para realizar la coneccion
     var env = process.env.NODE_ENV || 'SERWEB';
     var config = require('../controllers/connections/servers')[env];
@@ -3247,7 +3249,7 @@ export default class SolicitudCompraCTR {
                     '<br>' +
                     // Envio de botones para aprovar o un denegar la solicitud de pedido
                     '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
-                    '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
+                    //'<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
                     '<br>' +
                     '<br>' +
                     '<p> Porfavor no Responder a este Mensaje, Este es un Mensaje Automatico<p/>' +
@@ -4036,7 +4038,7 @@ export default class SolicitudCompraCTR {
                   '<br>' +
                   // Envio de botones para aprovar o un denegar la solicitud de pedido
                   '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
-                  '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
+                  //'<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
                   '<br>' +
                   '<br>' +
                   '<p> PORFAVOR NO RESPONDER A ESTE MENSAJE, ESTE ES UN MENSAJE AUTORMATICO <p/>' +
@@ -4195,7 +4197,6 @@ export default class SolicitudCompraCTR {
 
     if (req.params.IdStatus == 6 || req.params.IdStatus == 7) {
       console.log("Persona de finanzas");
-      console.log("Director de Area");
       var sql = require("mssql");
       var env = process.env.NODE_ENV || 'SERWEB';
       var config = require('../controllers/connections/servers')[env];
@@ -4377,6 +4378,7 @@ export default class SolicitudCompraCTR {
                       "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
                       "</body>" +
                       "</html>");
+                      res.end();
                   }
                 });
               } else {
@@ -4415,6 +4417,7 @@ export default class SolicitudCompraCTR {
                       "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
                       "</body>" +
                       "</html>");
+                      res.end();
                   }
                 });
               }
@@ -4454,9 +4457,11 @@ export default class SolicitudCompraCTR {
             "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
             "</body>" +
             "</html>");
+            res.end();
         }
       }).catch(err => {
         console.log("Error al recuperar la infromacion del siguente autorizador" + err);
+        res.end();
       });
 
     }

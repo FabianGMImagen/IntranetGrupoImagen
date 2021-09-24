@@ -83,7 +83,7 @@ import { DialogDeleteUserComponent } from './dialogs/dialog-delete-user/dialog-d
 import { DialogDeleteDirComponent } from './dialogs/dialog-delete-dir/dialog-delete-dir.component';
 import { AdminSolicitudesComponent } from './admin_Page/admin-solicitudes/admin-solicitudes.component';
 import { SolconsumointEditComponent } from './admin_Page/solconsumoint-edit/solconsumoint-edit.component';
-
+import { DialogAdvertenciaUpdateSolpedidoComponent } from './dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component';
 
 
 export function tokenGetter() {
@@ -123,6 +123,7 @@ export function tokenGetter() {
     DialogDeleteDirComponent,
     AdminSolicitudesComponent,
     SolconsumointEditComponent,
+    DialogAdvertenciaUpdateSolpedidoComponent,
   ],
   entryComponents:[
     DialogInfoComponent,

@@ -30,7 +30,7 @@ export class SolicitudesCompraRegistradas{
     Ext:string;
     Produccion:string;
     Justificacion:string;
-    MotivoRechazo:string;
+    MotivoRechazo?:string;
     RutaCotizacion:string;
     //IdSAP:string;
 
