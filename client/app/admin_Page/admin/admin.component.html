@@ -30,8 +30,9 @@
                     <th scope="col">Nombre Completo</th>
                   <th scope="col">Username</th>
                   <th scope="col">Email</th>
-                  <th scope="col">Role</th>
-                  <th scope="col">Telefono</th>
+                  <th scope="col">Role Sol.</th>
+                  <th scope="col">Role Sol.Consum.</th>
+                  <th scope="col">Teléfono</th>
                   <th scope="col">Ext</th>
                   <th scope="col">Actions</th>
                 </tr>
@@ -47,6 +48,7 @@
                   <td>{{user.LoginName}}</td>
                   <td>{{user.Email}}</td>
                   <td>{{user.NombreRol}}</td>
+                  <td>{{user.RoleConsumo}}</td>
                   <td>{{user.Telefono}}</td>
                   <td>{{user.Extension}}</td>
                   <td>
@@ -206,17 +208,14 @@
   </mat-tab>
   <mat-tab label="Direcciones"> 
     <div *ngIf="isViewListDir">
-      <div class="example-flex-container" style="padding-top: 5px; padding-bottom: 5px;">
-        <div class="example-button-container">
-          <button mat-raised-button color="primary" (click)="addNewDir()">
-            <span class="material-icons">
-            control_point_duplicate
-            </span>
-            <p>Nueva Direccion o Sub-Dir.</p>
-          </button>
-          
-        </div>
+
+      <div class="text-right " style="padding: 10px; ">
+        <button mat-raised-button class="newdir" (click)="addNewDir()">
+          <span class="material-icons">add</span>
+          New Dir. o Sub-Dir
+        </button>
       </div>
+      
       <div class="card">
         <h4 class="card-header">Direcciones registradas ({{this.direcciones.length}}) </h4>
         <div class="card-body">
@@ -254,13 +253,13 @@
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
           <mat-card-title>Actualizar Direccion</mat-card-title>
-          <mat-card-subtitle>Modificacion de Nombre de Direccion <strong>{{NameDirView}}</strong></mat-card-subtitle>
+          <mat-card-subtitle>Modificación de Nombre de Direccion <strong>{{NameDirView.Nombre}}</strong></mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <mat-form-field class="example-full-width " style="width: 350px;">
             <mat-label>Editar el Nombre de la Direccion  </mat-label>
-            <input matInput #message maxlength="100" [(ngModel)]="newName" placeholder="Cambia el nombre de la direccion..">
-            <mat-hint align="start"><strong>Edita el nombre de la sub o direccion.</strong> </mat-hint>
+            <input matInput #message maxlength="100" [(ngModel)]="newName" placeholder="Cambia el nombre de la dirección..">
+            <mat-hint align="start"><strong>Edita el nombre de la sub o dirección.</strong> </mat-hint>
             <mat-hint align="end">{{message.value.length}} / 100</mat-hint>
           </mat-form-field>
         </mat-card-content>
@@ -290,5 +289,5 @@
       </mat-card>
     </div>
   </mat-tab>
-  <!-- <mat-tab label="Third"> Content 3 </mat-tab> -->
+  <mat-tab label="Categorías"> <app-admin-categoria></app-admin-categoria> </mat-tab>
 </mat-tab-group>

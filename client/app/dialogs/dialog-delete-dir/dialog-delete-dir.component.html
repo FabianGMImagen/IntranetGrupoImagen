@@ -1,0 +1,7 @@
+
+<h1 mat-dialog-title>Eliminar Direccion</h1>
+<h3>Estas seguro que quieres Eliminar la DIreccion : {{data.name}}</h3>
+<div mat-dialog-actions>
+    <button mat-button class="backcancel" (click)="onCancelClick()">Cancel</button>
+    <button mat-button class="guardar" [mat-dialog-close]="data" cdkFocusInitial >Ok</button>
+</div>

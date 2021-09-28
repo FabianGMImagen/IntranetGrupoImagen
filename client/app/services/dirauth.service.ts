@@ -18,23 +18,23 @@ export class DirAuthService {
         private soap:NgxSoapService,
         private ngxXml2jsonService: NgxXml2jsonService) { }
 
-    getall_Direcciones(): Observable<Area[]>{
-        return this.http.get<Area[]>('/api/dirauth');
-    }
-
-    getall_RoleAuth(): Observable<Role[]>{
-        return this.http.get<Role[]>('/api/roleauth');
-    }
-
-    insertExeptionAuth(IdDireccion:number, IdRole:number){
-        return this.http.get(`/api/insertexeptionauth/${IdDireccion}/${IdRole}`);
-    }
-
-    listdiretionsexeptionauth(): Observable<DirAuth[]>{
-        return this.http.get<DirAuth[]>('/api/lisrdirauth');
-    }
+        getall_Direcciones(): Observable<Area[]>{
+            return this.http.get<Area[]>('/api/dirauth');
+        }
     
-    deleteexcepctionrole(IdAuth:number){
-        return this.http.get(`/api/deleteauth/${IdAuth}`);
-    }
+        getall_RoleAuth(): Observable<Role[]>{
+            return this.http.get<Role[]>('/api/roleauth');
+        }
+    
+        insertExeptionAuth(TipoSolicitud:number,IdDireccion:number, IdRole:number){
+            return this.http.get(`/api/insertexeptionauth/${TipoSolicitud}/${IdDireccion}/${IdRole}`);
+        }
+    
+        listdiretionsexeptionauth(): Observable<DirAuth[]>{
+            return this.http.get<DirAuth[]>('/api/lisrdirauth');
+        }
+        
+        deleteexcepctionrole(IdAuth:number){
+            return this.http.get(`/api/deleteauth/${IdAuth}`);
+        }
 }

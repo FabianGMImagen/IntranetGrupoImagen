@@ -82,24 +82,13 @@ abstract class BaseCtrl {
                           .input('Puesto', sql.VarChar, req.body.puesto)
                           .execute('InsertNewUser')
     }).then(result =>{
-        res.status(200).json(result.body)
+      console.log(result.recordset[0].Mensaje)
+        res.status(200).json(result.recordset[0].Mensaje)
         sql.close();
     }).catch(err =>{
       if(err) console.log(err);
       sql.close();
     });
-
-    /*const obj = new this.model(req.body);
-    obj.save((err, item) => {
-      // 11000 is the code for duplicate key error
-      if (err && err.code === 11000) {
-        res.sendStatus(400);
-      }
-      if (err) {
-        return console.error(err);
-      }
-      res.status(200).json(item);
-    });*/
   }
 
   // Get by id

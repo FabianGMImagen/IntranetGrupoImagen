@@ -1,0 +1,8 @@
+<h3 mat-dialog-title>Actualizacion de {{NameType}}</h3>
+<div mat-dialog-content>
+  <p>¿Quieres seguir actualizando el contendio de la Solicitud de Pedido o prefieres terminar?</p>
+</div>
+<div mat-dialog-actions>
+  <button class="btn bt-sm btn-info" style="margin: 1em;" (click)="onNoClick()"> <i class="fa fa-hand-paper-o" aria-hidden="true"></i>Continuare modificando</button>
+  <button class="btn bt-sm btn-success" style="margin: 1em;" (click)="onYesClick()" cdkFocusInitial> <i class="fa fa-check" aria-hidden="true"></i>Termine</button>
+</div>

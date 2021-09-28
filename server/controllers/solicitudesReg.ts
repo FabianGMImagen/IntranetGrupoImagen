@@ -112,6 +112,7 @@ InsertnewexceptionAuth = (req, res)=>{
   var config = require('../controllers/connections/servers')[env];
   new sql.ConnectionPool(config).connect().then(pool =>{
     return pool.request()
+    .input('TipoSolicitud', sql.Int, req.params.TipoSolicitud)
     .input('IdDireccion', sql.Int, req.params.IdDireccion)
     .input('IdRole', sql.Int, req.params.IdRole)
     .execute('InsertNewExeptionAuthorization')

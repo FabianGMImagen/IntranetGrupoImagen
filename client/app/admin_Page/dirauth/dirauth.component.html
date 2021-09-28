@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="col">
-          <label>Selecciona un role para exexcluir de las Autorizaciones.</label>
+          <label>Selecciona un role</label>
           <div class="icons">
             <i class="fas fa-user-tag"></i>
             <mat-form-field class="empLarge">
@@ -39,7 +39,20 @@
           </div>
         </div>
         <div class="col">
-          <button mat-raised-button style="color: #143654;" (click)="ExcluirAuth()">Excluir Autorizacion a esta Direccion</button>
+          <label>Selecciona un tipo de Solicitud.</label>
+          <div class="icons">
+            <i class="fas fa-user-tag"></i>
+            <mat-form-field class="empLarge">
+              <mat-label>Tipo Solicitud </mat-label>
+                  <mat-select name="role" [(ngModel)]="SelectedSolicitud">
+                      <mat-option value="1">Solicitud de Pedido</mat-option>
+                      <mat-option value="2">Solicitud de Consumo Interno</mat-option>
+                  </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <button mat-raised-button style="background-color: #143654; color: #ffff;" (click)="ExcluirAuth()">Excluir Autorizacion a esta Direccion</button>
         </div>
         
       </div>
@@ -60,7 +73,8 @@
       <thead class="thead-light">
         <tr>
           <th scope="col">Direccion</th>
-          <th scope="col">Rol Excluido de las Validaciones</th>
+          <th scope="col">Rol Excluido en Sol. Pedido</th>
+          <th scope="col">Rol Excluido en Sol. Consumo Int.</th>
           <th scope="col">Acciones</th>
         </tr>
       </thead>
@@ -68,7 +82,8 @@
       <tbody>
         <tr *ngFor="let dirauth of ListDirAuth">
           <td>{{dirauth.NameDir}}</td>
-          <td>{{dirauth.NameRole}}</td>
+          <td>{{dirauth.NombreRole}}</td>
+          <td>{{dirauth.NombreRoleCI}}</td>
           <td>
             <button class="btn btn-sm btn-danger" (click)="deleteExcept(dirauth)">
               <i class="fa fa-trash"></i> Delete

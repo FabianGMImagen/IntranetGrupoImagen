@@ -29,11 +29,11 @@
               </a>
           </li>
 
-          <!-- <li class="nav-item">
-            <a routerLink="/RegistrarSolicitudCompras" class="nav-link" routerlinkActivate="active" *ngIf="auth.loggedIn">
+          <li class="nav-item">
+            <a routerLink="/RegistrarSolicitudCompras" class="nav-link" routerlinkActivate="active" *ngIf="auth.loggedIn && auth.isSolicitanteCI">
               <i class="fa fa-list"></i> SOL. CONSUMO INT.
             </a>
-          </li> -->
+          </li>
 
           <li class="nav-item">
             <a routerLink="/solicitudesRegistradas" class="nav-link" routerLinkActive="active" 
@@ -43,11 +43,12 @@
             </a>
           </li>
 
-          <!-- <li class="nav-item">
-            <a routerLink="/solicituderegistradasconsumoint" class="nav-link" routerLinkActive="active" *ngIf="auth.loggedIn && auth.isJefeAreaConsumoInt || auth.isAlmacenistaConsumoInt ">
+          <li class="nav-item">
+            <a routerLink="/solicituderegistradasconsumoint" class="nav-link" routerLinkActive="active" 
+            *ngIf="auth.loggedIn && auth.isJefeAreaConsumoInt || auth.isDirectorConsumoInt || auth.isAlmacenistaConsumoInt ">
               <i class="fa fa-list"></i> SOL. CONSUMO INT. REGISTRADAS 
             </a>
-          </li> -->
+          </li>
 
           <li class="nav-item">
             <a routerLink="/login" class="nav-link" routerLinkActive="active" *ngIf="!auth.loggedIn" (click)="reset()">
@@ -63,7 +64,7 @@
           </li>
           
           <li class="nav-item">
-            <a routerLink="/account" class="nav-link" routerLinkActive="active" *ngIf="auth.loggedIn && auth.isStandardUser">
+            <a routerLink="/account" class="nav-link" routerLinkActive="active" *ngIf="auth.loggedIn && auth.isStandardUser || auth.isSolicitanteCI">
               <i class="fa fa-user"></i> PERFIL {{auth.currentUser.NombreCompleto}}
             </a>
           </li>
@@ -82,9 +83,9 @@
               <i class="fas fa-pencil-alt"></i> SOLICITUD EDIT
             </a>
           </li>
-          <li class="nav-item">
-            <a routerLink="/solicitudes" class="nav-link" routerLinkActive="active" *ngIf="auth.loggedIn && auth.isCompras">
-              <i class="fas fa-pencil-alt"></i> EXAMPLIST
+          <li class="nac-item">
+            <a routerLink="/authcat" class="nav-link" routerlinkActivate="active" *ngIf="auth.loggedIn && auth.isAdminApp">
+              <i class="fas fa-certificate"></i> PERMISOS CAT.
             </a>
           </li>
           <li class="nav-item">

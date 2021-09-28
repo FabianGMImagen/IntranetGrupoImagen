@@ -1,0 +1,91 @@
+<app-toast [message]="toast.message"></app-toast>
+<app-loading [condition]="isLoading"></app-loading>
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Asignacion de Categoria por Cliente.</mat-card-title>
+        <mat-card-subtitle>Especificar el usuario que administrara la categoria.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="row"> 
+            <div class="col">
+              <label>Selecciona un Usuario Comparador</label>
+              <div class="icons">
+                <i class="fas fa-street-view"></i>
+                <mat-form-field class="userc">
+                  <mat-label>Usuario</mat-label>
+                      <mat-select name="comprador" [(ngModel)]="this.User" (selectionChange)="getAllCategoriasAdmiistradasforUserComprador()">
+                          <mat-option *ngFor="let comprador of ListUserCompradores" [value]="comprador">{{comprador.NombreCompleto}}</mat-option>
+                      </mat-select>
+                      
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col">
+              <mat-accordion>
+                <mat-expansion-panel (opened)="panelOpenState = true"
+                                     (closed)="panelOpenState = false">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      Asignar Categoria a Usuario
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      Asignacion de Categoria para su Administracion
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <div>
+                    <br>
+                    <div class="asigcat">
+                      <label>Selecciona una Categoria</label>
+                      <div class="icons">
+                        <i class="fas fa-user-tag"></i>
+                        <mat-form-field class="cat" >
+                          <mat-label>Categoria</mat-label>
+                              <mat-select name="cat" [(ngModel)]="this.Categoria">
+                                  <mat-option *ngFor="let cat of ListCategorias" [value]="cat">{{cat.Nombre}}</mat-option>
+                              </mat-select>
+                              <mat-hint>Elegir una categoria para ser administrada por el comprador seleccionado.</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="asigcat">
+                      <button mat-raised-button style="background-color: #143654; color: #ffff;" (click)="InsertNewcategory()"><i class="fas fa-plus"></i></button>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card >
+  <mat-card-header>
+    <label style="font-size: large;">
+      Categorias Administradas por el Comprador Seleccionado
+    </label>
+  </mat-card-header>
+  <mat-card-content>
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Nombre Categoria</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      
+      <tbody>
+        <tr *ngFor="let categoria of this.ListCategoriasUsuario">
+          <td>{{categoria.Nombre}}</td>
+          <td>{{categoria.Descripcion}}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" (click)="DeleteCategoria(categoria)">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>

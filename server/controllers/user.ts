@@ -35,12 +35,14 @@ export default class UserCtrl extends BaseCtrl {
         var env = process.env.NODE_ENV || 'SERWEB';
         //config es la variable de configuracion y le pide a env (enviroment) que traega el nodo llamado WEB
         var config = require('../controllers/connections/servers')[env];              
-        /*var Query = "select IdEmpresa,Nombre from ImagenFinanzas.dbo.Empresas";*/ 
+        var Query = "select IdEmpresa,Nombre from ImagenFinanzas.dbo.Empresas";
         var Query = "select * from Usuario where Password = '" + req.body.password + "' and Email = '" + req.body.email + "' ;" ; 
         new sql.ConnectionPool(config).connect().then(pool =>{
           return pool.request().query(Query)
         }).then(result =>{
                 console.log( "----------FFFF----------"+ result.rowsAffected );
+                console.log(req.body.password);
+                console.log(result.recordset);
                 if(result.rowsAffected == 0){
                   return res.sendStatus(403);
                   
@@ -48,6 +50,7 @@ export default class UserCtrl extends BaseCtrl {
                   //console.log("hola como estaaaa");
 
                   if(result.recordset[0].Password != req.body.password){
+                    
                     return res.sendStatus(403);
                   }
 

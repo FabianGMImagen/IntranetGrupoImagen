@@ -1,0 +1,668 @@
+
+<app-toast [message]="toast.message"></app-toast>
+
+<mat-tab-group>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>library_books</mat-icon>
+      <div style="padding-left: 5px; padding-right: 5px;">Sol. Pedido</div>
+    </ng-template>
+    <mat-card>
+      <div *ngIf="viewcoutn">
+          <div class="row">
+            <mat-card-title class="title col-5">HISTORIAL DE SOLICITUDES DE PEDIDO</mat-card-title>
+            
+            <mat-card-subtitle class="col">
+              <button mat-flat-button color="warn" aria-label="Actualizar la Lista de Sol. de Pedido"
+                (click)="getAllSolicitudforUser()">
+                <mat-icon>cached</mat-icon>
+              </button>
+            </mat-card-subtitle>
+          </div>
+          <mat-divider></mat-divider>
+          <mat-form-field class="firstFilter">
+            <input matInput (keyup)="applyFilter($event.target.value)"
+              placeholder="FILTRADO POR DESCRIPCCION DE LA SOLICITUD">
+          </mat-form-field>
+          <div class="mat-elevation-z8">
+            <!--TABLA DINAMICA -->
+            <table mat-table [dataSource]="DataSource" multiTemplateDataRows matSort>
+              <!--Columnas de las Tablas-->
+              <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
+                <td mat-cell *matCellDef="let element" (click)="isPDF(element)"> {{element[column]}} </td>
+              </ng-container>
+      
+      
+              <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                  <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                    <div class="example-element-diagram row caracteristicas">
+                      <div class="example-element-position col-5">
+                        <span [ngClass]="element.status">{{element.Statname}}</span> 
+                      </div>
+                        <div class="col-5 ">
+                          <div>
+                            <a class="titles">ASIGNADO A : </a> <span>{{element.Comprador ? element.Comprador : "Aun no Asignado"}}</span> 
+                          </div>
+                          <div >
+                            <div class="example-element-position"
+                                *ngIf="(element.Statname == 'S. P. RECHAZADA POR GERENTE') ||
+                                            (element.Statname == 'S. P. RECHAZADA POR DIRECCION')||
+                                            (element.Statname == 'S. P. PRESUPUESTO RECHAZADO') ||
+                                            (element.Statname == 'S. P. RECHAZADA POR COMPRAS')">
+                                <a class="titles">MOTIVO RECHAZO </a>:
+                                {{element.MotivoRechazo}}
+                            </div>
+                          </div>
+                        </div>
+
+                    </div>
+                    
+                      
+                    <div class="example-element-description">
+                      <div *ngIf="genPDF">
+                        <button mat-flat-button color="warn" (click)="GeneraPDF(element)"><i class="far fa-file-pdf"></i>
+                          Descargar</button>
+                      </div>
+      
+                      <div *ngIf="editSol">
+                        <button class="btn btn-outline-warning btn-sm" (click)="EditSolicitud(element)"><i
+                            class="fa fa-pencil"></i> Detalles de Solicitud</button>
+                      </div>
+                    </div>
+      
+                  </div>
+                </td>
+              </ng-container>
+      
+              <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+              <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = element">
+              </tr>
+              <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+            </table>
+      
+            <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+          </div>
+        
+      </div>
+    </mat-card>
+    
+  </mat-tab>
+  
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>library_books</mat-icon>
+      <div style="padding-left: 5px; padding-right: 5px;"> Sol. Consumo Int</div>
+      <!-- <div class="spinner-border text-danger" role="status" *ngIf="isload">
+        <span class="visually-hidden"></span>
+      </div> -->
+    </ng-template>
+    
+    <app-account-sol-consumo-list></app-account-sol-consumo-list>
+  </mat-tab>
+  <div class="spinner-border text-danger" role="status" *ngIf="isload">
+    <span class="visually-hidden"></span>
+  </div>
+</mat-tab-group>
+
+
+
+
+
+<!-- Esta parte solo la ve el Anunciante si esque le rechazaraon el solicitud por algun campo que esta mal.-->
+<div *ngIf="isViewEditingSol">
+
+  <mat-card class="example-card" *ngIf="iseditsolped">
+    <mat-card-content>
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="openedDataSol" (opened)="panelOpenState = true" (closed)="panelOpenState = false" >
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h5>DATOS ACTUALIZABLES A NIVEL SOLICITUD.</h5>
+            </mat-panel-title>
+            <mat-panel-description>
+              <button mat-mini-fab color="primary"
+                matTooltip="LOS DATOS COMO EMPRESA, PLAZA/DIVI, TIPO DE SOLICITUD NO SON EDITABLES, SI SE REQUIERE CAMBIAR ESTOS VALORES SE TENDRA QUE CREAR UNA NUEVA SOLICITUD DE PEDIDO">
+                <i class="fas fa-info"></i>
+              </button>
+              <!-- Currently I am {{panelOpenState ? 'open' : 'closed'}} -->
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+                <h3>DATOS DE REFERENCIA GUARDADOS</h3>
+              <div class="row">
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Fecha de Solicitud" [(ngModel)]="DataSolReg.FECHASOLICITUD" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Tipo Solicitud" [(ngModel)]="DataSolReg.TSNOMBRE" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Empresa" [(ngModel)]="DataSolReg.EMPRESA" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="col">
+                  <mat-form-field>
+                    <input matInput placeholder="Plaza" [(ngModel)]="DataSolReg.Plaza" disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+          <div class="title">
+            <mat-title class="title">
+              <h4>CAMPOS EDITABLES </h4>
+            </mat-title>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="REQUIRENTE" [(ngModel)]="requirente" upperCase type="text">
+                <mat-hint>{{DataSolReg.REQUIRENTE}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Puesto" [(ngModel)]="puesto">
+                <mat-hint>{{DataSolReg.Puesto}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Email" [(ngModel)]="email">
+                <mat-hint>{{DataSolReg.Email}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Telefono" [(ngModel)]="tel" type="number">
+                <mat-hint>{{DataSolReg.Tel}}</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Ext" [(ngModel)]="ext" type="number">
+                <mat-hint>{{DataSolReg.Ext}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <input matInput placeholder="Produccion" [(ngModel)]="produccion" upperCase>
+                <mat-hint>{{DataSolReg.Produccion}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field class="moreLarge selected">
+                <mat-label>ORDEN INVERSION</mat-label>
+                <mat-select [(ngModel)]="SelectedOInvercion" name="ordeninterna" (selectionChange)="selectedOInterna()"
+                  [disabled]="AplicaOrdInt">
+                  <mat-option *ngFor="let orden of ListOrdenInterna" [value]="orden">
+                    {{orden.IdOrdenInterna}}-{{orden.NombreOrder}}</mat-option>
+                </mat-select>
+                <mat-hint>{{DataSolReg.OInterna}}</mat-hint>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field>
+                <textarea matInput placeholder="Justificacion" [(ngModel)]="justificacion" upperCase></textarea>
+                <!-- <mat-hint>{{DataSolReg.Justificacion}}</mat-hint> -->
+              </mat-form-field>
+            </div>
+
+
+          </div>
+
+          <div class="row" style="height: auto; width: auto;">
+
+            <div class="col">
+              <!-- <div class="spaceitem">
+                    <strong>ORDEN INVERSION</strong>: <label></label>
+                  </div> -->
+              <div class="spaceitem">
+                <strong>JUSTIFICACION</strong>: <label>{{DataSolReg.Justificacion}}</label>
+              </div>
+
+
+              <!-- <mat-list-item  ><strong>ORDEN INTERNA</strong>: {{DataSolReg.OInterna}}</mat-list-item> -->
+
+            </div>
+            <div class="col spaceitem">
+
+              <!-- <mat-list-item  ><strong>JUSTIFICACION</strong>: {{DataSolReg.Justificacion}}</mat-list-item> -->
+            </div>
+          </div>
+          <div style="padding: 20px;">
+            <button class="btn btn-sm btn-info" (click)="openDialog(0)"><i class="fa fa-wrench" aria-hidden="true"></i>Actualiza</button>
+
+          </div>
+
+        </mat-expansion-panel>
+
+      </mat-accordion>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h3>DETALLADO DE SOLICITUD DE PEDIDO CONCEPTO</h3>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+
+        <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+          <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+          <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+        </ng-container>
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+            <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              <!--parte del cuadro donde se puede agregar informacion de referencia-->
+              <div>
+                    <div *ngIf="element.butonMoreChilds">
+                      <button class="btn btn-sm btn-outline-info" (click)="ViewChilds(element)"><i class="fas fa-shapes"></i> verSubConcepto / s</button>
+                    </div>
+                    <div class="example-element-description" *ngIf="iseditproductbutton">
+                      <button class="btn btn-sm btn-outline-primary" (click)="VieEditProductos(element)"><i class="fas fa-edit"></i>Editar Concepto</button>
+                    </div>
+                <br>
+                <div *ngIf="viewChilds" class="Childs">
+                  <div class="movebutton">
+                    <button class="btn btn-sm btn-danger" (click)="closeViewChilds()"><i class="fa fa-times"></i></button>
+                  </div>
+                  <table class="table table-bordered">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Cantidad</th>
+                        <th scope="col">Precio Unitario</th>
+                        <th scope="col">O. Estadistica</th>
+                        <th scope="col">Unidad Medida.</th>
+                        <th scope="col">C.Costo</th>
+                        <th scope="col">C.Mayor</th>
+                        <th scope="col">Texto Breve.</th>
+                        <th scope="col">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let childs of ListChilds">
+                        <td width="15">{{childs.CantidadChild}}</td>
+                        <td width="15">{{childs.PrecioChild}}</td>
+                        <td width="15">{{childs.NameOrdenEstadisticaChild}}</td>
+                        <td width="15">{{childs.NameUnidadMedidaChild}}</td>
+                        <td width="15">{{childs.NameCentroCostoChild}}</td>
+                        <td width="15">{{childs.NameCuentaMayorChild}}</td>
+                        <td>{{childs.TextoBreve}}</td>
+                        <td *ngIf="iseditchilds">
+                          <button class="btn btn-sm btn-info" (click)="viewEditSubProducts(childs)"><i class="fas fa-edit"></i></button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                </div>
+                <div class="editsubprod" *ngIf="iseditsubProduct">
+                  <h3>Datos Actualizables SUBPRODUCTOS</h3>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <mat-form-field class="example-full-width">
+                        <input matInput type="number" name="Cantidad" [(ngModel)]="cantidadchild" placeholder="CANTIDAD"
+                          step="any" min="1">
+                        <mat-hint>{{detalle_subproducts.CantidadChild}}</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div class="col">
+                      <mat-form-field class="example-full-width">
+                        <input matInput type="number" name="Precio" [(ngModel)]="preciochild" [value]="this.precio"
+                          placeholder="Precio" step="any" min="1">
+                        <mat-hint>{{detalle_subproducts.PrecioChild}}</mat-hint>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-sign"></i>
+                        <mat-form-field>
+                          <mat-label>ORDEN ESTADISTICA</mat-label>
+                          <mat-select [(ngModel)]="SelectOrdenEstadisiticaChild" name="oesestadistica"
+                            [disabled]="isOrdenEstadisticaChild">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="OrdenEstadisticaFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let oesestadistica of filteredOrdenEstadistica | async"
+                              [value]="oesestadistica">{{oesestadistica.IdOrdenInterna}}-{{oesestadistica.NombreOrder}}
+                            </mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameOrdenEstadisticaChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <mat-form-field>
+                          <mat-label>UNIDAD DE MEDIDA</mat-label>
+                          <mat-select [(ngModel)]="SelectedUnidadMedChild" name="umedida">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="UnidadMedidaFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let umedida of filteredUnidadMedida | async" [value]="umedida">
+                              {{umedida.NombreUnidadMedida}}</mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameUnidadMedidaChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="icons">
+                        <i class="far fa-newspaper ico"></i>
+                        <mat-form-field class="moreLarge">
+                          <mat-label>CENTRO DE COSTOS</mat-label>
+                          <mat-select [(ngModel)]="SelectedCentroCostChild" name="ccosto">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="CCosotosFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let ccosto of filteredCCostos | async" [value]="ccosto">
+                              {{ccosto.Nombre}} - {{ccosto.IdCentroCosto}} </mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameCentroCostoChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-flag ico"></i>
+                        <mat-form-field class="moreLarge">
+                          <mat-label>CUENTA DE MAYOR</mat-label>
+                          <mat-select [(ngModel)]="SelectedCuentaMayorChild" name="cmayorr">
+                            <mat-option>
+                              <ngx-mat-select-search [formControl]="CMayorFilterCtrl"></ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let cmayor of filteredCMayor | async" [value]="cmayor">
+                              {{cmayor.IdCuentaMayor}} - {{cmayor.Nombre}}</mat-option>
+                          </mat-select>
+                          <mat-hint>{{detalle_subproducts.NameCuentaMayorChild}}</mat-hint>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="icons">
+                        <i class="fas fa-heading"></i>
+                        <mat-form-field class="example-full-width expan">
+                          <textarea matInput type="text" name="textbreve" [(ngModel)]="textbreve"
+                            placeholder="TEXTO BREVE. " upperCase></textarea>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <strong>TEXTO BREVE: </strong>{{detalle_subproducts.TextoBreve}}
+                    </div>
+                  </div>
+                  <div class="row updatechild">
+                    <div class="col">
+                      <button class="btn btn-sm btn-info" (click)="openDialog(2)"><i class="fa fa-pencil-square-o"></i>
+                        ACTUALIZAR SUBCONCEPTO</button>
+                    </div>
+                    <div class="col">
+                      <button class="btn btn-sm btn-warning" (click)="canceleditSubProduct()"><i class="fa fa-times"></i>CERRAR
+                        EDICION DE SUBCONCEPTO</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </td>
+
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="example-element-row"
+          [class.example-expanded-row]="expandedElement === element"
+          (click)="expandedElement = expandedElement === element ? null : element">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+      </table>
+    </mat-card-content>
+    <mat-card-actions>
+      <!-- <div *ngIf="isviewEdit">
+        <button class="btn btn-sm btn-primary mr-2" type="submit" (click)="guardaCambiosSolicitud()"><i class="fa fa-floppy-o"></i> Save</button>
+      </div> -->
+      <button class="btn btn-sm btn-warning" (click)="cancelEditing()"><i class="fa fa-times"></i> CERRAR</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+
+<div *ngIf="this.iseditproduct">
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h3>ACTUALIZAR DATOS DE CONCEPTO</h3>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <input matInput type="number" name="Cantidad" [(ngModel)]="cantidad" placeholder="CANTIDAD" step="any"
+              min="1" [disabled]="isCantidad">
+            <mat-hint>{{detalle_producto.CANTIDAD}}</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <input matInput type="number" name="Precio" [(ngModel)]="precio" [value]="this.precio"
+              placeholder="Precio Unitario" step="any" min="1" [disabled]="isPrecio">
+            <mat-hint>{{detalle_producto.PRECIO}}</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="far fa-building"></i>
+            <mat-form-field>
+              <mat-label>ALMACEN</mat-label>
+              <!--Simepre es Obligatorio poner un CENTRO-->
+              <mat-select name="almacen" [(ngModel)]="SelectedAlmacen" (selectionChange)="getAllMateriales()"
+                [disabled]="AplicaAlma">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="AlmacenFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let almacen of filteredAlmacen | async" [value]="almacen">{{almacen.Nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.AlmacenName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <mat-form-field class="example-full-width">
+            <mat-label>MATERIAL O SERVICIOS</mat-label>
+            <mat-select [(ngModel)]="SelectedMaterial" name="material" [disabled]="AplicaMat">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="MaterialesFilterCtrl"></ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let mat of filteredMaterial | async" [value]="mat">{{mat.Nombre}}</mat-option>
+            </mat-select>
+            <mat-hint>{{detalle_producto.MaterialName}}</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="icons">
+            <i class="far fa-newspaper ico"></i>
+            <mat-form-field class="moreLarge">
+              <mat-label>CENTRO DE COSTOS</mat-label>
+              <mat-select [(ngModel)]="SelectedCentroCost" name="ccosto" [disabled]="AplicaCenCost">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="CCosotosFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let ccosto of filteredCCostos | async" [value]="ccosto"> {{ccosto.Nombre}} -
+                  {{ccosto.IdCentroCosto}} </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.CECO}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-flag ico"></i>
+            <mat-form-field class="moreLarge">
+              <mat-label>CUENTA DE MAYOR</mat-label>
+              <mat-select [(ngModel)]="SelectedCuentaMayor" name="cmayorr" [disabled]="AplicaCtaMayor">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="CMayorFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let cmayor of filteredCMayor | async" [value]="cmayor">{{cmayor.IdCuentaMayor}} -
+                  {{cmayor.Nombre}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.CMAYOR}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <mat-form-field>
+              <mat-label>GRUPO DE COMPRAS</mat-label>
+              <mat-select [(ngModel)]="SelectedGrupoComp" name="gcompra">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="GCompraFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let gcompra of filteredGCompra | async" [value]="gcompra">{{gcompra.Nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.GrupoCompraName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <mat-form-field>
+              <mat-label>UNIDAD DE MEDIDA</mat-label>
+              <mat-select [(ngModel)]="SelectedUnidadMed" name="umedida" [disabled]="AplicaUMedida">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="UnidadMedidaFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let umedida of filteredUnidadMedida | async" [value]="umedida">
+                  {{umedida.NombreUnidadMedida}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.MEDIDA}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-sign"></i>
+            <mat-form-field>
+              <mat-label>ORDEN ESTADISTICA</mat-label>
+              <mat-select [(ngModel)]="SelectOrdenEstadisitica" name="oesestadistica" [disabled]="isOrdEstadistica">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="OrdenEstadisticaFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let oesestadistica of filteredOrdenEstadistica | async" [value]="oesestadistica">
+                  {{oesestadistica.IdOrdenInterna}}-{{oesestadistica.NombreOrder}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.OrdenEstadisticaName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-boxes"></i>
+            <mat-form-field class="moreLarge">
+              <mat-label>NUMERO ACTIVO</mat-label>
+              <mat-select name="numactivo" [disabled]="AplicaNumActivo" [(ngModel)]="SelectedNumActivo">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="ActivoFilterCtrl"></ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let numactivo of filteredActivo | async" [value]="numactivo">
+                  {{numactivo.IdActivo}}-{{numactivo.Nombre}}</mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.ACTFIJ}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-boxes"></i>
+            <mat-form-field>
+              <mat-label>NUMERO NECESIDAD</mat-label>
+              <mat-select [(ngModel)]="SelectedNecesidad" name="necesidad">
+                <mat-option *ngFor="let necesidad of ListNecesidad" [value]="necesidad">{{necesidad.Nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-hint>{{detalle_producto.NumeroNecesidadName}}</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="icons">
+            <i class="fas fa-heading"></i>
+            <mat-form-field class="example-full-width expan">
+              <textarea matInput type="text" name="UsoProd" [(ngModel)]="UsoBien" placeholder="BIEN O SERV."
+                [disabled]="AplicaUsobien" maxlength="40" upperCase></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col ">
+          <div class="icons">
+            <i class="fas fa-heading"></i>
+            <mat-form-field class="example-full-width expan">
+              <textarea matInput type="text" name="Espf" [(ngModel)]="Espesificaciones"
+                placeholder="ESPF. GRAL./TECNICAS. " upperCase></textarea>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="spaceitem">
+            <strong>BIEN o SERV.</strong>: <label>{{detalle_producto.BIENOSERV}}</label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="spaceitem">
+            <strong>ESPF.GRAL./TECNICAS</strong>: <label>{{detalle_producto.EspGenerales}}</label>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-primary" (click)="openDialog(1)"><i class="fa fa-upload"></i> ACTUALIZAR
+            CONCEPTO</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-sm btn-warning" (click)="cancelEditProduct()"><i class="fa fa-times"></i> CERRAR
+            EDICION DE CONCEPTO</button>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

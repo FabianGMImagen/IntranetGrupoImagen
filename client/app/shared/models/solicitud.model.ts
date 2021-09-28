@@ -25,6 +25,7 @@ import { UnidadMedida } from '../models/umedida.model';
 import { Activo } from '../models/activo.model';
 import { Moneda } from '../models/moneda.model';
 import { DecimalPipe } from '@angular/common';
+import { Categorias } from './categorias.model';
 
 export class Solicitud { 
     
@@ -37,6 +38,7 @@ export class Solicitud {
     Area:Area;
     Empresa:Empresa;
     Plaza:SucursalPlaza;
+    Categoria:Categorias;
     Imputacion:Imputacion;
     Materiales: Materiales;
     Posicion:Posiciones;

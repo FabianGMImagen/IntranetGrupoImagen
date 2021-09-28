@@ -147,7 +147,6 @@ export class RegisterComponent implements OnInit {
 
 
 
-
   getErrorMenssgeName(){
     if (this.name.hasError('required')) {
       return 'Nombre es requerido';
@@ -219,13 +218,17 @@ export class RegisterComponent implements OnInit {
     console.log("Este es el puesto para el USR-->" + this.registerForm.value.puesto);
     console.log("Est es el valor para Role Consumo interno --> " + this.registerForm.value.roleconsumo);
 
-
-
     this.userService.register(this.registerForm.value).subscribe(
       res => {
-        this.toast.setMessage('you successfully registered!', 'success');
-        //this.router.navigate(['/login']);
-        this.registerForm.reset();
+        if(res == undefined){
+          this.toast.setMessage('you successfully registered!', 'success');
+          //this.router.navigate(['/login']);
+          this.registerForm.reset();
+        }else{
+          this.toast.setMessage(res, 'warning');
+          //this.router.navigate(['/login']);
+        }
+        
       },
       error =>{
         console.log(error);

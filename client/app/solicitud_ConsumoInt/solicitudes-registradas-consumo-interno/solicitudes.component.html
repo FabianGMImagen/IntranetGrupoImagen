@@ -4,14 +4,14 @@
     <mat-card class="example-card">
         <mat-card-header>
           <div mat-card-avatar class="example-header-image"></div>
-          <mat-card-title>SOLICIUTDES CONSUMO INERNO INGESADAS</mat-card-title>
-          <mat-card-subtitle>solicitudes de consumo interno ingresadas por area</mat-card-subtitle>
+          <mat-card-title><h3>SOLICITUDES CONSUMO INTERNO </h3></mat-card-title>
+          <mat-card-subtitle>Solicitudes de consumo interno ingresadas por area</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="row">
             <div class="col">
                 <div class="icons">
-                  <i class="fas fa-sign"></i>
+                  <i class="fas fa-sign icondir"></i>
                   <mat-form-field class="extend">
                     <mat-label>DIRECCIONES A CONSULTAR SOLICITUDES DE CONSUMO INTERNO</mat-label>
                     <mat-select  [(ngModel)]="this.SelectedDir" name="dir" (selectionChange)="SelectedDireccion()">
@@ -23,11 +23,76 @@
                   </mat-form-field>
                 </div>
             </div>
+            <div class="col">
+              <button mat-raised-button color="warn" aria-label="Actualizar la Lista de Solicitudes de Consumo"
+                (click)="SelectedDireccion()">
+                <mat-icon>cached</mat-icon>
+              </button>
+            </div>
           </div>
+
+          <div class="mat-app-background basic-container">
+            <mat-form-field>
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="FILTRO DE SOLICITUDES DE PEDIDO.">
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+              <!--TABLA DINAMICA -->
+              <table mat-table [dataSource]="datSource" multiTemplateDataRows matSort>
+          
+                  <!--Columnas de las Tablas-->
+                  <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{column}} </th>
+                      <td mat-cell *matCellDef="let element" > {{element[column]}} </td>
+                  </ng-container>
+          
+          
+                  <ng-container matColumnDef="expandedDetail">
+                      <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                          <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                            <div class="example-element-diagram margen">
+                              <div class="example-element-position">
+                                <a class="titles">JUSTIFICACIÓN:</a> {{element.Justificacion}}
+                              </div>
+                              <div class="margen">
+                                <button class="btn btn-outline-warning btn-sm" (click)="getDetalleProductos(element)">
+                                    <i class="fa fa-cog" aria-hidden="true"></i> Detalles de Solicitud</button>
+                              </div>
+                                <div class="col ">
+                                  <mat-form-field>
+                                    <mat-label>CAMBIAR ESTATUS</mat-label>
+                                    <mat-select [(ngModel)]="SelectStatus" name="status">
+                                      <mat-option *ngFor="let status of ListStatus" [value]="status">{{status.Nombre}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                  <div>
+                                    <button class="btn btn-success btn-sm" (click)="CambiaStatus(element)">
+                                      <i class="fa fa-floppy-o"></i>
+                                      GUARDAR
+                                    </button>
+                                  </div>
+                                </div>
+                            </div>  
+                            
+                              
+                          </div>
+                      </td>
+                  </ng-container>
+          
+                  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+                      [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = element">
+                  </tr>
+                  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+              </table>
+          
+              <mat-paginator [pageSizeOptions]="[5, 10, 20, 50, 100]" [pageSize]="5" showFirstLastButtons></mat-paginator>
+          </div>
+          </div>
+
         </mat-card-content>
-        <mat-card-actions>
+        <!-- <mat-card-actions>
           <button mat-button>LIKE</button>
           <button mat-button>SHARE</button>
-        </mat-card-actions>
+        </mat-card-actions> -->
       </mat-card>
 </div>
