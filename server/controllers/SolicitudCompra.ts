@@ -7,7 +7,7 @@ const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
 const SERVER = 'http://solicitud.adgimm.com.mx:3000';
-const Intranet = 'http://solicitud.adgimm.com.mx:4200';
+const Intranet = 'http://solicitud.adgimm.com.mx:3000';
 
 const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
 const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
@@ -2717,7 +2717,8 @@ export default class SolicitudCompraCTR {
       var mailOptiongerenteRechaza = {
         to: EmailSolicitante,
         //to:'marco.garcia@gimm.com.mx',
-        //cc: 'marco.garcia@gimm.com.mx',
+        cc: 'marco.garcia@gimm.com.mx',
+
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
@@ -2898,7 +2899,7 @@ export default class SolicitudCompraCTR {
       //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
       var mailOptionDirectRechaza = {
         to: EmailSolicitante,
-        //cc: 'mmp@gimm.com.mx',
+        cc: 'marco.garcia@gimm.com.mx',
         subject: 'SOLICITUD DE PEDIDO RECHAZADA',
         html:
           ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +

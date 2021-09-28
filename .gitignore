@@ -18,6 +18,7 @@
 .settings/
 *.sublime-workspace
 *.csv
+.csv
 # IDE - VSCode
 /.vscode
 .vscode/*

@@ -1342,7 +1342,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //validamos si el estatus seleccionado es rechazado y si si despues pasamos a validar si se lleno un motivo de rechazo si no no podemos actualizar.
         if (this.SelectedStatus.IdStatusSolicitud == 7) {
           if (this.motivo_Rechazo != undefined) {
-
             //  //Paso 2 Cambiar el Status de Solicitud a Enviada a SAP-----------
             this.solicitudComp
               .UpdateStatusSolicitud(
