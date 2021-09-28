@@ -2188,7 +2188,7 @@ export default class SolicitudCompraCTR {
     // console.log("*********************hola como esta --------------------------------------------");
 
     new sql.ConnectionPool(config).connect().then(pool => {
-      return pool.request()
+        return pool.request()
         .input('IdSolPed', sql.Int, req.body.Id)
         .input('Nombre', sql.VarChar, req.body.Nombre)
         .input('Puesto', sql.VarChar, req.body.Puesto)
@@ -2378,8 +2378,13 @@ export default class SolicitudCompraCTR {
             .input('IdUser', sql.Int, req.params.IdUser)
             .execute('ConsultdirexceptionAuth')
         }).then(data=>{ 
-          console.log(data.recordset[0].IdRole);
-          var statusExcluir = data.recordset[0].IdRole;
+          console.log(data.recordset);
+          var statusExcluir:number;
+          if(data.recordset[0] === undefined){
+            statusExcluir = 0
+          }else{
+            statusExcluir = data.recordset[0].IdRole;
+          }
           resp.json(statusExcluir);
           sql.close();
         }).catch(err=>{

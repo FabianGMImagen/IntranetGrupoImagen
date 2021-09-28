@@ -282,7 +282,7 @@ export class AccountComponent implements OnInit {
   /*BLoqueo de campos con variables*/
   AplicaOrdInt: boolean = false;
   /*---fin de datos editables---*/
-  newStatus: number;
+  newStatus: number = undefined;
   isload: boolean = false;
   openedDataSol:boolean=false;
   applyFilter(filterValue: string) {
@@ -295,6 +295,7 @@ export class AccountComponent implements OnInit {
   }
 
   constructor(
+    
     private auth: AuthServices,
     public toast: ToastComponent,
     public cdr: ChangeDetectorRef,
@@ -305,7 +306,7 @@ export class AccountComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    //this.getUser();
+    this.openedDataSol=false;
     this.SelectedAlmacen = new Almacen();
     this.SelectedMaterial = new Materiales();
     this.SelectedCentroCost = new CentroCostos();
@@ -594,7 +595,6 @@ export class AccountComponent implements OnInit {
         console.log("---------------CHILDS-------------------");
         console.log(data);
         this.ListChilds = data;
-        console.log("datos dentro del Objeto");
         console.log(this.DatosSubProd);
         this.ListDetallesol.forEach((element) => {
           element.SubHijos = this.ListChilds;
@@ -1144,7 +1144,7 @@ export class AccountComponent implements OnInit {
 
       if (
         this.SelectedOInvercion.IdOrdenInterna.length === 0 &&
-        this.SelectedOInvercion.NombreOrder.length === 0 &&
+        this.SelectedOInvercion.NombreOrder.length === 0 ||
         this.DataSolReg.IdOrdenInterna == null &&
         this.DataSolReg.OInterna == null
       ) {
@@ -1821,29 +1821,30 @@ export class AccountComponent implements OnInit {
     } else if (this.DataSolReg.IdSol === 3) {
       console.log("COMPRAS EN GENERAL");
       if (
-        this.precio == undefined ||
-        (this.precio == 0 && this.cantidad == undefined) ||
-        (this.cantidad == 0 &&
+          this.precio == undefined ||
+          this.precio == 0 && 
+          this.cantidad == undefined ||
+          this.cantidad == 0 &&
           this.Espesificaciones == undefined &&
           this.UsoBien == undefined &&
           // this.SelectedAlmacen.IdAlmacen === undefined || this.SelectedAlmacen.IdAlmacen === '' &&
           // this.SelectedAlmacen.Nombre === undefined || this.SelectedAlmacen.Nombre === '' &&
           // this.SelectedMaterial.IdMaterial === undefined || this.SelectedMaterial.IdMaterial === '' &&
           // this.SelectedMaterial.Nombre === undefined || this.SelectedMaterial.Nombre === '' &&
-          this.SelectedCentroCost.IdCentroCosto === undefined &&
-          this.SelectedCentroCost.Nombre === undefined &&
-          this.SelectedCuentaMayor.IdCuentaMayor === undefined &&
-          this.SelectedCuentaMayor.Nombre === undefined &&
-          this.SelectedGrupoComp.IdGrupoCompra === undefined &&
-          this.SelectedGrupoComp.Nombre === undefined &&
-          this.SelectedUnidadMed.IdUnidadMedida === undefined &&
-          this.SelectedUnidadMed.NombreUnidadMedida === undefined &&
+          this.SelectedCentroCost.IdCentroCosto == undefined &&
+          this.SelectedCentroCost.Nombre == undefined &&
+          this.SelectedCuentaMayor.IdCuentaMayor == undefined &&
+          this.SelectedCuentaMayor.Nombre == undefined &&
+          this.SelectedGrupoComp.IdGrupoCompra == undefined &&
+          this.SelectedGrupoComp.Nombre == undefined &&
+          this.SelectedUnidadMed.IdUnidadMedida == undefined &&
+          this.SelectedUnidadMed.NombreUnidadMedida == undefined &&
           // this.SelectOrdenEstadisitica.IdOrdenInterna === undefined || this.SelectOrdenEstadisitica.IdOrdenInterna === '' &&
           // this.SelectOrdenEstadisitica.NombreOrder === undefined || this.SelectOrdenEstadisitica.NombreOrder === '' &&
           // this.SelectedNumActivo.IdActivo === undefined || this.SelectedNumActivo.IdActivo === '' &&
           // this.SelectedNumActivo.Nombre === undefined || this.SelectedNumActivo.Nombre === '' &&
-          this.SelectedNecesidad.IdNecesidad === undefined &&
-          this.SelectedNecesidad.Nombre === undefined)
+          this.SelectedNecesidad.IdNecesidad == undefined &&
+          this.SelectedNecesidad.Nombre == undefined
       ) {
         this.toast.setMessage(
           "si se requiere actualizar un producto, se debe de llenar almenos un campo o seleccionar una opcion",
@@ -3650,47 +3651,54 @@ export class AccountComponent implements OnInit {
     }
   }
 
-  // ChecknextStatus(IdUser: number) {
-  //   this.solicitudComp.getRoleExcepcionDir(IdUser).subscribe(
-  //     (data) => {
-  //       console.log(data);
-  //       var exceptAuth = data;
-  //       if (
-  //         (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuth == 3) ||
-  //         exceptAuth == 0 ||
-  //         exceptAuth == undefined
-  //       ) {
-  //         //si el a excluir es null o vacio o igual a 3 que es el de Direccion se debe retornar un role 1 (nueva solicitud)
-  //         //para que el gerente de area pueda visualizar la solicitud en su bandeja DENTRO DE LA INTRANET
-  //         this.newStatus = 1;
-  //       } else if (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuth == 2) {
-  //         //si entra en este if quiere decir que el role excluido es el del gerente por lo que se tiene retornar con un estatus 2 (autorizado por gerente)
-  //         //para que lo puedea visualizar el director de area DENTRO DE LA INTRANET
-  //         this.newStatus = 2;
-  //       } else if (
-  //         (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 3) ||
-  //         exceptAuth == 0 ||
-  //         exceptAuth == undefined
-  //       ) {
-  //         this.newStatus = 1;
-  //       } else if (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 2) {
-  //         this.newStatus = 2;
-  //       } else if (
-  //         (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuth == 3) ||
-  //         exceptAuth == 0 ||
-  //         exceptAuth == undefined
-  //       ) {
-  //         this.newStatus = 1;
-  //       } else if (this.DataSolReg.IdStatusSolicitud === 7 && exceptAuth == 2) {
-  //         this.newStatus = 2;
-  //       }
-  //     },
-  //     (err) => {
-  //       console.log("Error en ChecknextStatus");
-  //       console.log(err);
-  //     }
-  //   );
-  // }
+  async ChecknextStatus(IdUser: number) {
+    console.log("dentro del metodo para checar el estatus");
+    let retunrvalue;
+    const exceptAuthException = await this.solicitudComp.getRoleExcepcionDir(IdUser);
+    console.log(exceptAuthException)
+    if (
+      this.DataSolReg.IdStatusSolicitud === 3 && exceptAuthException === 3 ||
+      exceptAuthException == 0 ||
+      exceptAuthException == undefined
+    ) {
+      //si el a excluir es null o vacio o igual a 3 que es el de Direccion se debe retornar un role 1 (nueva solicitud)
+      //para que el gerente de area pueda visualizar la solicitud en su bandeja DENTRO DE LA INTRANET
+      console.log("primer if");
+      retunrvalue = 1;
+      return retunrvalue;
+    } else if (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuthException == 2) {
+      //si entra en este if quiere decir que el role excluido es el del gerente por lo que se tiene retornar con un estatus 2 (autorizado por gerente)
+      //para que lo puedea visualizar el director de area DENTRO DE LA INTRANET
+      console.log("2 if");
+      retunrvalue = 2
+      return retunrvalue;
+    } else if (
+      this.DataSolReg.IdStatusSolicitud === 5 && exceptAuthException == 3 ||
+      exceptAuthException == 0 ||
+      exceptAuthException == undefined
+    ) {
+      console.log("3 if");
+        retunrvalue = 1;
+       return retunrvalue;
+    } else if (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuthException == 2) {
+      console.log("4 if");
+      retunrvalue = 2;
+      return retunrvalue;
+    } else if (
+      this.DataSolReg.IdStatusSolicitud === 5 && exceptAuthException == 3 ||
+      exceptAuthException == 0 ||
+      exceptAuthException == undefined
+    ) {
+      console.log("5 if");
+      retunrvalue =1;
+      return retunrvalue;
+    } else if (this.DataSolReg.IdStatusSolicitud === 7 && exceptAuthException == 2) {
+      console.log("5 if");
+      retunrvalue = 2
+      return retunrvalue;
+    }
+  }
+
 
   openDialog(typeUpdate: number) {
     const dialogRef = this.dialog.open(DialogAdvertenciaUpdateSolpedidoComponent, {
@@ -3700,42 +3708,52 @@ export class AccountComponent implements OnInit {
     dialogRef.afterClosed().subscribe(async (result) => {
       console.log("The dialog was closed");
       console.log(result);
+      console.log(typeUpdate)
       if (typeUpdate === 0) {
         //esta opcion manda a llamar a meotodo update a nivel datos generales
         try {
-          this.newStatus = (result === true) ? this.newStatus = 1 : this.newStatus = this.DataSolReg.IdStatusSolicitud;
-          await this.updateLVLSOlcitud();
-          if(result === true){
-            this.EndEditingAndChangedStatus();
+          const valReturnStatus = await this.ChecknextStatus(this.auth.currentUser.IdUsuario);
+          console.log("Variable de retorno  " + valReturnStatus);
+          this.newStatus = (result === true ) ? this.newStatus = valReturnStatus : this.newStatus = this.DataSolReg.IdStatusSolicitud;
+          console.log("Variable global  " + this.newStatus)
+            await this.updateLVLSOlcitud();
+            this.openedDataSol = true;
+            if(result === true){
+              this.EndEditingAndChangedStatus();
+            }
+          } catch (error) {
+            console.log(error);
           }
-        } catch (error) {
-          console.log(error);
-        }
-
       } else if (typeUpdate === 1) {
         //manda a llamar metodo par actualizar datos de producto
         try {
-          this.newStatus = (result === true) ? this.newStatus = 1 : this.newStatus = this.DataSolReg.IdStatusSolicitud;
+          const valReturnStatus = await this.ChecknextStatus(this.auth.currentUser.IdUsuario);
+          console.log("Variable de retorno  " + valReturnStatus);
+          this.newStatus = (result === true ) ? this.newStatus = valReturnStatus : this.newStatus = this.DataSolReg.IdStatusSolicitud;
+          console.log("Variable global  " + this.newStatus)
           await this.UpdateLVLProducts();
-          if(result === true){
-            this.EndEditingAndChangedStatus();
-          }
+          this.iseditproduct = false;
+            if(result === true){
+              this.EndEditingAndChangedStatus();
+            }
         } catch (error) {
           console.log(error);
         }
-        
       } else if (typeUpdate === 2) {
         //madna a llamar metodo para actualizar datos de subprodcuto
         try {
-          this.newStatus = (result === true) ? this.newStatus = 1 : this.newStatus = this.DataSolReg.IdStatusSolicitud;
-          await this.UpdateLVLProducts();
-          if(result === true){
-            this.EndEditingAndChangedStatus();
+          const valReturnStatus = await this.ChecknextStatus(this.auth.currentUser.IdUsuario);
+          console.log("Variable de retorno  " + valReturnStatus);
+          this.newStatus = (result === true ) ? this.newStatus = valReturnStatus : this.newStatus = this.DataSolReg.IdStatusSolicitud;
+          console.log("Variable global  " + this.newStatus)
+          await this.updateLVLChilds();
+            this.iseditsubProduct = false;
+            if(result === true){
+              this.EndEditingAndChangedStatus();
+            }
+          } catch (error) {
+            console.log(error);
           }
-        } catch (error) {
-          console.log(error);
-        }
-        
       }
     });
   }

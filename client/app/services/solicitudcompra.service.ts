@@ -2297,7 +2297,7 @@ export class SolicitudCompraService {
   }
 
   getRoleExcepcionDir(IdUser:number){
-    return this.http.get(`/api/checkroleexcepcion/${IdUser}`)
+    return this.http.get<number>(`/api/checkroleexcepcion/${IdUser}`).toPromise();
   }
 
 }

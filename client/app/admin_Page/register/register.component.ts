@@ -220,9 +220,15 @@ export class RegisterComponent implements OnInit {
 
     this.userService.register(this.registerForm.value).subscribe(
       res => {
-        this.toast.setMessage('you successfully registered!', 'success');
-        //this.router.navigate(['/login']);
-        this.registerForm.reset();
+        if(res == undefined){
+          this.toast.setMessage('you successfully registered!', 'success');
+          //this.router.navigate(['/login']);
+          this.registerForm.reset();
+        }else{
+          this.toast.setMessage(res, 'warning');
+          //this.router.navigate(['/login']);
+        }
+        
       },
       error =>{
         console.log(error);
