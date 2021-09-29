@@ -370,7 +370,7 @@ export default function setRoutes(app) {
                     type:"",
                     port:"",
                     username:"solpedidossap",
-                    password:"d1nosauri0Z!"
+                    password:"grup0imagensap"
                     // username:"dalet",
                     // password:"ps1dalet" 
                   };
