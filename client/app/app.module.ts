@@ -16,10 +16,8 @@ import { AboutComponent } from './about/about.component';
 import { RegisterComponent } from './admin_Page/register/register.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
-import { AccountComponent } from './account/account.component';
+import { AccountComponent } from './account_sol/account/account.component';
 import { AdminComponent } from './admin_Page/admin/admin.component';
-import { DialogDataExampleDialog } from './admin_Page/admin/admin.component'
-import { DialogDeleteDir } from './admin_Page/admin/admin.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -60,6 +58,7 @@ import { SolicitudConsumoService } from './services/solicitudconsumo.service';
 import { DirauthComponent } from './admin_Page/dirauth/dirauth.component';
 
 import { DirAuthService } from '../app/services/dirauth.service';
+import { AuthcatComponent } from './admin_Page/authcat/authcat.component';
 //import { SignaturePadModule } from 'angular2-signaturepad';
 //import { SignaturePadModule } from 'angular2-signaturepad';
 //import { AngularSignaturePadModule } from 'angular-signature-pad';
@@ -73,10 +72,18 @@ import { DialogInfoComponent } from './solicitud_Pedido/dialog-info/dialog-info.
 
 //libreria de infragistics------frame de exel
 
-import { AccountSolConsumoListComponent } from './account-sol-consumo-list/account-sol-consumo-list.component';
+import { AccountSolConsumoListComponent } from './account_sol/account-sol-consumo-list/account-sol-consumo-list.component';
 import { DialogDetalleSolConsumoInternoComponent } from './dialogs/dialog-detalle-sol-consumo-interno/dialog-detalle-sol-consumo-interno.component';
 // import { DialogUpdateDatageneralSolConsumoComponent } from './dialogs/dialog-update-datageneral-sol-consumo/dialog-update-datageneral-sol-consumo.component';
 import { DialogUpdateProductsdataSolConsumoComponent } from './dialogs/dialog-update-productsdata-sol-consumo/dialog-update-productsdata-sol-consumo.component';
+import { AdminCategoriaComponent } from './admin_Page/admin-categoria/admin-categoria.component';
+import { DialogNewCategoryComponent } from './dialogs/dialog-new-category/dialog-new-category.component';
+import { DialogDeleteCategoryComponent } from './dialogs/dialog-delete-category/dialog-delete-category.component';
+import { DialogDeleteUserComponent } from './dialogs/dialog-delete-user/dialog-delete-user.component';
+import { DialogDeleteDirComponent } from './dialogs/dialog-delete-dir/dialog-delete-dir.component';
+import { AdminSolicitudesComponent } from './admin_Page/admin-solicitudes/admin-solicitudes.component';
+import { SolconsumointEditComponent } from './admin_Page/solconsumoint-edit/solconsumoint-edit.component';
+import { DialogAdvertenciaUpdateSolpedidoComponent } from './dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component';
 
 
 export function tokenGetter() {
@@ -94,8 +101,6 @@ export function tokenGetter() {
     LogoutComponent,
     AccountComponent,
     AdminComponent,
-    DialogDataExampleDialog,
-    DialogDeleteDir,
     NotFoundComponent,
     
     ListadoSolicitudesComponent,
@@ -110,6 +115,15 @@ export function tokenGetter() {
     AccountSolConsumoListComponent,
     DialogDetalleSolConsumoInternoComponent,
     DialogUpdateProductsdataSolConsumoComponent,
+    AuthcatComponent,
+    AdminCategoriaComponent,
+    DialogNewCategoryComponent,
+    DialogDeleteCategoryComponent,
+    DialogDeleteUserComponent,
+    DialogDeleteDirComponent,
+    AdminSolicitudesComponent,
+    SolconsumointEditComponent,
+    DialogAdvertenciaUpdateSolpedidoComponent,
   ],
   entryComponents:[
     DialogInfoComponent,

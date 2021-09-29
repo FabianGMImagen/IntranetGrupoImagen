@@ -1,0 +1,17 @@
+
+        <h1 mat-dialog-title>Nueva categoría</h1>
+        <p>Creación de nuevas categorías</p>
+        <table class="example-full-width" cellspacing="0">
+            <tr>
+                <td>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Nombre Categoría</mat-label>
+                        <input matInput [(ngModel)]="newcategory">
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+        <div mat-dialog-actions>
+            <button mat-button class="backcancel" (click)="onNoClick()">Cancel</button>
+            <button mat-button class="guardar" [mat-dialog-close]="data" cdkFocusInitial (click)="onYesClick()">Guardar</button>
+        </div>

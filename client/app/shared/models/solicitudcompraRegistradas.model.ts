@@ -7,6 +7,7 @@ export class SolicitudesCompraRegistradas{
     IdSol:number;
     IdStatusSolicitud:number;
     Statname:string;
+    CATEGORIA:string;
     USUARIO:string;
     DIRECCION:string;
     IdEmpresa:number;
@@ -29,7 +30,7 @@ export class SolicitudesCompraRegistradas{
     Ext:string;
     Produccion:string;
     Justificacion:string;
-    MotivoRechazo:string;
+    MotivoRechazo?:string;
     RutaCotizacion:string;
     //IdSAP:string;
 
@@ -38,6 +39,6 @@ export class SolicitudesCompraRegistradas{
     isChangeStatus:boolean;
 
     buttonChild:boolean;
-    
-    
+    Comprador:string;
+    status:string;
 }

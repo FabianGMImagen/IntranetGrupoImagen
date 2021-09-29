@@ -27,7 +27,7 @@ import { User } from "../../shared/models/user.model";
 import { OrdenInterna } from "../../shared/models/ordeninterna.model";
 import { UnidadMedida } from "../../shared/models/umedida.model";
 import { Moneda } from "../../shared/models/moneda.model";
-
+import { Categorias } from "client/app/shared/models/categorias.model";
 //importamos el modelo con el que se empalmara el json de la consulta de el webservice
 
 import { MensajesSolPed } from "../../shared/models/mensajessolped.model";
@@ -81,7 +81,9 @@ export class ListadoSolicitudesComponent implements OnInit {
   /** control for the MatSelect filter keyword */
   public EmpreFilterCtrl: FormControl = new FormControl();
   /** list of banks filtered by search keyword */
-  public filteredEmpresa: ReplaySubject<Empresa[]> = new ReplaySubject<Empresa[]>(1);
+  public filteredEmpresa: ReplaySubject<Empresa[]> = new ReplaySubject<
+    Empresa[]
+  >(1);
   //fin filtrado empresa
 
   //variabkles para hacer filtrado de Sucursal
@@ -146,9 +148,8 @@ export class ListadoSolicitudesComponent implements OnInit {
   protected ListUnidadMedida: UnidadMedida[];
   public UnidadMedidaCtrl: FormControl = new FormControl();
   public UnidadMedidaFilterCtrl: FormControl = new FormControl();
-  public filteredUnidadMedida: ReplaySubject<
-    UnidadMedida[]
-  > = new ReplaySubject<UnidadMedida[]>(1);
+  public filteredUnidadMedida: ReplaySubject<UnidadMedida[]> =
+    new ReplaySubject<UnidadMedida[]>(1);
   //fin de variables
 
   //variables para hacer busquedas en Numero de Activo
@@ -164,9 +165,8 @@ export class ListadoSolicitudesComponent implements OnInit {
   protected ListOrdEstadistica: OrdenInterna[];
   public OrdenEstadisticaCrtl: FormControl = new FormControl();
   public OrdenEstadisticaFilterCtrl: FormControl = new FormControl();
-  public filteredOrdenEstadistica: ReplaySubject<
-    OrdenInterna[]
-  > = new ReplaySubject<OrdenInterna[]>(1);
+  public filteredOrdenEstadistica: ReplaySubject<OrdenInterna[]> =
+    new ReplaySubject<OrdenInterna[]>(1);
   //fin de las variables
 
   protected _onDestroy = new Subject<void>();
@@ -207,7 +207,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   SelectArea: Area | undefined;
   ListUser: User[];
   ListMoneda: Moneda[];
-
+  ListCategorias: Categorias[];
   //Campos que se bloaquearan dependiendo de la seleccion de Imputacion
   AplicaCenCost: boolean = false;
   AplicaOrdInt: boolean = false;
@@ -229,8 +229,8 @@ export class ListadoSolicitudesComponent implements OnInit {
   usr = new FormControl("", [Validators.required]);
   puesto = new FormControl("", [Validators.required]);
   email = new FormControl("", [Validators.required, Validators.email]);
-  tel = new FormControl("", [Validators.required]);
-  ext = new FormControl("", [Validators.required, Validators.maxLength(4)]);
+  tel = new FormControl("", [Validators.required, Validators.pattern('^[0-9]*$')]);
+  ext = new FormControl("", [Validators.required, Validators.maxLength(4), Validators.pattern('^[0-9]*$')]);
   area = new FormControl("", [Validators.required]);
   nombreProduccion = new FormControl();
   //tipo = new FormControl('',[Validators.required])
@@ -297,8 +297,9 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   UsrAuthEmail: User;
   IdSoliforFile: Solicitud;
-
+  progressbar: boolean = false;
   /*------------------------------------variables de hijos-------------------------------------*/
+  countChilds:number = 0;
   AddDataProduct: boolean = false;
   Childs: ProductoHijos[] = [];
   ChildsProduct: ProductoHijos = new ProductoHijos();
@@ -349,7 +350,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     //this.getAllAlmacen();
     //this.getAllActivo();
     this.getAllNecesidad();
-
+    this.getAllCategorias();
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ["", Validators.required],
     });
@@ -566,8 +567,21 @@ export class ListadoSolicitudesComponent implements OnInit {
     this.selectedFecha();
     // console.log(this.DataInsert.Empresa.Bukrs);
     // console.log(this.DataInsert.Empresa.Butxt);
-
     // console.log("entrando al metodo filtro");
+    this.DataInsert.Cantidad = 0;
+    this.price ='0';
+    this.DataInsert.Almacen = undefined;
+    this.DataInsert.Materiales = undefined;
+    this.DataInsert.CentroCostos = undefined;
+    this.DataInsert.Cuentamayor = undefined;
+    this.DataInsert.GCompra = undefined;
+    this.DataInsert.UMedida = undefined;
+    this.SelectOrdenEstadisitica = undefined;
+    this.DataInsert.NActivo = undefined;
+    this.DataInsert.Necesidad = undefined;
+    this.DataInsert.UsoBien = undefined;
+    this.SelectedOInvercion = undefined;
+    this.DataInsert.OrdenInterna = undefined;
     this.getAllSucursalesPlazaByIdEmpresa(this.DataInsert.Empresa);
     this.getAllActivo(this.DataInsert.Empresa);
     this.getAllGrupoCompra(this.DataInsert.Empresa);
@@ -576,9 +590,8 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   getAllSucursalesPlazaByIdEmpresa(Idempresa: Empresa) {
-    this.ListSucuPlaza = this.solicitudComp.getAllSucursalPlazaByIdEmpresa(
-      Idempresa
-    );
+    this.ListSucuPlaza =
+      this.solicitudComp.getAllSucursalPlazaByIdEmpresa(Idempresa);
     this.SucursalCtrl.setValue(this.ListSucuPlaza[0]);
 
     // cargar la lista Empresas inicial
@@ -620,10 +633,40 @@ export class ListadoSolicitudesComponent implements OnInit {
     );
   }
 
+  async getAllCategorias() {
+    console.log("buscamos las categorias");
+    try {
+      this.ListCategorias = await this.solicitudComp.getAllCategorias();
+      if (!this.ListCategorias) {
+        this.toast.setMessage("Error al recuperar las categorias", "warning");
+      }
+    } catch (error) {
+      if (error.status == 403 || error.status == 404) {
+        this.auth.logout();
+      } else {
+        this.toast.setMessage(error.message, "danger");
+      }
+    }
+  }
+
   selectedPlaza() {
     // console.log("dentro de el metodo que selecciona");
     // console.log(this.DataInsert.Plaza.IdPlaza);
     // console.log(this.DataInsert.Plaza.Nombre);
+    this.DataInsert.Cantidad = 0;
+    this.price ='0';
+    this.DataInsert.Almacen = undefined;
+    this.DataInsert.Materiales = undefined;
+    this.DataInsert.CentroCostos = undefined;
+    this.DataInsert.Cuentamayor = undefined;
+    this.DataInsert.GCompra = undefined;
+    this.DataInsert.UMedida = undefined;
+    this.SelectOrdenEstadisitica = undefined;
+    this.DataInsert.NActivo = undefined;
+    this.DataInsert.Necesidad = undefined;
+    this.DataInsert.UsoBien = undefined;
+    this.SelectedOInvercion = undefined;
+    this.DataInsert.OrdenInterna = undefined;
     this.getAllCentroCosto(this.DataInsert.Empresa, this.DataInsert.Plaza);
     this.getAllAlmacen(this.DataInsert.Plaza);
   }
@@ -686,9 +729,12 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   getAllCuentasMayor(idEmpresa: Empresa, SolPedAcronimo: string) {
+    console.log(this.DataInsert.Imputacion.Acronimo)
+    console.log(SolPedAcronimo)
     if (this.DataInsert.Imputacion != undefined) {
       // console.log("Este es el Tipo de Silicitud-------> " + SolPedAcronimo);
       if (this.DataInsert.Imputacion.IdTipoSolicitud == 2) {
+        console.log("tipo de solicitud 2")
         this.ListCmayor = this.solicitudComp.getCuentaMayor(
           idEmpresa,
           this.DataInsert.Imputacion.Acronimo
@@ -701,7 +747,8 @@ export class ListadoSolicitudesComponent implements OnInit {
             this.filterCmayor();
           });
       } else {
-        this.ListCmayor = this.solicitudComp.getCuentaMayor(idEmpresa, " ");
+        console.log("otro tipo de solicitud que no es 2")
+        this.ListCmayor = this.solicitudComp.getCuentaMayor(idEmpresa, ' ');
         this.CMayorCtrl.setValue(this.ListCmayor[0]);
         this.filteredCMayor.next(this.ListCmayor);
         this.CMayorFilterCtrl.valueChanges
@@ -848,7 +895,22 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.DataInsert.Imputacion.Nombre);
     // console.log(this.DataInsert.Imputacion.Acronimo);
     // console.log(this.DataInsert.Productos.length);
-
+    this.DataInsert.Cantidad = 0;
+    this.price ='0';
+    this.DataInsert.Almacen = undefined;
+    this.DataInsert.Materiales = undefined;
+    this.DataInsert.CentroCostos = undefined;
+    this.DataInsert.Cuentamayor = undefined;
+    this.DataInsert.GCompra = undefined;
+    this.DataInsert.UMedida = undefined;
+    this.SelectOrdenEstadisitica = undefined;
+    this.DataInsert.NActivo = undefined;
+    this.DataInsert.Necesidad = undefined;
+    this.DataInsert.UsoBien = undefined;
+    this.SelectedOInvercion = undefined;
+    this.DataInsert.OrdenInterna = undefined;
+    this.Producto = new Producto();
+    console.log(this.Producto);
     if (this.DataInsert.Productos.length != 0) {
       this.toast.setMessage(
         "No se puede Cambiar el Tipo de Solicitud cuando ya se crearon Materiales/Servicios para la Solicitud",
@@ -1060,114 +1122,13 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.ListImputacionForItem = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
       }
     );
   }
-
-  // selectSolPedporItem(){
-  //   console.log("dentro del metodo para seleccionar un tipo de sol por item");
-  //   console.log(this.DataInsert.ImputacionItem.Acronimo);
-  //   console.log(this.DataInsert.ImputacionItem.Nombre);
-  //   // if(this.DataInsert.Productos.length != 0){
-  //   //   this.toast.setMessage('No se puede Cambiar el Tipo de Solicitud cuando ya se crearon Materiales/Servicios para la Solicitud', 'danger');
-  //   // }else{
-  //     if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 1){
-  //       //TIPO DE IMPUTACUION A -----se bloquearan Centro de Costos, Orden interna, Cta. Mayor
-  //       this.AplicaCenCost = true;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = true;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = false;
-  //       //vaciando los Selects de Almacen y Materiales.
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       //cuando se seleccione este tipo de Solicitud se mandara a llamar metodo de unidad de medida para el llenado sin idmaterial
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 2){
-  //       //TIPO DE IMPUTACION F ----ninguno se bloquea y todos son obligatorios Centro de Costos, Orden interna, Cta. Mayor
-  //       this.AplicaCenCost = true;
-  //       this.AplicaOrdInt = false;
-  //       this.AplicaCtaMayor = false;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = true;
-  //       //vaciando los Selects de Almacen y Materiales.
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       //cuando se seleccione este tipo de Solicitud se mandara a llamar metodo de unidad de medida para el llenado sin idmaterial
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 3){
-  //       //TIPO DE IMPUTCION K ------- solo se bloquea Orden Interna, y quedan como obligatorioCentro de Costos y Cta de mayor
-  //       this.AplicaCenCost = false;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = false;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = true;
-  //       //vaciando los Selects de Almacen y Materiales.
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       //cuando se seleccione este tipo de Solicitud se mandara a llamar metodo de unidad de medida para el llenado sin idmaterial
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 4){
-  //       //TIPO DE SOLICITUD KF Servicios
-  //       this.AplicaCenCost = false;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = false;
-  //       this.AplicaMat = true;
-  //       this.AplicaAlma = true;
-  //       this.AplicaNumActivo = true;
-  //       this.ListAlmacen = undefined;
-  //       this.ListMateriales = undefined;
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //       var Material: String = ' ' ;
-  //       this.getunidadMedida(Material);
-
-  //     }else if(this.DataInsert.ImputacionItem.IdTipoSolicitud == 5){
-  //       //TIPO DE IMPUTACION NORMAL ------- se bloquea centro de costos , orden interna, cta de mayor, almacen
-  //       this.AplicaCenCost = true;
-  //       this.AplicaOrdInt = true;
-  //       this.AplicaCtaMayor = true;
-  //       this.AplicaMat = false;
-  //       this.AplicaAlma = false;
-  //       //this.AplicaCentro = false;
-  //       this.AplicaNumActivo = true;
-  //       //this.getAllPosiciones(this.DataInsert.Imputacion);
-  //       //llamamos los metodos que dependen de un cambio para limpiar los registros
-  //       this.getAllCentroCosto(this.DataInsert.Empresa,this.DataInsert.Plaza);
-  //       this.getAllCuentasMayor(this.DataInsert.Empresa);
-  //     }
-  //   //}
-
-  // }
 
   getAllPosiciones(IdImputacion: Imputacion) {
     this.solicitudComp.getAllPosicionesByImputacion(IdImputacion).subscribe(
@@ -1377,8 +1338,10 @@ export class ListadoSolicitudesComponent implements OnInit {
     this.DataInsert.OrdenEstadistica = this.SelectOrdenEstadisitica;
 
     //se tiene que agregar la ordenEstadistica seleccionada a la opcion por ITEM de los Productos
-    this.Producto.IdOrdenEstadistica = this.SelectOrdenEstadisitica.IdOrdenInterna;
-    this.Producto.OrdenEstadisticaName = this.SelectOrdenEstadisitica.NombreOrder;
+    this.Producto.IdOrdenEstadistica =
+      this.SelectOrdenEstadisitica.IdOrdenInterna;
+    this.Producto.OrdenEstadisticaName =
+      this.SelectOrdenEstadisitica.NombreOrder;
     // console.log("ya en lista de producto" + this.Producto.OrdenEstadisticaName);
     // console.log("ya en lista de producto" + this.Producto.IdOrdenEstadistica);
   }
@@ -1391,11 +1354,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.ListMoneda = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log("error al recuperar las monedas");
@@ -1490,17 +1450,13 @@ export class ListadoSolicitudesComponent implements OnInit {
   async addProductos() {
     // if(this.DataInsert.Imputacion.IdTipoSolicitud != 6){
     //primero recuperamos los valores ingresados y despues los pasamos a el objeto Producto.
-
     var cantidad: number = this.DataInsert.Cantidad;
     var precio: number = this.DataInsert.Precio;
     var espesificaciones: string = this.DataInsert.Espf;
     var usobien: string = this.DataInsert.UsoBien;
     this.Producto.UsoProd = await this.RemoveCaracteresEpeciales(usobien);
     this.Producto.Espf = await this.RemoveCaracteresEpeciales(espesificaciones);
-    if (
-      this.DataInsert.Imputacion.IdTipoSolicitud == 4 ||
-      this.DataInsert.Imputacion.IdTipoSolicitud == 7
-    ) {
+    if (this.DataInsert.Imputacion.IdTipoSolicitud == 4 || this.DataInsert.Imputacion.IdTipoSolicitud == 7) {
       this.Producto.Cantidad = 0;
       this.Producto.Precio = 0;
       this.Producto.PriceView = "0";
@@ -1525,23 +1481,32 @@ export class ListadoSolicitudesComponent implements OnInit {
       this.Producto.UsoProd = usobien;
     }
 
-    if (
-      this.DataInsert.Productos.length == 0 ||
-      this.DataInsert.Productos.length == null
-    ) {
+    if(this.DataInsert.Imputacion.IdTipoSolicitud != 2){
+      this.getAllCuentasMayor(this.DataInsert.Empresa, " ");
+    }else{
+      this.getAllCuentasMayor(this.DataInsert.Empresa,this.DataInsert.Imputacion.Acronimo);
+    }
+
+
+    if ( this.DataInsert.Productos.length == 0 || this.DataInsert.Productos.length == null) {
       this.Producto.IdPrduct = 1;
     } else {
       var Id = this.DataInsert.Productos.length;
       this.Producto.IdPrduct = Id + 1;
     }
-
+    console.log("Cenro de Costos  " + this.Producto.CentroCosto);
+    console.log("Orden de Invercion  " + this.SelectedOInvercion);
+    console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
+    console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
+    console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
+    console.log("Numero de Activo   " + this.Producto.NumActivo);
+    console.log("Numero de Necesidad   " + this.Producto.NumNeces);
+    console.log("Uso de Producto  " + this.Producto.UsoProd);
+    console.log("Especificaciones   " + this.Producto.Espf.length);
+    console.log("Material   " + this.Producto.Material);
+    console.log("Almacen  " + this.Producto.Almacen);
+    console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 1) {
-      // console.log(this.Producto.UsoProd);
-      // console.log(this.Producto.Espf);
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       if (
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
@@ -1550,9 +1515,12 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo != undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
-      ) {
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
+          this.Producto.UsoProd
+        );
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1607,10 +1575,6 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 2) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       if (precio >= 30000) {
         console.log("dentro del if para los 30000 debe mostrar ");
         const dialogRef = this.dialog.open(DialogInfoComponent);
@@ -1619,10 +1583,7 @@ export class ListadoSolicitudesComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
       }
-      this.getAllCuentasMayor(
-        this.DataInsert.Empresa,
-        this.DataInsert.Imputacion.Acronimo
-      );
+      this.getAllCuentasMayor(this.DataInsert.Empresa,this.DataInsert.Imputacion.Acronimo);
       if (
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion != undefined &&
@@ -1631,9 +1592,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1685,15 +1648,9 @@ export class ListadoSolicitudesComponent implements OnInit {
           "danger"
         );
       }
-    } else {
-      this.getAllCuentasMayor(this.DataInsert.Empresa, " ");
-    }
-
+    } 
+  
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 3) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
 
@@ -1704,16 +1661,20 @@ export class ListadoSolicitudesComponent implements OnInit {
       if (
         this.Producto.CentroCosto != undefined &&
         this.SelectedOInvercion == undefined &&
-        this.Producto.CuentaMayor != undefined &&
+        this.Producto.CuentaMayor !== undefined &&
         this.Producto.Material == undefined &&
         this.Producto.Almacen == undefined &&
         this.Producto.GrupCompra != undefined &&
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
+          this.Producto.UsoProd
+        );
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1760,6 +1721,20 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.DataInsert.UsoBien = "";
         this.DataInsert.Espf = "";
       } else {
+        this.DataInsert.Cantidad = 0;
+        this.price ='0';
+        this.DataInsert.Almacen = undefined;
+        this.DataInsert.Materiales = undefined;
+        this.DataInsert.CentroCostos = undefined;
+        this.DataInsert.Cuentamayor = undefined;
+        this.DataInsert.GCompra = undefined;
+        this.DataInsert.UMedida = undefined;
+        this.SelectOrdenEstadisitica = undefined;
+        this.DataInsert.NActivo = undefined;
+        this.DataInsert.Necesidad = undefined;
+        this.DataInsert.UsoBien = undefined;
+        this.SelectedOInvercion = undefined;
+        this.Producto = new Producto();
         this.toast.setMessage(
           "Los campos Habilitados son requeridos, por favor valida la informacion",
           "danger"
@@ -1768,10 +1743,6 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       if (
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
@@ -1782,9 +1753,13 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
+          this.Producto.UsoProd
+        );
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1839,10 +1814,6 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 5) {
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
 
@@ -1860,9 +1831,13 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
+          this.Producto.UsoProd
+        );
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -1933,10 +1908,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       //  console.log(this.Producto.NumActivo);
       //  console.log(this.Producto.NumNeces);
       //  console.log(this.Producto.UsoProd );
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
 
@@ -1955,9 +1927,13 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.IdOrdenEstadistica != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
+          this.Producto.UsoProd
+        );
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -2022,11 +1998,9 @@ export class ListadoSolicitudesComponent implements OnInit {
       // console.log(this.Producto.IdOrdenEstadistica);
       // console.log(this.Producto.NumActivo);
       // console.log(this.Producto.NumNeces);
-      this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
-        this.Producto.UsoProd
-      );
-      this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
-
+      // this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+      // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
+      console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES")
       if (
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
@@ -2038,9 +2012,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         // && this.Producto.IdOrdenEstadistica != undefined
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd != undefined &&
-        this.Producto.Espf != undefined
+        this.Producto.UsoProd.length != 0 &&
+        this.Producto.Espf.length != 0
       ) {
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
         if (this.DataInsert.Productos.length > 0) {
@@ -2231,14 +2207,11 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.DataInsert.Autorizador = this.ListUser[0];
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("error al recuperar usuario autorizador" + error)
+        console.log("error al recuperar usuario autorizador" + error);
       }
     );
   }
@@ -2310,8 +2283,10 @@ export class ListadoSolicitudesComponent implements OnInit {
     /*Se crea variable en Modelo Principal y se iguala al valor seleccionado para su validacion del lado del server */
     this.DataInsert.SelectedOEstadisiticaChild = this.SelectedOrEstChild;
     /*Se pasan los datos a arreglo de Informacion para Mostrarse en la Vista (Lista de Detalle de Items) */
-    this.ChildsProduct.IdOrdenEstadisticaChild = this.SelectedOrEstChild.IdOrdenInterna;
-    this.ChildsProduct.NameOrdenEstadisticaChild = this.SelectedOrEstChild.NombreOrder;
+    this.ChildsProduct.IdOrdenEstadisticaChild =
+      this.SelectedOrEstChild.IdOrdenInterna;
+    this.ChildsProduct.NameOrdenEstadisticaChild =
+      this.SelectedOrEstChild.NombreOrder;
   }
 
   SelectdCentrodeCostoChild() {
@@ -2323,7 +2298,8 @@ export class ListadoSolicitudesComponent implements OnInit {
     /*Se crea variable en Modelo Principal y se iguala al valor seleccionado para su validacion del lado del server */
     this.DataInsert.SelectedCentroCosotosChild = this.SelectedCostosChild;
     /*Se pasan los datos a arreglo de Informacion para Mostrarse en la Vista (Lista de Detalle de Items) */
-    this.ChildsProduct.IdCentroCostoChild = this.SelectedCostosChild.IdCentroCosto;
+    this.ChildsProduct.IdCentroCostoChild =
+      this.SelectedCostosChild.IdCentroCosto;
     this.ChildsProduct.CentroCostoNameChild = this.SelectedCostosChild.Nombre;
   }
 
@@ -2344,8 +2320,10 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log("dentro de la unidad de medida");
     // console.log(this.SelectedUMedidaChild.IdUnidadMedida);
     // console.log(this.SelectedUMedidaChild.NombreUnidadMedida);
-    this.ChildsProduct.IdUMedidaChild = this.SelectedUMedidaChild.IdUnidadMedida;
-    this.ChildsProduct.NameUMedidaChild = this.SelectedUMedidaChild.NombreUnidadMedida;
+    this.ChildsProduct.IdUMedidaChild =
+      this.SelectedUMedidaChild.IdUnidadMedida;
+    this.ChildsProduct.NameUMedidaChild =
+      this.SelectedUMedidaChild.NombreUnidadMedida;
   }
 
   /* metosod de los datos de los items Hijos*/
@@ -2526,15 +2504,16 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log("Empresa-->" + this.DataInsert.Empresa.Butxt);
     // console.log("Plaza-->" + this.DataInsert.Plaza.Nombre);
     // console.log("Tipo Solicitud-->" + this.DataInsert.Imputacion.Nombre);
-    console.log("Centro de costo-->" + this.DataInsert.CentroCostos);
-    console.log("Orden Interna-->" + this.DataInsert.OrdenInterna);
-    console.log("Cuenta de mayor-->" + this.DataInsert.Cuentamayor);
+    // console.log("Centro de costo-->" + this.DataInsert.CentroCostos);
+    // console.log("Orden Interna-->" + this.DataInsert.OrdenInterna);
+    // console.log("Cuenta de mayor-->" + this.DataInsert.Cuentamayor);
+    // console.log("Categorias --->" + this.DataInsert.Categoria)
     //console.log("Producto-->" + this.DataInsert.Productos);
     this.buscaIdAutorizador(this.DataInsert.Area);
     this.uploader.progress = 0;
-    console.log(this.uploader.queue[0]._file.name);
-    console.log(this.uploader.queue.length);
-    
+    this.progressbar = true;
+    //console.log(this.uploader.queue[0]._file.name);
+    //console.log(this.uploader.queue.length);
     if (
       this.Date.value == "" ||
       this.usr.status === "INVALID" ||
@@ -2553,6 +2532,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       this.DataInsert.Moneda === undefined ||
       this.DataInsert.Imputacion === undefined ||
       this.DataInsert.Justificacion === undefined
+
       //  || this.DataInsert.Posicion === undefined
       //|| this.DataInsert.Tipo === undefined
       //|| this.DataInsert.CentroCostos === undefined
@@ -2566,18 +2546,17 @@ export class ListadoSolicitudesComponent implements OnInit {
         "Los Campos de Usuario y Datos Generales son requeridos, Revisar Informacion",
         "warning"
       );
+      this.progressbar = false;
     } else {
       //this.uploader._fileSizeFilter;
       //this.uploader._fileTypeFilter;
-      if (
-        this.uploader.queue[0]._file.name != undefined &&
-        this.uploader.queue.length == 1
-      ) {
+      if (this.uploader.queue.length == 1) {
         var requierente = this.RemoveCaracteresEpeciales(this.usr.value);
         this.usr.setValue(requierente);
-        var justificacion = this.RemoveCaracteresEpeciales(this.DataInsert.Justificacion);
+        var justificacion = this.RemoveCaracteresEpeciales(
+          this.DataInsert.Justificacion
+        );
         this.DataInsert.Justificacion = justificacion;
-        console.log("good");
         if (this.DataInsert.Productos.length != 0) {
           console.log("porlomenos tiene un item la Solicitud");
           if (this.DataInsert.Imputacion.IdTipoSolicitud == 1) {
@@ -2666,8 +2645,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -2699,6 +2678,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.uploader.clearQueue();
                                     //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                     this.isEnviadoSolPed = false;
+                                    this.uploader = new FileUploader({
+                                      url: URL,
+                                      itemAlias: " ",
+                                    });
 
                                     this.ngOnInit();
                                     //si se guardo la Solicitud limpiamos los registros
@@ -2735,45 +2718,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                               if(error.status == 403 || error.status == 404){
-                                  this.toast.setMessage(
-                                    error.message,
-                                    "danger"
-                                  );
-                                  this.auth.logout();
-                                }
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
+                                this.auth.logout();
+                                this.progressbar = false;
+                              }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -2812,8 +2805,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -2845,6 +2838,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.uploader.clearQueue();
                                     //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                     this.isEnviadoSolPed = false;
+                                    this.uploader = new FileUploader({
+                                      url: URL,
+                                      itemAlias: " ",
+                                    });
 
                                     this.ngOnInit();
                                     //si se guardo la Solicitud limpiamos los registros
@@ -2881,9 +2878,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (err) => {
                                           console.log(err);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -2893,6 +2892,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         err
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
@@ -2903,6 +2903,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 "Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ",
                                 "danger"
                               );
+                              this.progressbar = false;
                             }
                           );
                       }
@@ -2967,6 +2968,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     "success"
                                   );
                                   //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
+                                  this.uploader.clearQueue();
+                                  //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                   this.isEnviadoSolPed = false;
                                   this.uploader = new FileUploader({
                                     url: URL,
@@ -3007,11 +3010,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
+                                        this.progressbar = false;
                                       },
                                       (err) => {
                                         //console.log("----ÑÑÑÑÑÑÑÑÑÑ");
                                         //location.reload();
                                         console.log(err);
+                                        this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -3021,6 +3026,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       err
                                   );
+                                  this.progressbar = false;
                                 }
                               );
                           },
@@ -3028,6 +3034,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                             this.isEnviadoSolPed = false;
                             console.log(error);
                             this.toast.setMessage(error.message, "danger");
+                            this.progressbar = false;
                           }
                         );
                     }
@@ -3037,106 +3044,16 @@ export class ListadoSolicitudesComponent implements OnInit {
                       "error al recuperar la informacion de las Exxcepcions" +
                         err
                     );
+                    this.progressbar = false;
                   }
                 );
-
-              //   this.DataInsert.TipoSolicitud = 1;
-              //  this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
-              //     res => {
-              //       console.log("??????????????????????????????????????");
-              //       console.log(res);
-              //       console.log("??????????????????????????????????????");
-              //       //console.log(this.DataInsert.Area.IdDireccion);
-              //       this.IdSoliforFile = res;
-
-              //       this.solicitudComp.checkdirauthexeption(this.DataInsert.Area.IdDireccion).subscribe(data =>{
-              //         //se envia parametro de IdSOlicitud para identificar correctamente la cotizacion
-              //         this.uploader.options.headers=[];
-              //         this.uploader.options.headers.push({name:'IdSol', value:this.IdSoliforFile.toString()});
-              //         this.uploader.options.removeAfterUpload.valueOf();
-              //         this.uploader.setOptions(this.uploader);
-              //         this.uploader.uploadAll();
-
-              //         console.log(data[0]);
-              //         console.log("¡¡¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?");
-              //         console.log(this.DataInsert.Area)
-              //         if(data[0] != undefined || data[0] != null){
-              //           console.log("dentro del if Para mandar mail a Director de Area no a Genrente")
-              //           if(data[0].IdRole == 2){ //caso donde excluimos la Autorizacion de GERENTE
-
-              //           }else if(data[0].IdRole == 3){//caso donde excluimos la Autorizacion de Directo
-
-              //           }
-
-              //         }else{
-              //           console.log("entrando al else para seguir el flujo normal de la solicitud");
-
-              //           Role = 2;
-              //           status = 1;
-              //           console.log(Role);
-              //           console.log(status);
-              //           console.log(this.DataInsert.Area.IdDireccion);
-              //           var Solicitante = this.DataInsert.Usr;
-              //           var IdDIreccion = this.DataInsert.Area.IdDireccion;
-              //           var NombreDir = this.DataInsert.Area.Nombre;
-              //               this.solicitudComp.getUserAutorizador(this.DataInsert.Area.IdDireccion,Role).subscribe(data =>{
-              //                 this.UsrAuthEmail = data;
-              //                 console.log("------------------------------");
-              //                 console.log(this.UsrAuthEmail[0]);
-              //                 console.log("------------------0------------");
-              //                 console.log("Id de la DIreccion a enviar correo"+IdDIreccion);
-              //                 console.log("Nombre de la DIrecion a la que se enviara mail--->" + NombreDir);
-              //                 this.toast.setMessage('Envio de Solicitud Correcto. ', 'success');
-              //                 //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
-              //                 this.isEnviadoSolPed = false;
-              //                 this.uploader = new FileUploader({url: URL, itemAlias:' '});
-              //                 this.ngOnInit();
-              //                 //si se guardo la Solicitud limpiamos los registros
-              //                 this.date = '';
-              //                 this.usr.reset();
-              //                 this.puesto.reset();
-              //                 this.email.reset();
-              //                 this.tel.reset();
-              //                 this.ext.reset();
-              //                 this.nombreProduccion.reset();
-              //                 this.ngOnInit();
-              //                 this.addProdForm.reset();
-              //                 this.BloqMoreItem = false;
-
-              //                 //esta parte es para el envio de correo para el dir de area.
-              //                 this.solicitudComp.SendEmailNewSolicitud(res, status, IdDIreccion,  NombreDir, Solicitante, this.UsrAuthEmail[0].IdRole, this.UsrAuthEmail[0].NombreCompleto, this.UsrAuthEmail[0].Email )
-              //                 .subscribe( res =>{
-              //                   console.log(res);
-              //                   this.toast.setMessage('Se realizo el envio del Email a Dir de Area','success');
-
-              //                 }, err=>{
-              //                   console.log("----ÑÑÑÑÑÑÑÑÑÑ");
-              //                   //location.reload();
-              //                   console.log(err);
-              //                   //this.toast.setMessage('Error en el envio de el Correo','success');
-              //                 })
-              //               },
-              //               err=>{
-              //                 console.log("error al recuperar la informacion del usuario aotorizador por DIreccion" + err);
-              //               });
-              //         }
-              //       }, err=>{
-              //         console.log("error al recuperar la informacion de las Exxcepcions" + err );
-              //       });
-
-              //     },
-              //     error => {
-              //       this.isEnviadoSolPed = false;
-              //       console.log(error)
-              //       this.toast.setMessage('Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ', 'danger');
-              //     }
-              //   );
             } else {
               console.log("entra al else");
               this.toast.setMessage(
                 "Los Campos Habilitados son requeridos Favor de Revisar la Informacion ",
                 "danger"
               );
+              this.progressbar = false;
             }
           }
 
@@ -3217,8 +3134,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -3282,46 +3199,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Gerete de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
-
                               this.isEnviadoSolPed = false;
-                               if(error.status == 403 || error.status == 404){
-                                  this.toast.setMessage(
-                                    error.message,
-                                    "danger"
-                                  );
-                                  this.auth.logout();
-                                }
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
+                                this.auth.logout();
+                                this.progressbar = false;
+                              }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -3357,8 +3283,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -3422,9 +3348,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (err) => {
                                           console.log(err);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -3434,6 +3362,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         err
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
@@ -3444,6 +3373,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 "Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ",
                                 "danger"
                               );
+                              this.progressbar = false;
                             }
                           );
                       }
@@ -3544,9 +3474,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a aotorizador de Area",
                                           "success"
                                         );
+                                        this.progressbar = false;
                                       },
                                       (err) => {
                                         console.log(err);
+                                        this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -3556,6 +3488,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       err
                                   );
+                                  this.progressbar = false;
                                 }
                               );
                           },
@@ -3563,6 +3496,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                             this.isEnviadoSolPed = false;
                             console.log(error);
                             this.toast.setMessage(error.message, "danger");
+                            this.progressbar = false;
                           }
                         );
                     }
@@ -3572,6 +3506,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                       "error al recuperar la informacion de las Exxcepcions" +
                         err
                     );
+                    this.progressbar = false;
                   }
                 );
               // this.DataInsert.TipoSolicitud = 2;
@@ -3780,8 +3715,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               this.uploader.setOptions(this.uploader);
                               this.uploader.uploadAll();
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -3845,45 +3780,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -3913,8 +3858,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               this.uploader.setOptions(this.uploader);
                               this.uploader.uploadAll();
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -3978,45 +3923,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       }
@@ -4111,61 +4066,70 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
+                                        this.progressbar = false;
                                       },
                                       (error) => {
-                                        if(error.status == 403 || error.status == 404){
+                                        if (
+                                          error.status == 403 ||
+                                          error.status == 404
+                                        ) {
                                           this.toast.setMessage(
                                             error.message,
                                             "danger"
                                           );
                                           this.auth.logout();
+                                          this.progressbar = false;
                                         }
                                         console.log(error);
+                                        this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
                                 },
                                 (error) => {
-                                  if(error.status == 403 || error.status == 404){
+                                  if (
+                                    error.status == 403 ||
+                                    error.status == 404
+                                  ) {
                                     this.toast.setMessage(
                                       error.message,
                                       "danger"
                                     );
                                     this.auth.logout();
+                                    this.progressbar = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
+                                  this.progressbar = false;
                                 }
                               );
                           },
                           (error) => {
                             this.isEnviadoSolPed = false;
-                            if(error.status == 403 || error.status == 404){
-                              this.toast.setMessage(
-                                error.message,
-                                "danger"
-                              );
+                            if (error.status == 403 || error.status == 404) {
+                              this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
+                              this.progressbar = false;
                             }
                             this.toast.setMessage(error.message, "danger");
+                            this.progressbar = false;
                           }
                         );
                     }
                   },
                   (error) => {
-                    if(error.status == 403 || error.status == 404){
-                      this.toast.setMessage(
-                        error.message,
-                        "danger"
-                      );
+                    if (error.status == 403 || error.status == 404) {
+                      this.toast.setMessage(error.message, "danger");
                       this.auth.logout();
+                      this.progressbar = false;
                     }
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
                         error
                     );
+                    this.progressbar = false;
                   }
                 );
             } else {
@@ -4173,33 +4137,35 @@ export class ListadoSolicitudesComponent implements OnInit {
                 "Existe un problema, favor de Validar Informacion ",
                 "danger"
               );
+              this.progressbar = false;
             }
           }
 
           if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
-            console.log(
-              "se cumple la condicion-------------4------------------"
-            );
+            console.log("se cumple la condicion-------------4------------------");
 
-            console.log("CCostos   " + "   CMayor   " + "  OEstadisitica   ");
-            console.log(this.SelectedCostosChild);
-            console.log(this.SelectedCMayorChild);
-            console.log(this.SelectedOrEstChild);
-            console.log("OR   " + this.SelectedOrdenEstaHijo);
-            console.log("CM   " + this.SelectedCMayorHijo);
-            console.log("CC   " + this.SelectCentroCostosHijo);
-
-            // var BreakException = {};
-            var datachild;
-              this.DataInsert.Productos.forEach((element) => {
-                console.log(element.ChildsProducts.length);
-                if(element.ChildsProducts.length === 0 || element.ChildsProducts.length === undefined ||element.ChildsProducts.length === null){
-                  datachild = 0;
-                }
-              });
-             
-            
-
+            console.log("First CentroCosotos  " + this.SelectedCostos)
+            console.log("CCostos   " + this.SelectCentroCostosHijo);
+            console.log("First Orden invercion  "  + this.SelectedOInvercion)
+            console.log("OEstadistica  " + this.SelectedOrdenEstaHijo);
+            console.log("First CCuenta maYor   " + this.SelectedCMayor )
+            console.log("CMayor   " + this.SelectedCMayorHijo);
+            console.log("-.-.-.-.-.-.-.-.-.--.-.-.-.-.--.-.-.-.-.--.-.-.-.-.-.-")
+            console.log("CCostos   " + this.SelectedCostosChild);
+            console.log( "   CMayor   " +this.SelectedCMayorChild);
+            console.log("  OEstadisitica   " + this.SelectedOrEstChild);
+            this.SelectedCostos = undefined;
+            this.SelectedCMayor = undefined;
+            this.DataInsert.Productos.forEach((element) => {
+              console.log(element.ChildsProducts.length);
+              if (element.ChildsProducts.length === 0 || element.ChildsProducts.length === undefined || element.ChildsProducts.length === null) {
+                console.log("dentro del if que dice que tenemos cero hijos");
+                this.countChilds = 0;
+              }else{
+                this.countChilds = element.ChildsProducts.length;
+              }
+            });
+            console.log(this.countChilds)
             if (
               this.SelectedCostos == undefined &&
               this.SelectCentroCostosHijo != undefined &&
@@ -4207,9 +4173,9 @@ export class ListadoSolicitudesComponent implements OnInit {
               this.SelectedOrdenEstaHijo == undefined &&
               this.SelectedCMayor == undefined &&
               this.SelectedCMayorHijo != undefined &&
-              datachild != 0
+              this.countChilds != 0
             ) {
-              console.log("Valiiidoooooooooooooooooooooooooooooooooooooo");
+              //console.log("Valiiidoooooooooooooooooooooooooooooooooooooo");
               this.DataInsert.Fecha = this.date;
               this.DataInsert.Usr = this.usr.value;
               this.DataInsert.Puesto = this.puesto.value;
@@ -4263,8 +4229,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -4328,45 +4294,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -4402,8 +4378,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -4467,45 +4443,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       }
@@ -4604,61 +4590,70 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
+                                        this.progressbar = false;
                                       },
                                       (error) => {
-                                        if(error.status == 403 || error.status == 404){
+                                        if (
+                                          error.status == 403 ||
+                                          error.status == 404
+                                        ) {
                                           this.toast.setMessage(
                                             error.message,
                                             "danger"
                                           );
                                           this.auth.logout();
+                                          this.progressbar = false;
                                         }
                                         console.log(error);
+                                        this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
                                 },
                                 (error) => {
-                                  if(error.status == 403 || error.status == 404){
+                                  if (
+                                    error.status == 403 ||
+                                    error.status == 404
+                                  ) {
                                     this.toast.setMessage(
                                       error.message,
                                       "danger"
                                     );
                                     this.auth.logout();
+                                    this.progressbar = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
+                                  this.progressbar = false;
                                 }
                               );
                           },
                           (error) => {
                             this.isEnviadoSolPed = false;
-                            if(error.status == 403 || error.status == 404){
-                              this.toast.setMessage(
-                                error.message,
-                                "danger"
-                              );
+                            if (error.status == 403 || error.status == 404) {
+                              this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
+                              this.progressbar = false;
                             }
                             this.toast.setMessage(error.message, "danger");
+                            this.progressbar = false;
                           }
                         );
                     }
                   },
                   (error) => {
-                    if(error.status == 403 || error.status == 404){
-                      this.toast.setMessage(
-                        error.message,
-                        "danger"
-                      );
+                    if (error.status == 403 || error.status == 404) {
+                      this.toast.setMessage(error.message, "danger");
                       this.auth.logout();
+                      this.progressbar = false;
                     }
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
                         error
                     );
+                    this.progressbar = false;
                   }
                 );
             } else {
@@ -4666,6 +4661,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                 "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
                 "danger"
               );
+              this.progressbar = false;
             }
           }
 
@@ -4730,8 +4726,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -4795,45 +4791,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -4865,8 +4871,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -4930,45 +4936,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       }
@@ -5061,45 +5077,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
+                                        this.progressbar = false;
                                       },
                                       (error) => {
-                                        if(error.status == 403 || error.status == 404){
+                                        if (
+                                          error.status == 403 ||
+                                          error.status == 404
+                                        ) {
                                           this.toast.setMessage(
                                             error.message,
                                             "danger"
                                           );
                                           this.auth.logout();
+                                          this.progressbar = false;
                                         }
                                         console.log(error);
+                                        this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
                                 },
                                 (error) => {
-                                  if(error.status == 403 || error.status == 404){
+                                  if (
+                                    error.status == 403 ||
+                                    error.status == 404
+                                  ) {
                                     this.toast.setMessage(
                                       error.message,
                                       "danger"
                                     );
                                     this.auth.logout();
+                                    this.progressbar = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
+                                  this.progressbar = false;
                                 }
                               );
                           },
                           (error) => {
                             this.isEnviadoSolPed = false;
-                            if(error.status == 403 || error.status == 404){
-                              this.toast.setMessage(
-                                error.message,
-                                "danger"
-                              );
+                            if (error.status == 403 || error.status == 404) {
+                              this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
+                              this.progressbar = false;
                             }
                             this.toast.setMessage(error.message, "danger");
+                            this.progressbar = false;
                           }
                         );
                     }
@@ -5109,6 +5135,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                         err
                     );
+                    this.progressbar = false;
                   }
                 );
             } else {
@@ -5116,6 +5143,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                 "Existe un problema, favor de Validar Informacion ",
                 "danger"
               );
+              this.progressbar = false;
             }
           }
 
@@ -5158,7 +5186,10 @@ export class ListadoSolicitudesComponent implements OnInit {
               console.log("este es un tipo de solicitud --IMP G--");
               var Role;
               var status;
-              this.solicitudComp.checkdirauthexeption(this.DataInsert.Area.IdDireccion).subscribe((data) => {
+              this.solicitudComp
+                .checkdirauthexeption(this.DataInsert.Area.IdDireccion)
+                .subscribe(
+                  (data) => {
                     if (data[0] != undefined || data[0] != null) {
                       console.log(
                         "validamos que tipo de esxcepcion se esta manejando"
@@ -5169,7 +5200,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                         status = data[0].IdRole;
                         this.DataInsert.TipoSolicitud = 6;
                         this.DataInsert.EstatusSol = status;
-                        this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
+                        this.solicitudComp
+                          .InsertSolicitudPedido1(this.DataInsert)
+                          .subscribe(
                             (res) => {
                               // console.log("??????????????????????????????????????");
                               // console.log(res);
@@ -5188,8 +5221,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -5253,42 +5286,50 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
                               }
                               this.toast.setMessage(error.message, "danger");
@@ -5302,7 +5343,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                         status = data[0].IdRole - 2;
                         this.DataInsert.TipoSolicitud = 6;
                         this.DataInsert.EstatusSol = status;
-                        this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
+                        this.solicitudComp
+                          .InsertSolicitudPedido1(this.DataInsert)
+                          .subscribe(
                             (res) => {
                               // console.log("??????????????????????????????????????");
                               // console.log(res);
@@ -5321,8 +5364,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -5386,55 +5429,69 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       }
                     } else {
-                      console.log("seguimos con el flujo normal de la operacion");
+                      console.log(
+                        "seguimos con el flujo normal de la operacion"
+                      );
                       Role = 2;
                       status = 1;
                       this.DataInsert.TipoSolicitud = 6;
                       this.DataInsert.EstatusSol = status;
-                      this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
+                      this.solicitudComp
+                        .InsertSolicitudPedido1(this.DataInsert)
+                        .subscribe(
                           (res) => {
                             // console.log("??????????????????????????????????????");
                             // console.log(res);
@@ -5515,60 +5572,73 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
+                                        this.progressbar = false;
                                       },
                                       (error) => {
-                                        if(error.status == 403 || error.status == 404){
+                                        if (
+                                          error.status == 403 ||
+                                          error.status == 404
+                                        ) {
                                           this.toast.setMessage(
                                             error.message,
                                             "danger"
                                           );
                                           this.auth.logout();
+                                          this.progressbar = false;
                                         }
                                         console.log(error);
+                                        this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
                                 },
                                 (error) => {
-                                  if(error.status == 403 || error.status == 404){
+                                  if (
+                                    error.status == 403 ||
+                                    error.status == 404
+                                  ) {
                                     this.toast.setMessage(
                                       error.message,
                                       "danger"
                                     );
                                     this.auth.logout();
+                                    this.progressbar = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
+                                  this.progressbar = false;
                                 }
                               );
                           },
                           (error) => {
                             this.isEnviadoSolPed = false;
-                            if(error.status == 403 || error.status == 404){
-                              this.toast.setMessage(
-                                error.message,
-                                "danger"
-                              );
+                            if (error.status == 403 || error.status == 404) {
+                              this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
+                              this.progressbar = false;
                             }
                             this.toast.setMessage(
                               "Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ",
                               "danger"
                             );
+                            this.progressbar = false;
                           }
                         );
                     }
                   },
                   (error) => {
-                    if(error.status == 403 || error.status == 404){this.toast.setMessage(error.message,"danger");
+                    if (error.status == 403 || error.status == 404) {
+                      this.toast.setMessage(error.message, "danger");
                       this.auth.logout();
+                      this.progressbar = false;
                     }
                     console.log(
                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                         error
                     );
+                    this.progressbar = false;
                   }
                 );
 
@@ -5705,13 +5775,15 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("OR  H " + this.SelectedOrdenEstaHijo);
             console.log("CM  H " + this.SelectedCMayorHijo);
             console.log("CC  H " + this.SelectCentroCostosHijo);
-            var datachild;
-              this.DataInsert.Productos.forEach((element) => {
-                console.log(element.ChildsProducts.length);
-                if(element.ChildsProducts.length === 0 || element.ChildsProducts.length === undefined ||element.ChildsProducts.length === null){
-                  datachild = 0;
-                }
-              });
+            this.DataInsert.Productos.forEach((element) => {
+              console.log(element.ChildsProducts.length);
+              if (element.ChildsProducts.length === 0 ||element.ChildsProducts.length === undefined ||element.ChildsProducts.length === null
+              ) {
+                this.countChilds = 0;
+              }else{
+                this.countChilds = element.ChildsProducts.length;
+              }
+            });
             if (
               this.SelectedCostos == undefined &&
               this.SelectCentroCostosHijo != undefined &&
@@ -5719,7 +5791,7 @@ export class ListadoSolicitudesComponent implements OnInit {
               this.SelectedOrdenEstaHijo != undefined &&
               this.SelectedCMayor == undefined &&
               this.SelectedCMayorHijo != undefined &&
-              datachild != 0
+              this.countChilds != 0
             ) {
               console.log(
                 "--------------------------------Hacemos Insert de TipoSol 7--------------------------------------------------"
@@ -5767,8 +5839,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(Role);
                               console.log(status);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -5832,9 +5904,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
@@ -5847,7 +5923,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
@@ -5856,18 +5935,15 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      error
+                                        error
                                     );
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
                               }
                               this.toast.setMessage(error.message, "danger");
@@ -5900,8 +5976,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                               console.log(Role);
                               console.log(status);
                               var Solicitante = this.DataInsert.Usr;
-                              var IdDIreccion = this.DataInsert.Area
-                                .IdDireccion;
+                              var IdDIreccion =
+                                this.DataInsert.Area.IdDireccion;
                               var NombreDir = this.DataInsert.Area.Nombre;
                               this.solicitudComp
                                 .getUserAutorizador(
@@ -5965,45 +6041,55 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
+                                          this.progressbar = false;
                                         },
                                         (error) => {
-                                          if(error.status == 403 || error.status == 404){
+                                          if (
+                                            error.status == 403 ||
+                                            error.status == 404
+                                          ) {
                                             this.toast.setMessage(
                                               error.message,
                                               "danger"
                                             );
                                             this.auth.logout();
+                                            this.progressbar = false;
                                           }
                                           console.log(error);
+                                          this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
                                   },
                                   (error) => {
-                                    if(error.status == 403 || error.status == 404){
+                                    if (
+                                      error.status == 403 ||
+                                      error.status == 404
+                                    ) {
                                       this.toast.setMessage(
                                         error.message,
                                         "danger"
                                       );
                                       this.auth.logout();
+                                      this.progressbar = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
+                                    this.progressbar = false;
                                   }
                                 );
                             },
                             (error) => {
                               this.isEnviadoSolPed = false;
-                              if(error.status == 403 || error.status == 404){
-                                this.toast.setMessage(
-                                  error.message,
-                                  "danger"
-                                );
+                              if (error.status == 403 || error.status == 404) {
+                                this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
+                                this.progressbar = false;
                               }
                               this.toast.setMessage(error.message, "danger");
+                              this.progressbar = false;
                             }
                           );
                       }
@@ -6096,9 +6182,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
+                                        this.progressbar = false;
                                       },
                                       (error) => {
-                                        if(error.status == 403 || error.status == 404){
+                                        if (
+                                          error.status == 403 ||
+                                          error.status == 404
+                                        ) {
                                           this.toast.setMessage(
                                             error.message,
                                             "danger"
@@ -6111,7 +6201,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                 },
                                 (error) => {
-                                  if(error.status == 403 || error.status == 404){
+                                  if (
+                                    error.status == 403 ||
+                                    error.status == 404
+                                  ) {
                                     this.toast.setMessage(
                                       error.message,
                                       "danger"
@@ -6127,11 +6220,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                           },
                           (error) => {
                             this.isEnviadoSolPed = false;
-                            if(error.status == 403 || error.status == 404){
-                              this.toast.setMessage(
-                                error.message,
-                                "danger"
-                              );
+                            if (error.status == 403 || error.status == 404) {
+                              this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
                             }
                             this.toast.setMessage(error.message, "danger");
@@ -6140,11 +6230,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                     }
                   },
                   (error) => {
-                    if(error.status == 403 || error.status == 404){
-                      this.toast.setMessage(
-                        error.message,
-                        "danger"
-                      );
+                    if (error.status == 403 || error.status == 404) {
+                      this.toast.setMessage(error.message, "danger");
                       this.auth.logout();
                     }
                     console.log(
@@ -6279,15 +6366,15 @@ export class ListadoSolicitudesComponent implements OnInit {
                 "Ocurrio un problema al enviar la solicitud, Por Favor verifica la informacion ",
                 "danger"
               );
+              this.progressbar = false;
             }
           }
-
-          
         } else {
           this.toast.setMessage(
             "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
             "warning"
           );
+          this.progressbar = false;
         }
       } else {
         if (this.uploader.queue.length > 1) {
@@ -6295,11 +6382,13 @@ export class ListadoSolicitudesComponent implements OnInit {
             "La solicitud de pedido solo debe contener un archivo de precotizacion.",
             "warning"
           );
+          this.progressbar = false;
         } else if (this.uploader.queue.length == 0) {
           this.toast.setMessage(
             "Se debe adjuntar una precotizacion para crear una nueva Solicitud de Pedido.",
             "warning"
           );
+          this.progressbar = false;
         }
       }
     }
@@ -6307,26 +6396,47 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   //validacion de campos
   RemoveCaracteresEpeciales(str) {
-    var j: number;
+    console.log(str);
+    if (str == undefined || str == null) {
+      this.toast.setMessage(
+        "El campo de justificacion es requerido, favor de validar la informacion",
+        "warning"
+      );
+    } else {
+      var j: number;
+      var format = str.replace(/['"]+/g, " ");
+      format = format.replace(/[´´]+/g, " ");
+      format = format.replace(/[``]+/g, " ");
+      format = format.replace(/[¨]+/g, " ");
 
-    //console.log(str)
-    var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
-      to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
-      mapping = {};
+      //console.log(str)
+      var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
+        to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
+        mapping = {};
 
-    for (var i = 0, j = from.length; i < j; i++)
-      mapping[from.charAt(i)] = to.charAt(i);
+      for (var i = 0, j = from.length; i < j; i++)
+        mapping[from.charAt(i)] = to.charAt(i);
 
-    var ret = [];
+      var ret = [];
 
-    for (var i = 0, tamaño = str.length; i < tamaño; i++) {
-      var c = str.charAt(i);
-      //console.log(tamaño);
-      if (mapping.hasOwnProperty(str.charAt(i))) ret.push(mapping[c]);
-      else ret.push(c);
+      for (var i = 0, tamaño = format.length; i < tamaño; i++) {
+        var c = format.charAt(i);
+        //console.log(tamaño);
+        if (mapping.hasOwnProperty(format.charAt(i))) ret.push(mapping[c]);
+        else ret.push(c);
+      }
+      //console.log(ret.join( '' ).toString());
+
+      var cadena = ret.join("").toString();
+      format = cadena.replace(/['"]+/g, " ");
+      format = format.replace(/[´´]+/g, " ");
+      format = format.replace(/[``]+/g, " ");
+      format = format.replace(/[¨]+/g, " ");
+      format = format.replace(/[|]+/g, " ");
+      format = format.replace(/[~]+/g, " ");
+      format = format.replace(/[#]+/g, " ");
+      return format;
     }
-    //console.log(ret.join( '' ).toString());
-    return ret.join("").toString();
   }
 
   //Mensajes de validacion
@@ -6339,7 +6449,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       : "";
   }
   getErrorMensajeExt() {
-    return this.ext.hasError("")
+    return this.ext.hasError("required")
       ? "El campo no puede estar vacion"
       : this.ext.hasError("maxLength")
       ? "Extencion invalida"
@@ -6350,11 +6460,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       ? "El campo no Puede estar vacio "
       : "";
   }
-  getErrorMensajeInt() {
-    return this.precio.hasError("required")
-      ? "El campo no Puede estar vacio "
-      : "";
-  }
+
   getErrorMensajeUsuario() {
     return this.usr.hasError("required")
       ? "El campo no Puede estar vacio y debe ser mayor a 8 caracteres"

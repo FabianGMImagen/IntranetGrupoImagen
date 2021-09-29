@@ -19,6 +19,7 @@ export class DirauthComponent implements OnInit {
   SelectArea: Area | undefined;
   ListStatus:Role[];
   Selectrole:Role;
+  SelectedSolicitud:number;
   ListDirAuth:DirAuth[];
 
   constructor(
@@ -76,29 +77,31 @@ export class DirauthComponent implements OnInit {
   }
 
   ExcluirAuth(){
-    console.log(this.SelectArea);
-    console.log(this.Selectrole);
     console.log(this.Selectrole.IdRole);
-    this.dirauthserv.insertExeptionAuth(this.SelectArea.IdDireccion, this.Selectrole.IdRole)
-    .subscribe(data=>{
-      console.log(data);
-      if(data == 1){
-        this.toast.setMessage('Se guardo correctamente la excepcion para la Direccion seleccionada', 'success');
-      }else{
-        this.toast.setMessage('Ocurrio un error al guardar la excepcion, por favor intenta mas tarde.', 'warning');
-      }
-      this.allDirections();
-      this.ListDireccioneswidthExeptionAuth();
-    },error=>{
-      console.log(error);
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
-          this.auth.logout();
+    console.log(this.SelectArea.IdDireccion);
+    console.log(this.SelectedSolicitud);
+
+      this.dirauthserv.insertExeptionAuth(this.SelectedSolicitud ,this.SelectArea.IdDireccion, this.Selectrole.IdRole)
+      .subscribe(data=>{
+        console.log(data);
+        if(data == 1){
+          this.toast.setMessage('Se guardo correctamente la excepcion para la Direccion seleccionada', 'success');
+        }else{
+          this.toast.setMessage('Ocurrio un error al guardar la excepcion, por favor intenta mas tarde.', 'warning');
         }
-    })
+        this.allDirections();
+        this.ListDireccioneswidthExeptionAuth();
+      },error=>{
+        console.log(error);
+          if(error.status == 403 || error.status == 404){
+            this.toast.setMessage(
+              error.message,
+              "danger"
+            );
+            this.auth.logout();
+          }
+      })
+    
   }
 
 

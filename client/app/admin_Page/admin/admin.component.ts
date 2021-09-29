@@ -9,6 +9,8 @@ import { Direccion } from '../../shared/models/directions.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Role } from '../../shared/models/roles.model';
 import { RoleSolConsumo } from '../../shared/models/rolesol_consumo.mode';
+import { DialogDeleteUserComponent } from 'client/app/dialogs/dialog-delete-user/dialog-delete-user.component';
+import { DialogDeleteDirComponent } from 'client/app/dialogs/dialog-delete-dir/dialog-delete-dir.component';
 //import { ConsoleReporter } from 'jasmine';
 
 
@@ -118,7 +120,10 @@ export class AdminComponent implements OnInit {
 
   getUsers() {
     this.userService.getUsers().subscribe(
-      data => this.users = data,
+      data => {
+        this.users = data
+        //console.log(data);
+      },
       error =>{
         console.log(error);
         if(error.status == 403 || error.status == 404){
@@ -135,7 +140,7 @@ export class AdminComponent implements OnInit {
 
   getDirecciones(){
     this.userService.alldirection().subscribe(data=>{
-      console.log(data);
+      //console.log(data);
       this.direcciones = data;
     }, error=>{
       console.log(error);
@@ -150,14 +155,14 @@ export class AdminComponent implements OnInit {
   }
 
   deleteUser(user: User) {
-    const dialogRef = this.dialog.open(DialogDataExampleDialog, {
-      width: '350px',
+    const dialogRef = this.dialog.open(DialogDeleteUserComponent, {
+      width: '500px',
       data: {name: user.NombreCompleto , IdUser: user.IdUsuario}
     });
     dialogRef.afterClosed().subscribe(result => {
       //console.log(`No esta indefinida la variable, le dieron en si ${result}`);
           if(result == undefined){
-              console.log("le dieron que no no manches");
+              console.log("le dieron que no");
           }else{
             console.log(`No esta indefinida la variable, le dieron en si ${result}`);
             this.userService.deleteUser(user).subscribe(
@@ -256,7 +261,7 @@ export class AdminComponent implements OnInit {
   SelectedFilterDireccion(){
     console.log(this.selectedfilterDireccion);
     this.userService.filterUserDirections(this.selectedfilterDireccion.IdDireccion).subscribe(data=>{
-      console.log(data);
+      //console.log(data);
       this.users = data;
     }, error=>{
       if(error.status == 403 || error.status == 404){
@@ -286,10 +291,10 @@ export class AdminComponent implements OnInit {
   }
 
   AddDirForUser(){
-    console.log("Este es el Id de la direccion "+this.SelectedDir.IdDireccion + "  Nombre:  " + this.SelectedDir.Nombre);
-    console.log("Id de Usuario-->" + this.IdUser);
+    //console.log("Este es el Id de la direccion "+this.SelectedDir.IdDireccion + "  Nombre:  " + this.SelectedDir.Nombre);
+    //console.log("Id de Usuario-->" + this.IdUser);
     this.userService.addDirectionForUser(this.IdUser,this.SelectedDir.IdDireccion).subscribe( data=>{
-      console.log(data);
+      //console.log(data);
       this.toast.setMessage('Se actualizo Correctamente el Usuario.', 'success');
       this.getUsers();
       this.GetAllDirecciones();
@@ -306,11 +311,11 @@ export class AdminComponent implements OnInit {
   }
 
   DeleteDirForUser(){
-    console.log("Este es el id de la direccion" + this.SelectDirAsoc.IdDireccion);
-    console.log("Este es el id del usuario--->" + this.IdUser);
+    //console.log("Este es el id de la direccion" + this.SelectDirAsoc.IdDireccion);
+    //console.log("Este es el id del usuario--->" + this.IdUser);
     this.userService.deleteDirForUser(this.IdUser,this.SelectDirAsoc.IdDireccion).subscribe(
       data=>{
-        console.log(data);
+        //console.log(data);
         this.toast.setMessage('Se elimino la Direccion', 'success');
         this.getUsers();
         this.GetAllDirecciones();
@@ -360,17 +365,17 @@ export class AdminComponent implements OnInit {
   
   UpdateUsrData(){
     this.updateUsrDataGeneral.value.IdUsr = this.UserEdit.IdUsuario;
-    console.log("Dentro del metodo para actualizar los valores generales , este es el Usuario a actualizar--->" + this.updateUsrDataGeneral.value.IdUsr);
-    console.log(this.updateUsrDataGeneral.value.IdUsr);
-    console.log("Nombre usuario---->" + this.updateUsrDataGeneral.value.Name);
-    console.log("username--->" + this.updateUsrDataGeneral.value.username);
-    console.log("email--->" + this.updateUsrDataGeneral.value.email);
-    console.log("password--->"+ this.updateUsrDataGeneral.value.password);
-    console.log("tel--->"+ this.updateUsrDataGeneral.value.tel);
-    console.log("ext--->" + this.updateUsrDataGeneral.value.ext);
-    console.log("puesto--->" + this.updateUsrDataGeneral.value.puesto);
-    console.log("RoleSelected---->" + this.updateUsrDataGeneral.value.rolesolped);
-    console.log("Role Consumo Interno --->   " + this.updateUsrDataGeneral.value.rolesolconsumo);
+    // console.log("Dentro del metodo para actualizar los valores generales , este es el Usuario a actualizar--->" + this.updateUsrDataGeneral.value.IdUsr);
+    // console.log(this.updateUsrDataGeneral.value.IdUsr);
+    // console.log("Nombre usuario---->" + this.updateUsrDataGeneral.value.Name);
+    // console.log("username--->" + this.updateUsrDataGeneral.value.username);
+    // console.log("email--->" + this.updateUsrDataGeneral.value.email);
+    // console.log("password--->"+ this.updateUsrDataGeneral.value.password);
+    // console.log("tel--->"+ this.updateUsrDataGeneral.value.tel);
+    // console.log("ext--->" + this.updateUsrDataGeneral.value.ext);
+    // console.log("puesto--->" + this.updateUsrDataGeneral.value.puesto);
+    // console.log("RoleSelected---->" + this.updateUsrDataGeneral.value.rolesolped);
+    // console.log("Role Consumo Interno --->   " + this.updateUsrDataGeneral.value.rolesolconsumo);
     //console.log(this.updateUsrDataGeneral.value);
 
     if(this.updateUsrDataGeneral.value.Name == '' &&
@@ -386,7 +391,7 @@ export class AdminComponent implements OnInit {
       this.toast.setMessage('No se puede actualizar al Usuario con valores vacios' , 'warning');
     }else{
       this.userService.UpdateUser(this.updateUsrDataGeneral.value).subscribe(data =>{
-        console.log(data);
+        //console.log(data);
         this.toast.setMessage('Se actualizo Correctamente el Usuario.', 'success');
         this.updateUsrDataGeneral.reset();
         //this.GetAllDirecciones();
@@ -416,17 +421,20 @@ export class AdminComponent implements OnInit {
   addNewDir(){
     this.isCreateDir = true;
     this.isViewListDir = false;
+    this.namedir = "";
   }
 
   NewDir(){
     console.log("metodo para crear una nueva direccion en la base de datos");
     this.userService.createNewDireccion(this.namedir).subscribe(data=>{
-      console.log(data);
+      //console.log(data);
       if(data == 1){
         this.toast.setMessage('Se creo correctamente la Direccion o Sub-Direccion', 'success');
         this.isCreateDir = false;
         this.isViewListDir = true;
         this.getDirecciones();
+      }else{
+        this.toast.setMessage(data, 'warning');
       }
     }, error=>{
       if(error.status == 403 || error.status == 404){
@@ -452,11 +460,11 @@ export class AdminComponent implements OnInit {
   }
 
   SaveEditing(){
-    console.log(this.newName);
-    console.log(this.NameDirView);
+    //console.log(this.newName);
+    //console.log(this.NameDirView);
     this.userService.updateDIreccion(this.NameDirView.IdDireccion, this.newName).subscribe(
     data=>{
-      console.log(data);
+     // console.log(data);
       if(data==1){
         this.toast.setMessage('Se actualizo correctamente la Direccion o Sub-Direccion', 'success');
         this.isEditingDir = false;
@@ -483,8 +491,8 @@ export class AdminComponent implements OnInit {
   }
 
   deleteDir(dir:Direccion){
-    const dialogdeletedir = this.dialog.open(DialogDeleteDir, {
-      width: '350px',
+    const dialogdeletedir = this.dialog.open(DialogDeleteDirComponent, {
+      width: '500px',
       data: {name: dir.Nombre , IdDir: dir.IdDireccion}
     });
     dialogdeletedir.afterClosed().subscribe(result => {
@@ -493,9 +501,9 @@ export class AdminComponent implements OnInit {
               console.log("le dieron que no no manches");
           }else{
             console.log(`No esta indefinida la variable, le dieron en si ${result}`);
-            console.log(result.IdDir);
+            //console.log(result.IdDir);
             this.userService.delelteDireccion(result.IdDir).subscribe(data =>{
-              console.log(data);
+              //console.log(data);
               if(data == 1 ){
                 this.toast.setMessage('Se elimino la Direccion', 'success');
                 this.getDirecciones();
@@ -534,34 +542,36 @@ export class AdminComponent implements OnInit {
 }
 
 
-@Component({
-  selector: 'app-admindialog',
-  templateUrl: './admin.component.dialogdelete.html',
-})
-export class DialogDataExampleDialog {
+// @Component({
+//   selector: 'app-admindialog',
+//   templateUrl: './admin.component.dialogdelete.html',
+// })
+// export class DialogDataExampleDialog {
 
-  constructor(public dialogRef: MatDialogRef<DialogDataExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,public toast: ToastComponent) {}
+//   constructor(public dialogRef: MatDialogRef<DialogDataExampleDialog>,
+//     @Inject(MAT_DIALOG_DATA) public data: DialogData,
+//     public toast: ToastComponent) {}
 
-  onNoClick(): void {
-    this.dialogRef.close();
-    console.log("le dimos que no");
-    this.toast.setMessage('Operacion de cancelacion cancelada.', 'warning');
-  }
+//   onNoClick(): void {
+//     this.dialogRef.close();
+//     console.log("le dimos que no");
+//     this.toast.setMessage('Operacion de cancelacion cancelada.', 'warning');
+//   }
   
-}
+// }
 
-@Component({
-  selector: 'app-admindialogdeletedir',
-  templateUrl: './admin.component.dialogdeletedir.html',
-})
-export class DialogDeleteDir{
-  constructor(public dialogdeletedir: MatDialogRef<DialogDeleteDir>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,public toast: ToastComponent) {}
+// @Component({
+//   selector: 'app-admindialogdeletedir',
+//   templateUrl: './admin.component.dialogdeletedir.html',
+// })
+// export class DialogDeleteDir{
+//   constructor(public dialogdeletedir: MatDialogRef<DialogDeleteDir>,
+//     @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    //public toast: ToastComponent) {}
     
-  onCancelClick():void{
-    this.dialogdeletedir.close();
-    console.log("se cancelo la eliminacion de la direccion");
-    this.toast.setMessage('Operacion de eliminacion cancelada.', 'warning');
-  }
-}
+//   onCancelClick():void{
+//     this.dialogdeletedir.close();
+//     console.log("se cancelo la eliminacion de la direccion");
+//     this.toast.setMessage('Operacion de eliminacion cancelada.', 'warning');
+//   }
+// }

@@ -18,6 +18,7 @@
 .settings/
 *.sublime-workspace
 *.csv
+.csv
 # IDE - VSCode
 /.vscode
 .vscode/*
@@ -46,3 +47,6 @@ Thumbs.db
 
 package.json
 proxy.conf.json
+package-lock.json
+#datos archivos de excel o csv
+datos/

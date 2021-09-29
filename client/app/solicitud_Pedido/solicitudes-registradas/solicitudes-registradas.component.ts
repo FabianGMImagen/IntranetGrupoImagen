@@ -15,13 +15,12 @@ import {
   trigger,
 } from "@angular/animations";
 import { BsModalService } from "ngx-bootstrap/modal";
-import { BsModalRef } from "ngx-bootstrap/modal/bs-modal-ref.service";
-import { AuthServices } from "../../services/auth.service";
 import {
   MatDialog,
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from "@angular/material/dialog";
+import { ToastComponent } from "../../shared/toast/toast.component";
 
 import { SolicitudesReg } from "../../shared/models/solicitudesReg.model";
 import { Imputacion } from "../../shared/models/imputacion.model";
@@ -34,17 +33,18 @@ import { DataSAP } from "../../shared/models/dataSAP.model";
 import { SolicitudPedidoSAP } from "../../shared/models/solpedSAP.model";
 import { MensajesSolPed } from "../../shared/models/mensajessolped.model";
 import { Direccion } from "../../shared/models/directions.model";
-
+import { Categorias } from "client/app/shared/models/categorias.model";
 import { Detallesol } from "../../shared/models/detallesol.model";
 import { SolicitudesCompraRegistradas } from "../../shared/models/solicitudcompraRegistradas.model";
-import { SolicitudCompraService } from "../../services/solicitudcompra.service";
-
-import { ToastComponent } from "../../shared/toast/toast.component";
+import { Childs } from "../../shared/models/childs.model";
 import { User } from "../../shared/models/user.model";
+
+import { BsModalRef } from "ngx-bootstrap/modal/bs-modal-ref.service";
+import { AuthServices } from "../../services/auth.service";
+import { SolicitudCompraService } from "../../services/solicitudcompra.service";
 
 import { MatPaginatorIntl, PageEvent } from "@angular/material/paginator";
 import { PdfViewerModule } from "ng2-pdf-viewer";
-import { Childs } from "../../shared/models/childs.model";
 
 //import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
@@ -107,6 +107,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
   ListDirforUser: Direccion[];
   ListStatusCompras: StatusSolicitud[];
   SelectedCompras: StatusSolicitud;
+  ListCategorys: Categorias[];
+  SelectCategory: Categorias;
+  // ListCategorysforUser: Categorias[];
+  // SelectCategoryforUser: Categorias;
 
   //ListDataSolPed:DataSAP;
   ListSap: SolicitudPedidoSAP = new SolicitudPedidoSAP();
@@ -157,7 +161,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
   USR: number;
   Direcc: number;
   ListSolRegistr: SolicitudesCompraRegistradas[];
-
   ListDetallesol: Detallesol[];
   ListChilds: Childs[];
   MensajeSAP: string;
@@ -206,11 +209,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     //this.hellosign();
 
     if (this.auth.loggedIn) {
-      console.log("esta logeado");
-      console.log(
-        "Este es el id del Rool que tiene quien se logeo-->" +
-          this.auth.currentUser.IdRole
-      );
+      //console.log("esta logeado");
+      // console.log(
+      //   "Este es el id del Rool que tiene quien se logeo-->" +
+      //     this.auth.currentUser.IdRole
+      // );
       if (this.auth.isJefeArea) {
         //este metodo solo trae el listado de las solicitudes para el rol Director de Area
         console.log(
@@ -247,12 +250,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //metodo que nos regresa filtado las autorizaciones o tipos de status por Nivel
         this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
       } else if (this.auth.isCompras) {
-        console.log(
-          "Este es el Id del Usuario logeado------->    " +
-            this.auth.currentUser.IdUsuario +
-            "--" +
-            this.auth.isCompras
-        );
+        //console.log("Este es el Id del Usuario logeado------->    " +this.auth.currentUser.IdUsuario +"--" +this.auth.isCompras);
+        this.getAllCategorias();
         this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
         this.isEditing = true;
         this.isViewListSolicitudes = true;
@@ -260,16 +259,20 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.getStatusCompras(this.auth.currentUser.IdRole, 1);
         this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
       } else if (this.auth.isComprador) {
+        //this.getAllCategoriasForUserComprador(this.auth.currentUser.IdUsuario);
+        this.getStatusCompras(this.auth.currentUser.IdRole, 1);
+        this.getAllStatusSolicitud(this.auth.currentUser.IdRole);
+        //this.getAllCategorias();
         this.is_persona_coprador = false;
         this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
         this.isEditing = true;
         this.isViewListSolicitudes = true;
-        this.getStatusCompras(this.auth.currentUser.IdRole, 0);
+        this.is_persona_coprador = true;
       } else if (this.auth.isCheckPresupuesto) {
         this.isViewListSolicitudes = true;
         this.isEditing = true;
         this.getStatusCompras(this.auth.currentUser.IdRole, 0);
-      }else if(this.auth.isIntercambios){
+      } else if (this.auth.isIntercambios) {
         this.getStatusCompras(this.auth.currentUser.IdRole, 0);
         this.isViewListSolicitudes = true;
         this.isEditing = true;
@@ -290,16 +293,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.datSource.sort = this.sort;
   }
 
-  // hellosign(){
-  //   this.solicitudComp.getHellosgin().subscribe(data =>{
-  //     console.log("dentro del metodo para ver que hace el Hellosing");
-  //     console.log(data);
-  //   }, err =>{
-  //     console.log("error al recuperar la info de Hellosing");
-  //     console.log(err);
-  //   })
-  // }
-
   //mat dialog para mostrar firma
   openDialog() {
     this.isfirma = true;
@@ -317,19 +310,17 @@ export class SolicitudesRegistradasComponent implements OnInit {
     console.log("Este es el id de el Usuario------>   " + IdUser);
     this.solicitudComp.getAllDirectionsForUser(IdUser).subscribe(
       (data) => {
-        console.log(data);
+        //console.log(data);
         this.ListDirforUser = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log(
-          "error al recuperar las diferentes Direcciones del Usuario    " + error
+          "error al recuperar las diferentes Direcciones del Usuario    " +
+            error
         );
       }
     );
@@ -339,15 +330,12 @@ export class SolicitudesRegistradasComponent implements OnInit {
     console.log("metodo para recuperar los status de COMPRAS");
     this.solicitudComp.getStatusforCompras(IdRole, isCompras).subscribe(
       (data) => {
-        console.log(data);
+        //console.log(data);
         this.ListStatusCompras = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log(error);
@@ -380,20 +368,15 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.getAllSolicitudesRegistradasAutFinanzas(this.Direccion);
       } else if (this.auth.isCompras) {
         if (this.SelectedCompras != undefined) {
-          this.getAllSolicitudesRegistradasporUsrCompras(
-            this.Direccion,
-            this.SelectedCompras
-          );
+          this.getAllSolicitudesRegistradasporUsrCompras(this.Direccion,this.SelectedCompras);
         } else {
           this.SelectedCompras = undefined;
         }
       } else if (this.auth.isComprador) {
         if (this.SelectedCompras != undefined) {
-          this.getAllSolicitudesRegistradasporUsrCompras(
-            this.Direccion,
-            this.SelectedCompras
-          );
+          this.getAllSolicitudesRegistradasporUsrComprador(this.Direccion,this.SelectedCompras, this.auth.currentUser.IdUsuario);
         } else {
+          console.log(this.auth.currentUser.IdUsuario);
           this.SelectedCompras = undefined;
         }
       } else {
@@ -405,17 +388,34 @@ export class SolicitudesRegistradasComponent implements OnInit {
     }
   }
 
-  SelectionCompras() {
-    if (this.auth.isCompras || this.auth.isComprador) {
-      console.log(this.SelectedCompras.IdStatusSolicitud);
-      console.log(this.Direccion.IdDireccion);
-      this.getAllSolicitudesRegistradasporUsrCompras(this.Direccion,this.SelectedCompras);
+  async getAllCategorias(){
+    try {
+      this.ListCategorys = await this.solicitudComp.getAllCategorias();
+      if(!this.ListCategorys){
+        this.toast.setMessage("Error al recuperar las categorias", "warning");
+      }
+    } catch (error) {
+      if (error.status == 403 || error.status == 404) {
+        this.auth.logout();
+      }else{
+        this.toast.setMessage(error.message,"danger");
+      }
+      
+    }
+  }
+
+  SelectionStatus() {
+    if (this.auth.isCompras) {
+      this.getAllSolicitudesRegistradasporUsrCompras(this.Direccion, this.SelectedCompras);
+    }else if(this.auth.isComprador){
+      this.getAllSolicitudesRegistradasporUsrComprador(this.Direccion, this.SelectedCompras, this.auth.currentUser.IdUsuario);
     } else if (this.auth.isCheckPresupuesto || this.auth.isIntercambios) {
       console.log("se selecciono un estatus para el subdirecto de finanzas");
       //console.log(this.SelectedCompras);
       this.getSolPedForStatus(this.SelectedCompras.IdStatusSolicitud);
     }
   }
+
 
   getAllSolicitudesRegistradasAutorizadorDir(Dir: Direccion) {
     console.log(
@@ -433,14 +433,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //console.log(this.ListSolRegistr);
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("error al recuperar las solicitudes" + error)
+        console.log("error al recuperar las solicitudes" + error);
       },
       () => {
         //  this.ListSolRegistr.forEach(element =>{
@@ -480,11 +477,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         // });
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log("error al recuperar las Solicitudes para Finanzas" + error);
@@ -512,17 +506,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.ListSolRegistr = data;
         //console.log(this.ListSolRegistr);
       },
-      (error) =>
-        {
-          if(error.status == 403 || error.status == 404){
-            this.toast.setMessage(
-              error.message,
-              "danger"
-            );
-            this.auth.logout();
-          }
-          console.log("error al recuperar las Solicitudes para Finanzas" + error)
-        },
+      (error) => {
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
+          this.auth.logout();
+        }
+        console.log("error al recuperar las Solicitudes para Finanzas" + error);
+      },
       () => {
         // this.ListSolRegistr.forEach(element =>{
         //   if(element.IdTipoSolicitud == 4 || element.IdTipoSolicitud == 7){
@@ -556,16 +546,39 @@ export class SolicitudesRegistradasComponent implements OnInit {
     );
   }
 
-  getAllSolicitudesRegistradasporUsrCompras(Dir: Direccion,status: StatusSolicitud) {
+  getAllSolicitudesRegistradasporUsrCompras(
+    Dir: Direccion,
+    status: StatusSolicitud
+  ) {
     //console.log("recuperando el listado de las solicitudes para Compras");
     this.USR = this.auth.currentUser.IdUsuario;
     this.Direcc = Dir.IdDireccion;
-    console.log(status);
+    //console.log(status);
     this.solicitudComp.getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
       .subscribe(
         (data) => {
           this.ListSolRegistr = data;
           //console.log(this.ListSolRegistr);
+        },
+        (error) => console.log("error al recuperar las solicitudes" + error),
+        () => {
+          this.datSource = new MatTableDataSource(this.ListSolRegistr);
+          this.datSource.paginator = this.paginator;
+          this.datSource.sort = this.sort;
+        }
+      );
+  }
+
+  getAllSolicitudesRegistradasporUsrComprador(Dir: Direccion, status: StatusSolicitud, IdUser:number) {
+    //console.log("recuperando el listado de las solicitudes para Compras");
+    this.USR = this.auth.currentUser.IdUsuario;
+    this.Direcc = Dir.IdDireccion;
+    //console.log(status);
+    this.solicitudComp.getAllSolicitudNewSoliforCategori(status.IdStatusSolicitud, this.Direcc, IdUser)
+      .subscribe(
+        (data) => {
+          this.ListSolRegistr = data;
+          console.log(this.ListSolRegistr);
         },
         (error) => console.log("error al recuperar las solicitudes" + error),
         () => {
@@ -593,11 +606,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
           }
         },
         (error) => {
-          if(error.status == 403 || error.status == 404){
-            this.toast.setMessage(
-              error.message,
-              "danger"
-            );
+          if (error.status == 403 || error.status == 404) {
+            this.toast.setMessage(error.message, "danger");
             this.auth.logout();
           }
           console.log(
@@ -626,11 +636,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.UpdateVista();
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log(error);
@@ -648,13 +655,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         window.open(data.toString(), "_blank");
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
+        this.toast.setMessage(error, "danger");
         console.log(error);
       }
     );
@@ -686,14 +691,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         // });
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("error al traer el detalle de la solicitud" + error)
+        console.log("error al traer el detalle de la solicitud" + error);
       },
       () => {
         this.dataSource = new MatTableDataSource(this.ListDetallesol);
@@ -732,11 +734,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         // }
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
         console.log("error al recuperar la informacion de los Hijos");
@@ -803,14 +802,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.solicitudComp.getAllStatusSolicitud(idRole).subscribe(
       (data) => (this.ListStatus = data),
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("Error al traer los status" + error)
+        console.log("Error al traer los status" + error);
       }
     );
   }
@@ -850,14 +846,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.ListImputacion = data;
       },
       (error) => {
-        if(error.status == 403 || error.status == 404){
-          this.toast.setMessage(
-            error.message,
-            "danger"
-          );
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log(error)
+        console.log(error);
       }
     );
   }
@@ -872,13 +865,11 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.solicitudComp.getAllPosiciones().subscribe(
       (data) => (this.ListPosicion = data),
       (error) => {
-        if(error.status == 403 || error.status == 404){
-        this.toast.setMessage(
-          error.message,
-          "danger"
-        );
-        this.auth.logout();
-      }}
+        if (error.status == 403 || error.status == 404) {
+          this.toast.setMessage(error.message, "danger");
+          this.auth.logout();
+        }
+      }
     );
   }
 
@@ -911,35 +902,25 @@ export class SolicitudesRegistradasComponent implements OnInit {
           .checkdirauthexeption(this.Direccion.IdDireccion)
           .subscribe(
             (data) => {
+              console.log("*/*/*/*/*/*/*/*/*/Validacion de EXCEOCION*/*/*/*/*/*/*/*/*/*/")
               console.log(data[0]);
+              console.log("*/*/*/*/*/*/*/*/*/Validacion de EXCEOCION*/*/*/*/*/*/*/*/*/*/")
               if (data[0] != undefined || data[0] != null) {
                 //si tenemos un registro o Id de Role a excluir lo manejamos para actualizar correctamente el estatus
                 if (data[0].IdRole == 2) {
                   if (this.SelectedStatus.IdStatusSolicitud == 2) {
-                    console.log(
-                      "dentro de la seleccion de Estatus Auotrizado por Gerente"
-                    );
+                    console.log("METODO PENSANDO EN QUE SE DEBE EXCLUIR AL GERENTE Y LO PASAMOS DIRECTO A PLANEACION");
                     this.SelectedStatus.IdStatusSolicitud = 4; //se cambia el estatus a S. P. AUTORIZADO POR DIRECCION para que le aparesca a Planeacion
                     // console.log(this.SelectSolicitud.ID);
                     // console.log(this.SelectSolicitud.DIVISION);
-                    this.solicitudComp.UpdateStatusSolicitud(
-                        this.SelectedStatus.IdStatusSolicitud,
-                        this.SelectedStatus.IdSolicitud,
-                        this.motivo_Rechazo
-                      )
+                    this.solicitudComp.UpdateStatusSolicitud(this.SelectedStatus.IdStatusSolicitud,this.SelectedStatus.IdSolicitud,this.motivo_Rechazo)
                       .subscribe(
                         (res) => {
                           this.toast.setMessage(
                             "Actualizacion de Status Correcta ",
                             "success"
                           );
-                          console.log(
-                            "Se actualizo Correctamente ------Como gerente de Direccion -----" +
-                              res
-                          );
-                          this.getAllSolicitudesRegistradasAutorizadorDir(
-                            this.Direccion
-                          );
+                          this.getAllSolicitudesRegistradasAutorizadorDir(this.Direccion);
                           //Buscamos cual es el Usuario del area de Planeacion para notificarlo a el haciendo la excepcion a DIRECCIon
                           this.solicitudComp
                             .getUserAutorizador(this.Direccion.IdDireccion, 4)
@@ -962,32 +943,17 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                   .subscribe(
                                     (res) => {
                                       this.motivo_Rechazo = "";
-                                      this.toast.setMessage(
-                                        "Error en el envio de el Correo",
-                                        "warning"
-                                      );
-                                      console.log(
-                                        "dento de el metodo para enviar el correo" +
-                                          res
-                                      );
+                                      this.toast.setMessage("Error en el envio de el Correo","warning");
+                                      console.log("dento de el metodo para enviar el correo" +res);
                                     },
                                     (error) => {
-                                      console.log(
-                                        "Error al enviar el correo " + error
-                                      );
-
-                                      this.toast.setMessage(
-                                        "Envio de Email Correcto",
-                                        "success"
-                                      );
+                                      console.log("Error al enviar el correo " + error);
+                                      this.toast.setMessage( "Envio de Email Correcto","success");
                                     }
                                   );
                               },
                               (err) => {
-                                console.log(
-                                  "error al recuperar la informacion del Autorizador" +
-                                    err
-                                );
+                                console.log("error al recuperar la informacion del Autorizador" + err);
                               }
                             );
                         },
@@ -995,6 +961,58 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           console.log("error al actualizar el status" + error)
                       );
                   }
+                }else if(data[0].IdRole == 3){
+                  console.log("entrando a la exepcion de rol 3");
+
+                    console.log("METODO QUE EXCLUYE AL DIR Y SE MANDA DIRECTO A PLANEACION");
+                    this.SelectedStatus.IdStatusSolicitud = 4; //se cambia el estatus a S. P. AUTORIZADO POR DIRECCION para que le aparesca a Planeacion
+                    // console.log(this.SelectSolicitud.ID);
+                    // console.log(this.SelectSolicitud.DIVISION);
+                    this.solicitudComp.UpdateStatusSolicitud(this.SelectedStatus.IdStatusSolicitud,this.SelectedStatus.IdSolicitud,this.motivo_Rechazo)
+                      .subscribe(
+                        (res) => {
+                          this.toast.setMessage("Actualizacion de Status Correcta ","success");
+                          this.getAllSolicitudesRegistradasAutorizadorDir(this.Direccion);
+                          //Buscamos cual es el Usuario del area de Planeacion para notificarlo a el haciendo la excepcion a DIRECCIon
+                          this.solicitudComp
+                            .getUserAutorizador(this.Direccion.IdDireccion, 4)
+                            .subscribe(
+                              (res) => {
+                                console.log(res);
+                                this.UserAuth = res;
+                                console.log(this.UserAuth[0].Email);
+
+                                //Parte donde se envia El correo para los Diferentes autorizadores
+                                this.solicitudComp.SendEmailGerenteFianzas(
+                                    data2.ID,
+                                    this.SelectedStatus.IdStatusSolicitud,
+                                    this.Direccion.IdDireccion,
+                                    data2.NombreUsuario,
+                                    this.auth.currentUser.IdRole,
+                                    this.auth.currentUser.NombreCompleto,
+                                    this.UserAuth[0].Email
+                                  )
+                                  .subscribe(
+                                    (res) => {
+                                      this.motivo_Rechazo = "";
+                                      this.toast.setMessage("Error en el envio de el Correo","warning");
+                                      console.log("dento de el metodo para enviar el correo" +res);
+                                    },
+                                    (error) => {
+                                      console.log("Error al enviar el correo " + error);
+                                      this.toast.setMessage( "Envio de Email Correcto","success");
+                                    }
+                                  );
+                              },
+                              (err) => {
+                                console.log("error al recuperar la informacion del Autorizador" + err);
+                              }
+                            );
+                        },
+                        (error) =>
+                          console.log("error al actualizar el status" + error)
+                      );
+                  
                 } else {
                   this.solicitudComp
                     .UpdateStatusSolicitud(
@@ -1205,54 +1223,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
               );
             }
           );
-        // console.log(this.SelectSolicitud.ID);
-        // console.log(this.SelectSolicitud.DIVISION);
-        // this.solicitudComp.UpdateStatusSolicitud(this.SelectedStatus.IdStatusSolicitud, this.SelectedStatus.IdSolicitud, this.motivo_Rechazo).subscribe(
-        //   res => {
-        //     this.toast.setMessage('Actualizacion de Status Correcta ', 'success');
-        //     console.log("Se actualizo Correctamente ------Como gerente de Direccion -----" + res);
-        //     this.getAllSolicitudesRegistradasAutorizadorDir(this.Direccion);
-        //         //Buscamos cual es el Usuario Director de area para enviar el correo directo a el
-        //         this.solicitudComp.getUserAutorizador(this.Direccion.IdDireccion,3).subscribe(
-        //           res =>{
-        //             console.log(res);
-        //             this.UserAuth = res;
-        //             console.log(this.UserAuth[0].Email);
-
-        //                   //Parte donde se envia El correo para los Diferentes autorizadores
-        //                   //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
-        //                   console.log("Id de usuario Legeeoado-------------->"+this.auth.currentUser.IdUsuario);
-        //                   console.log("Nombre de el Usuario logeado--------->"+this.auth.currentUser.NombreCompleto);
-        //                   console.log("El Role de Usuario---->"+this.auth.currentUser.IdRole);
-        //                   console.log("El mail por usuario --->" + this.auth.currentUser.Email);
-        //                   console.log("Este es el Email de el Autorizador--->" + this.UserAuth[0].Email);
-
-        //                   this.solicitudComp.SendEmailDirectorArea(data2.ID,
-        //                                                     this.SelectedStatus.IdStatusSolicitud,
-        //                                                     this.Direccion.IdDireccion,
-        //                                                     data2.NombreUsuario,
-        //                                                     this.auth.currentUser.IdRole,
-        //                                                     this.auth.currentUser.NombreCompleto,
-        //                                                     this.UserAuth[0].Email).subscribe(
-        //                       res =>{
-
-        //                         this.toast.setMessage('Error en el envio de el Correo','warning');
-        //                         console.log("dento de el metodo para enviar el correo" +res);
-        //                       },
-        //                       error=>{
-        //                         console.log("Error al enviar el correo " + error);
-
-        //                         this.toast.setMessage('Envio de Email Correcto','success');
-        //                       }
-        //                   );
-        //           },
-        //           err =>{
-        //             console.log("error al recuperar la informacion del Autorizador" + err);
-        //           }
-        //         );
-        //   },
-        //   error => console.log("error al actualizar el status"+error)
-        // );
+      
       } else {
         this.toast.setMessage(
           "No tienes permisos para cambiar a este Status",
@@ -1576,7 +1547,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
           "warning"
         );
       }
-    } else if (this.auth.isCompras) {
+    } else if (this.auth.isCompras || this.auth.isComprador) {
       //solo valida el estatus que se seleciono y si correcponde a alguno de los 2 que tiene permitido pasa a actualizar
       //dicha solicitud a estatus autorizado por Compras despues refresca las solicitudes y los campos.
       if (
@@ -1650,18 +1621,41 @@ export class SolicitudesRegistradasComponent implements OnInit {
     }
   }
 
-  async verPDF(ruta: any) {
-    console.log(ruta.RutaCotizacion);
-    //window.open(ruta, null);
-    //this.pdfSrc = "https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf";
-    this.pdfSrc = "http://solicitud.adgimm.com.mx:3000/public/ 111.txt";
-    // // location.href = this.pdfSrc;
-    window.open(this.pdfSrc, null);
-
-    // var nameCotizacion = this.pdfSrc;
-    // this.solicitudComp.downloadCotizacion(nameCotizacion);
-    // .subscribe(data =>{
-    //   console.log(data);
-    // });
+  async changedCategorySol(sol:SolicitudesCompraRegistradas){
+    console.log(sol.ID);
+    console.log(this.SelectCategory.IdCategoria);
+    try {
+      let message = await this.solicitudComp.changedcategoryforsolicitud(sol.ID, this.SelectCategory.IdCategoria);
+      if(message != undefined){
+        this.toast.setMessage(message,"success");
+        this.getAllSolicitudesRegistradasporUsrCompras(
+          this.Direccion,
+          this.SelectedCompras
+        );
+        this.getAllCategorias();
+      }
+    } catch (error) {
+      if (error.status == 403 || error.status == 404) {
+        this.toast.setMessage(error.message,"danger");
+        this.auth.logout();
+      }else{
+        this.toast.setMessage(error.message,"danger");
+      }
+    }
   }
+
+  // async verPDF(ruta: any) {
+  //   console.log(ruta.RutaCotizacion);
+  //   //window.open(ruta, null);
+  //   //this.pdfSrc = "https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf";
+  //   this.pdfSrc = "http://solicitud.adgimm.com.mx:3000/public/ 111.txt";
+  //   // // location.href = this.pdfSrc;
+  //   window.open(this.pdfSrc, null);
+
+  //   // var nameCotizacion = this.pdfSrc;
+  //   // this.solicitudComp.downloadCotizacion(nameCotizacion);
+  //   // .subscribe(data =>{
+  //   //   console.log(data);
+  //   // });
+  // }
 }

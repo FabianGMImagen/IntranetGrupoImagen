@@ -10,18 +10,19 @@ import { read } from 'fs';
 
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
+
+const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
 const DIR = '../IntranetProduccion/datos';
-const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
+//const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
 var id = 0;
 let storage = multer.diskStorage({
-
+  
     destination: (req, file, cb) => {
-    
       cb(null, DIR);
     }
     ,
     filename: (req, file, cb) => {
-        
+      
         let ext = path.extname(file.originalname);
         let basename = path.basename(file.originalname,ext );
         console.log(file);
@@ -47,7 +48,6 @@ export default class UploadFilesController {
 
            var uploadfile = multer({storage: storage}).single(' ');
            uploadfile(req, res, function (err) {
-             
                 //console.log("File = " + req.file.originalname + " - " + path.extname(req.file.originalname) );
                 if (err) {
                     console.log("Se genero un error al enviar el archivo"+ err);
@@ -57,7 +57,7 @@ export default class UploadFilesController {
                 }
                 // Everything went fine.
                 //console.log("GOOOOD------- guardamos la ruta del archivo subido a la DB");
-                var RutaCotizacion = encodeURI('http://solicitud.adgimm.com.mx:3000/public/'+req.headers.idsol+' '+req.file.originalname);
+                var RutaCotizacion = encodeURI(ruta + req.headers.idsol+' '+req.file.originalname);
                 console.log(req.file);
                 console.log("Esta es la ruta del archivo---" + RutaCotizacion);
 
@@ -97,6 +97,8 @@ export default class UploadFilesController {
       
       var hora = fecha.getHours();
       var minutos = fecha.getMinutes();
+
+
       var sql = require("mssql");
               var env = process.env.NODE_ENV || 'SERWEB';
               var config = require('../../server/controllers/connections/servers')[env];
@@ -106,10 +108,11 @@ export default class UploadFilesController {
                                     .input('IdSolPed', sql.Int, req.params.ID)
                                     .execute('DatosFileCompras')
               }).then(result =>{
-
+                const ExcelJS = require('exceljs');
+                
                 var stringify = require('csv-stringify');
                 var path = require('path');
-                console.log(result.recordset);
+                console.log(result.recordset); 
                 var Data = new Object();
                 Data = result.recordset;
                 if(Data != undefined || Data != ''){
@@ -119,10 +122,10 @@ export default class UploadFilesController {
                   stringify(Data, function(err, output){
                     fs.writeFile(path, output, 'utf-8', function(err){
                       if(err){
-                        console.log("ocurrio un error de algun tipo        " + err);
+                        console.log("ocurrió un error de algún tipo        " + err);
                       }else{
                         console.log(".....Se creo el Archivo CSV.... ");
-                        var RutaCotizacion = UrlCompador+FileName;
+                        var RutaCotizacion = ruta+'DatosCompras/'+FileName;
                         console.log(RutaCotizacion);
                         res.status(201).json(RutaCotizacion);
                       }

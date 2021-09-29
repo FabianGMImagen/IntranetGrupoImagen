@@ -117,12 +117,31 @@ export default function setRoutes(app) {
   router.route('/activo').get(auth, solicitudCompraCTR.getAllActivos);
   //trae todas la Necesidades
   router.route('/necesidad').get(auth, solicitudCompraCTR.getAllNecesidad);
-  //trae el usurio autorizador de el area a la que le espesifico
+  //trae el usurio autorizador de el area a la que le especifico
   router.route('/usrauth/:id').get(auth, solicitudCompraCTR.UsuarioAuth);
-
+  //recuperamos las categorias de la base de datos.
+  router.route('/categorias').get(auth, solicitudCompraCTR.AllCategorias);
+  //agregamos una nueva categoría
+  router.route('/newcate/:category').get(auth, solicitudCompraCTR.NewCategory);
+  //recuperamos categorias espesificas para cada Comprador
+  //router.route('/categoryforcomprador/:IdUser').get(auth, solicitudCompraCTR.AllCategoriasforUserComprador);
+  
   //trae todos los activos fijos
   //router.route('/activo').get(solicitudCompraCTR.getAllActivo);
-  
+  //Recuperamos la lista de las categorías no usadas por los compradores para mostrarlas y que se puedan asignar a un comprador distinto
+  router.route('/catnousada').get(auth, solicitudCompraCTR.AllCategoriasnoUsadasporCompradores);
+  //recuperamos todos los usuarios Compradores para mostrarlos en la vista de PERMISOS CAT.
+  router.route('/userforcat').get(auth, solicitudCompraCTR.AllUsersCompradores)
+  //Lista de Categorias asgnadas por Usuario para administrarlas
+  router.route('/listcat/:IdUser').get(auth, solicitudCompraCTR.ListCategoriasforUsuario);
+  //Asignamos una nuveva categoria para adminsitrar por el usuario seleccionado
+  router.route('/insertcatforuser/:IdUser/:IdCategoria').get(auth, solicitudCompraCTR.InsertNewCategoryforComprador)
+  //Eliminamos una categoria en las 2 tablas
+  router.route('/catdelete/:IdCategoria').get(auth, solicitudCompraCTR.DeleteCategoria);
+  //eliminamos una categoria por usuario, para que pueda quedar libre para su asignacion
+  router.route('/deletecat/:IdUser/:IdCategoria').get(auth, solicitudCompraCTR.DeleteCategoriaForUser);
+  //cambio de categoria , esto por si se llega a quivocar el solicitante lo puedna cambiar la gente de ENIXE
+  router.route('/changcat/:IdSol/:IdCat').get(auth, solicitudCompraCTR.ChangedCategoriForSolicitud)
   //hacemos el insert de una Nueva Solicitud de Tipo A
   router.route('/newsolicitud1').post(auth, solicitudCompraCTR.insertSolicitudNewT1);
   //hacemos el insert de una Nueva Solicitud de Tipo F
@@ -140,6 +159,8 @@ export default function setRoutes(app) {
   router.route('/statususr/:IdRole/:isCompras').get(auth, solicitudCompraCTR.getStatusCompras);
   //Solicitudes Registradas con status Nueva Solicitud
   router.route('/solreg/:status/:direccion').get(auth, solicitudCompraCTR.getSolicitudRegistradasForstatus);
+  //Solicitusdes registradas para los compradores hacemos un filtro extra para las categorias.
+  router.route('/solregcat/:status/:direccion/:idusr').get(auth, solicitudCompraCTR.getSolicitudRegistradasForstatusanCategoria);
   //Solicitudes registradas por un Estatus espesifico solo para el SubDirector de Finanzas (Presupuesto)
   router.route('/solregpresu/:IdStatus').get(auth, solicitudCompraCTR.getSolicitudeRegistradasforstatusPresupuesto);
   //se actualiza el Status de la SOlciitud a Revisada por Compras
@@ -205,13 +226,13 @@ export default function setRoutes(app) {
   //ruta de api para la administracion de permisos para validaciones por direccion
   router.route('/dirauth').get(auth, solicitudCTR.getAllDirectionsforAutorizations);
   router.route('/roleauth').get(auth, solicitudCTR.getAllRolesforAuth);
-  router.route('/insertexeptionauth/:IdDireccion/:IdRole').get(auth, solicitudCTR.InsertnewexceptionAuth);
+  router.route('/insertexeptionauth/:TipoSolicitud/:IdDireccion/:IdRole').get(auth, solicitudCTR.InsertnewexceptionAuth);
   router.route('/lisrdirauth').get(auth, solicitudCTR.listDirAuth);
   router.route('/dirauthforauth/:IdDireccion').get(auth, solicitudCTR.AuthExeptionforDirection);
   router.route('/deleteauth/:IdAuth').get(auth, solicitudCTR.DeleteAuthforRoleandDir);
 
   //usandowebservices
-  router.route('/webSer').get();
+  //router.route('/webSer').get();
  
   //recuperamos el usuario que autoriza de los diferentes rooles por Direccion.
   router.route('/getUserValida/:IdDireccion/:IdRole').get(auth, solicitudCompraCTR.getallDataForUserAuth);
@@ -242,7 +263,7 @@ export default function setRoutes(app) {
   
   router.route("/hellosign").get(auth, solicitudCompraCTR.gethelloSing);
   router.route("/callback").get(auth, solicitudCompraCTR.callback);
-//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------CONSUMO INTERNO---------------------------------------------------------------------------------------------
   //recuperamos las diferentes areas que puede realizar solicitudes de Consumo Interno
   router.route('/areaconsumoInt/:IdUser').get(auth, solicitudCompraCTR.getArea);
   //seccion donde se agregan las rutas para solicitar infromacion para la Solicitud de Consumo Interno
@@ -250,24 +271,36 @@ export default function setRoutes(app) {
   //role para mostrar en la seccion de administracion
   router.route("/roleconsumo").get(auth, solconsumoInterno.getRolesSolicitudConsumo);
   //Solicitudes de consumo interno por Direccion y estatus de User 
-  router.route("/allsolconsumoint/:IdRole/:IdDireccion/:IdStatus").get(auth ,solconsumoInterno.getAllSolicitudConsumoIntfor_Dir_Role);
+  router.route("/allsolconsumointforstatusrole/:IdRole/:IdDireccion/:IdStatus").get(auth ,solconsumoInterno.getAllSolicitudConsumoIntfor_Dir_Role);
   //usuario autorizador para envio de correo primer nivel
   router.route("/alldatauserauthsolconsumo/:IdUser/:IdRole").get(auth ,solconsumoInterno.getUserAuthSolConsumo);
-  //envio de correo de Nueva solciitud de Consumo interno
-  router.route("/sendnewemailsolconsumo").post(auth ,solconsumoInterno.SendNewEmailSolConsumoInterno);
   //recuperamos el Id del role que se escluira si es que se tiene alguno para la direccion que se consulta
   router.route("/dirauthforauthconsumoInt/:IdDireccion").get(auth, solconsumoInterno.AuthExceptionforDireccion);
   //insertar una nueva solicitude de Consumo Interno
   router.route("/insertnewsolconsumo").post(auth ,solconsumoInterno.InsertNewSolConsumoInterno);
+  //Actualizacion de Status Solciitud consumo interno
+  router.route("/updatesatussolconfromlocal/:IdSolicitud/:IdNewStatus").get(auth, solconsumoInterno.UpdateSstatusSolcitudConsumoInterno);
+  //envio de correo de Nueva solciitud de Consumo interno
+  router.route("/sendnewemailsolconsumo").post(auth ,solconsumoInterno.SendNewEmailSolConsumoInterno);
+  //envio de correso para gerente director dependiendo el estatus de la solciitud y del role
+  router.route("/sendemailsforroles").post(auth, solconsumoInterno.SendEmailSolConsumoInternoforRole);
   //envio de autorizacion o rechazo a nivel correo electronico para la actualizacion del estatus
-  router.route("/upstatusconsumo/:IdSolicitud/:Solicitante/:IdStatus").get(auth ,solconsumoInterno.UpStatusConsumoInterno);
+  router.route("/upstatusconsumofromemail/:IdSolicitud/:Solicitante/:IdStatus").get(auth ,solconsumoInterno.UpStatusConsumoInternofromEmail);
   //recuperamos las solicitudes de consumo iterno creadas por el usuario
   router.route("/solconsumointforuser/:IdUser/:IdRole").get(auth ,solconsumoInterno.GetAllSolicitudsConsumoInternoporUsuario);
   //recuperamos los datos como la empresa y el centro seleccionado para el Id de la solicitud para despues mostrar datos actualizables para el Usuario solicitnate
   router.route("/inicialdataforupdate/:IdSol").get(auth ,solconsumoInterno.GetDataSolicitudConsumoDataInitial);
   //recuperando Productos por solicitud de consumo interno
   router.route("/productosforsolconsumoint/:IdSolConsumo").get(auth ,solconsumoInterno.GetAllProductosPorSolicitudConsumoInterno);
-
+  //recuperamos list de status para cambiar de estatus una solicitude de consumo interno por role.
+  router.route("/statusforrole/:IdRole").get(auth, solconsumoInterno.GetAllStatusforRole);
+  //lista de todas las solicitudes de consumo interno ingresadas para visualizar por el administrador
+  router.route("/allsolconsumoadmin").get(auth, solconsumoInterno.GetAllSolConsumoInternoForAdmin);
+  //lista de todos los estatus creados para la solicitud de consumo interno
+  router.route("/allstatusadmin").get(auth, solconsumoInterno.GetAllStatusConsumoInternoForAdmin);
+  //actualizacion de estatus para el usuario administrador
+  router.route("/changedstatusadmin/:IdSolicitud/:IdStatus").get(auth, solconsumoInterno.UpdateStatusforAdmin)
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
   
 
@@ -379,12 +412,13 @@ export default function setRoutes(app) {
                   console.log("pasamos a subir el archivo.....");
                   //'../ImagenFinanzasFabi/'+FileName, '/'+FileName
                   //var upfile = [{local:'../ImagenFinanzasFabi/' + FileName, remote:'/'+FileName}];
-                  ftp.upload('../IntranetProduccion/'+FileName, FileName, function(err){
-
-                    if(err) console.log(err);
-                    else console.log("Se dejo el Archivo en el 10.29.148.24" + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);
-                    ftp.close();
-                  });
+                  ftp.cd("/Capacitacion", function(err, path){
+                    ftp.upload('../IntranetGrupoImagen/'+FileName, FileName, function(err){
+                      if(err) console.log(err);
+                      else console.log("Se dejo el Archivo en el //10.29.148.24/Capacitacion " + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);
+                      ftp.close();
+                    });
+                  });	
   
                   //creacion de update para las solicitudes que se envian a sap-
                   //recorrer los valores de las solicitudes para hacer updates por cada solicitud ingresada

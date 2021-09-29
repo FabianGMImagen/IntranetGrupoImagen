@@ -22,24 +22,32 @@ import { ToastComponent } from "client/app/shared/toast/toast.component";
 export class DialogDetalleSolConsumoInternoComponent implements OnInit {
   viewspiner:boolean;
   idsolicitud: number;
+  canupdate:boolean;
   DataInitial:Object;
   ListProductos: ProductoConsumoInterno[] = [];
+  isUpdate:boolean = false;
   constructor(
     public dialog: MatDialog,
     public toast: ToastComponent,
     private solConsumoService: SolicitudConsumoService,
     public dialogRef: MatDialogRef<DialogDetalleSolConsumoInternoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: number
+    @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
   ngOnInit(): void {
+    console.log(this.data);
     this.viewspiner = true;
-    this.idsolicitud = this.data;
-    this.getDataInciialforUpdateProducts();
+    this.idsolicitud = this.data.IdSol;
+    if(this.data.Status != 3 || this.data.Status != 5 || this.data.Status != 7){
+      this.isUpdate = true
+    }else{
+      this.isUpdate = false;
+    }
+    this.getDataInicialforUpdateProducts();
     this.getAllProductsforSolConsumoInt();
   }
 
-  async getDataInciialforUpdateProducts(){
+  async getDataInicialforUpdateProducts(){
     
     this.DataInitial = await this.solConsumoService.getDataInicialforUpdate(this.idsolicitud);
     console.log(this.DataInitial[0]);

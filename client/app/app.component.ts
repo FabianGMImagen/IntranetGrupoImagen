@@ -1,8 +1,8 @@
 import { AfterViewChecked, ChangeDetectorRef, Component } from '@angular/core';
 import { AuthServices } from './services/auth.service';
-import {Idle, DEFAULT_INTERRUPTSOURCES} from '@ng-idle/core';
-import {Keepalive} from '@ng-idle/keepalive';
-
+import { Idle, DEFAULT_INTERRUPTSOURCES} from '@ng-idle/core';
+import { Keepalive} from '@ng-idle/keepalive';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -18,10 +18,10 @@ export class AppComponent implements AfterViewChecked {
               private changeDetector: ChangeDetectorRef,
               private idle: Idle, private keepalive: Keepalive) { 
               
-              // establece un tiempo de espera inactivo de 5 segundos, para propósitos de prueba.
-              idle.setIdle(150);
-              // Establece un tiempo de espera de 5 segundos. Después de 10 segundos de inactividad, el usuario se considerará agotado
-              idle.setTimeout(150);
+              // establece un tiempo de espera inactivo de 5 minutos, para propósitos de prueba.
+              idle.setIdle(5);
+              // Establece un tiempo de espera de 5 horas. Después de 5 horas y 5 minutos segundos de inactividad, el usuario se considerará agotado
+              idle.setTimeout(18000);
               // establece las interrupciones predeterminadas, en este caso, cosas como clics, desplazamientos, toques en el documento
               idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
               
@@ -33,10 +33,10 @@ export class AppComponent implements AfterViewChecked {
                 this.auth.logout();
               });
               idle.onIdleStart.subscribe(() => this.idleState = 'Te hemos deslogeado');
-              idle.onTimeoutWarning.subscribe((countdown) => this.idleState = '¿Estás ahí? Te desloguearemos en ...' + countdown + ' segundos!');
+              idle.onTimeoutWarning.subscribe((countdown) => this.idleState = '¿Estás ahí? Te desloguearemos en ...' + moment.utc(countdown*1000).format('HH:mm:ss') + ' segundos!');
 
-              // establece el intervalo de ping a 15 segundos
-              keepalive.interval(150);
+              // establece el intervalo de ping a 5 horas
+              keepalive.interval(18000);
 
               keepalive.onPing.subscribe(() => this.lastPing = new Date());
               this.reset ();
