@@ -6,8 +6,8 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-const SERVER = 'http://10.29.148.40:3000';
-const Intranet = 'http://10.29.148.40:3000';
+const SERVER = 'http://solicitud.adgimm.com.mx:3000';
+const Intranet = 'http://solicitud.adgimm.com.mx:3000';
 
 const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
 const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
@@ -434,15 +434,17 @@ export default class SolicitudCompraCTR {
     var env = process.env.NODE_ENV || 'SERWEB';
     //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
     var config = require('../controllers/connections/servers')[env];
-    var query = "Select * from Categoria";
-    const pool1 = new sql.ConnectionPool(config, err => {
-      pool1.request()
-        .query(query, (err, result) => {
-          if (err){ console.log(err);}
-          resp.status(200).json(result.recordset);
-          resp.end();
-        });
-    });
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .execute('GetAllCategorias')
+    }).then(result => {
+      resp.status(201).json(result.recordset);
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
   }
 
   NewCategory = (req, resp)=>{
