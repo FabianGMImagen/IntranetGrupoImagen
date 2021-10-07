@@ -122,7 +122,7 @@ export default function setRoutes(app) {
   //recuperamos las categorias de la base de datos.
   router.route('/categorias').get(auth, solicitudCompraCTR.AllCategorias);
   //agregamos una nueva categoría
-  router.route('/newcate/:category').get(auth, solicitudCompraCTR.NewCategory);
+  router.route('/newcate/:category/:descripcion').get(auth, solicitudCompraCTR.NewCategory);
   //recuperamos categorias espesificas para cada Comprador
   //router.route('/categoryforcomprador/:IdUser').get(auth, solicitudCompraCTR.AllCategoriasforUserComprador);
   

@@ -147,7 +147,7 @@ listDirAuth = (req, res) =>{
 }
 
   AuthExeptionforDirection = (req, res) => {
-    console.log("Entrando al metodo para recuperar la utorizacion excluida por direccion" + req.params.IdDireccion);
+    console.log("Entrando al metodo para recuperar la utorizacion excluida por direccion  " + req.params.IdDireccion);
     var sql = require("mssql");
     var env = process.env.NODE_ENV || 'SERWEB';
     var config = require('../controllers/connections/servers')[env];

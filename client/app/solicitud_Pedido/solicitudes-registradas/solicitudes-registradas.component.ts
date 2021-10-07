@@ -898,9 +898,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.SelectedStatus.IdSolicitud = data2.ID;
         console.log(this.SelectedStatus.IdStatusSolicitud);
         //Revisar si se tiene una Excepcion de autorizacion a cualquier nivel
-        this.solicitudComp
-          .checkdirauthexeption(this.Direccion.IdDireccion)
-          .subscribe(
+        console.log(this.Direccion.IdDireccion);
+        this.solicitudComp.checkdirauthexeption(this.Direccion.IdDireccion).subscribe(
             (data) => {
               console.log("*/*/*/*/*/*/*/*/*/Validacion de EXCEOCION*/*/*/*/*/*/*/*/*/*/")
               console.log(data[0]);
@@ -942,11 +941,15 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                   )
                                   .subscribe(
                                     (res) => {
-                                      this.motivo_Rechazo = "";
+                                      this.isrechazada = false;
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
                                       this.toast.setMessage("Error en el envio de el Correo","warning");
                                       console.log("dento de el metodo para enviar el correo" +res);
                                     },
                                     (error) => {
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
                                       console.log("Error al enviar el correo " + error);
                                       this.toast.setMessage( "Envio de Email Correcto","success");
                                     }
@@ -961,7 +964,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           console.log("error al actualizar el status" + error)
                       );
                   }
-                }else if(data[0].IdRole == 3){
+                  }else if(data[0].IdRole == 3){
                   console.log("entrando a la exepcion de rol 3");
 
                     console.log("METODO QUE EXCLUYE AL DIR Y SE MANDA DIRECTO A PLANEACION");
@@ -994,11 +997,15 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                   )
                                   .subscribe(
                                     (res) => {
-                                      this.motivo_Rechazo = "";
+                                      this.isrechazada = false;
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
                                       this.toast.setMessage("Error en el envio de el Correo","warning");
                                       console.log("dento de el metodo para enviar el correo" +res);
                                     },
                                     (error) => {
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
                                       console.log("Error al enviar el correo " + error);
                                       this.toast.setMessage( "Envio de Email Correcto","success");
                                     }
@@ -1014,8 +1021,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                       );
                   
                 } else {
-                  this.solicitudComp
-                    .UpdateStatusSolicitud(
+                  this.solicitudComp.UpdateStatusSolicitud(
                       this.SelectedStatus.IdStatusSolicitud,
                       this.SelectedStatus.IdSolicitud,
                       this.motivo_Rechazo
@@ -1077,7 +1083,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 )
                                 .subscribe(
                                   (res) => {
-                                    this.motivo_Rechazo = "";
+                                    this.isrechazada = false;
+                                    this.motivo_Rechazo = '';
+                                    this.SelectedStatus = undefined;
                                     this.toast.setMessage(
                                       "Error en el envio de el Correo",
                                       "warning"
@@ -1091,7 +1099,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                     console.log(
                                       "Error al enviar el correo " + error
                                     );
-
+                                    this.motivo_Rechazo = '';
+                                    this.SelectedStatus = undefined;
                                     this.toast.setMessage(
                                       "Envio de Email Correcto",
                                       "success"
@@ -1178,7 +1187,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               )
                               .subscribe(
                                 (res) => {
-                                  this.motivo_Rechazo = "";
+                                  this.isrechazada = false;
+                                  this.motivo_Rechazo = '';
+                                  this.SelectedStatus = undefined;
                                   this.toast.setMessage(
                                     "Error en el envio de el Correo",
                                     "warning"
@@ -1192,7 +1203,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                   console.log(
                                     "Error al enviar el correo " + error
                                   );
-
+                                  this.motivo_Rechazo = '';
+                                  this.SelectedStatus = undefined;
                                   this.toast.setMessage(
                                     "Envio de Email Correcto",
                                     "success"
@@ -1214,6 +1226,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
               }
             },
             (err) => {
+              console.log(err)
               console.log(
                 "Error al intentar recuperar los datos de algua excepcion"
               );
@@ -1243,81 +1256,90 @@ export class SolicitudesRegistradasComponent implements OnInit {
         console.log(data2.DIVISION);
         this.SelectedStatus.IdSolicitud = data2.ID;
         console.log(this.SelectedStatus.IdSolicitud);
-        this.solicitudComp
-          .UpdateStatusSolicitud(
-            this.SelectedStatus.IdStatusSolicitud,
-            this.SelectedStatus.IdSolicitud,
-            this.motivo_Rechazo
-          ).subscribe(
-            (res) => {
-              this.toast.setMessage(
-                "Actualizacion de Status Correcta",
-                "succes"
-              );
-              console.log(
-                "se actualizo el status ----- Como Gerente de Finanzas----" +
-                  res
-              );
-              this.getAllSolicitudesRegistradasAutFinanzas(this.Direccion); //Buscamos cual es el Usuario que lleva la Direccion y Autoriza su presupuesto
-              this.solicitudComp.getUserAutorizador(this.Direccion.IdDireccion, 4)
-                .subscribe(
-                  (res) => {
-                    console.log("++++++++++++++++++");
-                    console.log(res);
-                    console.log("++++++++++++++++++");
-                    this.UserAuth = res;
-                    console.log(this.UserAuth[0]);
-                    //Parte donde se envia El correo para los Diferentes autorizadores
-                    //mandamos el id y el nombre de l usuario que entra autorizar para validar si tiene permisos
-                    console.log(this.auth.currentUser.IdUsuario);
-                    console.log(this.auth.currentUser.NombreCompleto);
-                    console.log(this.auth.currentUser.IdRole);
-                    console.log(
-                      "El mail por usuario --->" + this.auth.currentUser.Email
-                    );
-                    console.log(
-                      "El mail por usuario Autrorizador --->" +
-                        this.UserAuth[0].Email
-                    );
-
-                    this.solicitudComp.SendEmailGerenteFianzas(
-                        data2.ID,
-                        this.SelectedStatus.IdStatusSolicitud,
-                        this.Direccion.IdDireccion,
-                        data2.NombreUsuario,
-                        this.auth.currentUser.IdRole,
-                        this.auth.currentUser.NombreCompleto,
-                        this.UserAuth[0].Email)
-                      .subscribe(
-                        (res) => {
-                          this.motivo_Rechazo = "";
-                          this.toast.setMessage(
-                            "Error en el envio de el Correo",
-                            "warning"
-                          );
-                          console.log(
-                            "dento de el metodo para enviar el correo" + res
-                          );
-                        },
-                        (error) => {
-                          console.log("Error al enviar el correo " + error);
-
-                          this.toast.setMessage(
-                            "Envio de Email Correcto",
-                            "success"
-                          );
-                        }
-                      );
-                  },
-                  (err) => {
-                    console.log(
-                      "error al recuperar la informacion del Autorizador" + err
-                    );
-                  }
+        if(this.SelectedStatus.IdStatusSolicitud != 5 && this.motivo_Rechazo != undefined){
+          //console.log("es otro estatus o no esta indefinido la variable de rechazo")
+          this.solicitudComp
+            .UpdateStatusSolicitud(
+              this.SelectedStatus.IdStatusSolicitud,
+              this.SelectedStatus.IdSolicitud,
+              this.motivo_Rechazo
+            ).subscribe(
+              (res) => {
+                this.toast.setMessage(
+                  "Actualizacion de Status Correcta",
+                  "succes"
                 );
-            },
-            (error) => console.log("error al actualizar en status" + error)
-          );
+                // console.log(
+                //   "se actualizo el status ----- Como Gerente de Finanzas----" +
+                //     res
+                // );
+                this.getAllSolicitudesRegistradasAutFinanzas(this.Direccion); //Buscamos cual es el Usuario que lleva la Direccion y Autoriza su presupuesto
+                this.solicitudComp.getUserAutorizador(this.Direccion.IdDireccion, 4)
+                  .subscribe(
+                    (res) => {
+                      console.log("++++++++++++++++++");
+                      console.log(res);
+                      console.log("++++++++++++++++++");
+                      this.UserAuth = res;
+                      console.log(this.UserAuth[0]);
+                      //Parte donde se envia El correo para los Diferentes autorizadores
+                      //mandamos el id y el nombre de l usuario que entra autorizar para validar si tiene permisos
+                      console.log(this.auth.currentUser.IdUsuario);
+                      console.log(this.auth.currentUser.NombreCompleto);
+                      console.log(this.auth.currentUser.IdRole);
+                      console.log(
+                        "El mail por usuario --->" + this.auth.currentUser.Email
+                      );
+                      console.log(
+                        "El mail por usuario Autrorizador --->" +
+                          this.UserAuth[0].Email
+                      );
+  
+                      this.solicitudComp.SendEmailGerenteFianzas(
+                          data2.ID,
+                          this.SelectedStatus.IdStatusSolicitud,
+                          this.Direccion.IdDireccion,
+                          data2.NombreUsuario,
+                          this.auth.currentUser.IdRole,
+                          this.auth.currentUser.NombreCompleto,
+                          this.UserAuth[0].Email)
+                        .subscribe(
+                          (res) => {
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
+                            this.toast.setMessage(
+                              "Error en el envio de el Correo",
+                              "warning"
+                            );
+                            console.log(
+                              "dento de el metodo para enviar el correo" + res
+                            );
+                          },
+                          (error) => {
+                            console.log("Error al enviar el correo " + error);
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
+                            this.toast.setMessage(
+                              "Envio de Email Correcto",
+                              "success"
+                            );
+                          }
+                        );
+                    },
+                    (err) => {
+                      console.log(
+                        "error al recuperar la informacion del Autorizador" + err
+                      );
+                    }
+                  );
+              },
+              (error) => console.log("error al actualizar en status" + error)
+            );
+
+        }else{
+          this.toast.setMessage("Se esta rechazando una Solicitud se requiere un Motivo de Rechazo.", 'warning');
+        }
       } else {
         this.toast.setMessage(
           "No tienes permisos para cambiar a este Status",
@@ -1342,6 +1364,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
         //validamos si el estatus seleccionado es rechazado y si si despues pasamos a validar si se lleno un motivo de rechazo si no no podemos actualizar.
         if (this.SelectedStatus.IdStatusSolicitud == 7) {
           if (this.motivo_Rechazo != undefined) {
+
             //  //Paso 2 Cambiar el Status de Solicitud a Enviada a SAP-----------
             this.solicitudComp
               .UpdateStatusSolicitud(
@@ -1383,7 +1406,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           )
                           .subscribe(
                             (res) => {
-                              this.motivo_Rechazo = "";
+                              this.isrechazada = false;
+                              this.motivo_Rechazo = '';
+                              this.SelectedStatus = undefined;
                               this.toast.setMessage(
                                 "Error en el envio de el Correo",
                                 "warning"
@@ -1398,7 +1423,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 this.auth.logout();
                               }
                               console.log("Error al enviar el correo " + error);
-
+                              this.motivo_Rechazo = '';
+                              this.SelectedStatus = undefined;
                               this.toast.setMessage(
                                 "Envio de Email Correcto",
                                 "success"
@@ -1496,7 +1522,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
                         )
                         .subscribe(
                           (res) => {
-                            this.motivo_Rechazo = "";
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
                             this.toast.setMessage(
                               "Envio de Email Correcto",
                               "success"
@@ -1547,7 +1575,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
           "warning"
         );
       }
-    } else if (this.auth.isCompras || this.auth.isComprador) {
+    } else if (this.auth.isCompras) {
       //solo valida el estatus que se seleciono y si correcponde a alguno de los 2 que tiene permitido pasa a actualizar
       //dicha solicitud a estatus autorizado por Compras despues refresca las solicitudes y los campos.
       if (
@@ -1556,7 +1584,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
         (this.SelectedStatus.Nombre == "S. P. RECHAZADA POR COMPRAS" &&
           this.SelectedStatus.IdStatusSolicitud == 9) ||
         (this.SelectedStatus.Nombre == "CONTRATO MARCO" &&
-          this.SelectedStatus.IdStatusSolicitud == 14)
+          this.SelectedStatus.IdStatusSolicitud == 18 ||
+         this.SelectedStatus.Nombre == "INTERCAMBIOS" &&
+          this.SelectedStatus.IdStatusSolicitud == 19)
       ) {
         console.log(data2);
         console.log(this.motivo_Rechazo);
@@ -1586,7 +1616,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
                 );
                 this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
                 this.getStatusCompras(this.auth.currentUser.IdRole, 1);
-                this.motivo_Rechazo = "";
+                this.isrechazada = false;
+                this.motivo_Rechazo = '';
+                this.SelectedStatus = undefined;
                 this.SelectedStatus = new StatusSolicitud();
                 this.toast.setMessage(
                   "Se actualizo correctamente el estatus.",
@@ -1598,6 +1630,68 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
                 }
+                this.motivo_Rechazo = '';
+                this.SelectedStatus = undefined;
+                console.log(error);
+              }
+            );
+        }
+      }
+    }else if(this.auth.isComprador){
+      if (
+        (this.SelectedStatus.Nombre == "S. P. REVISADA POR COMPRAS" &&
+          this.SelectedStatus.IdStatusSolicitud == 8) ||
+        (this.SelectedStatus.Nombre == "S. P. RECHAZADA POR COMPRAS" &&
+          this.SelectedStatus.IdStatusSolicitud == 9) ||
+        (this.SelectedStatus.Nombre == "CONTRATO MARCO" &&
+          this.SelectedStatus.IdStatusSolicitud == 18 ||
+         this.SelectedStatus.Nombre == "INTERCAMBIOS" &&
+          this.SelectedStatus.IdStatusSolicitud == 19)
+      ) {
+        console.log(data2);
+        console.log(this.motivo_Rechazo);
+        if (
+          (this.SelectedStatus.Nombre == "S. P. RECHAZADA POR COMPRAS" &&
+            this.motivo_Rechazo == undefined) ||
+          this.motivo_Rechazo == ""
+        ) {
+          this.toast.setMessage(
+            "No se puede Rechazar una Solicitud sin un motivo de rechazo, favor de validar la informacion",
+            "danger"
+          );
+        } else {
+          this.SelectedStatus.IdSolicitud = data2.ID;
+          this.solicitudComp
+            .UpdateStatusSolicitud(
+              this.SelectedStatus.IdStatusSolicitud,
+              this.SelectedStatus.IdSolicitud,
+              this.motivo_Rechazo
+            )
+            .subscribe(
+              (data) => {
+                console.log(data);
+                this.getAllSolicitudesRegistradasporUsrCompras(
+                  this.Direccion,
+                  this.SelectedCompras
+                );
+                this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
+                this.getStatusCompras(this.auth.currentUser.IdRole, 1);
+                this.isrechazada = false;
+                this.motivo_Rechazo = '';
+                this.SelectedStatus = undefined;
+                this.SelectedStatus = new StatusSolicitud();
+                this.toast.setMessage(
+                  "Se actualizo correctamente el estatus.",
+                  "success"
+                );
+              },
+              (error) => {
+                if (error.status == 403 || error.status == 404) {
+                  this.toast.setMessage(error.message, "danger");
+                  this.auth.logout();
+                }
+                this.motivo_Rechazo = '';
+                this.SelectedStatus = undefined;
                 console.log(error);
               }
             );

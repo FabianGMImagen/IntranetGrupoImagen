@@ -701,9 +701,9 @@ export class SolicitudCompraService {
 
   }
 
-  InsertNewCategory(categoria:string){
+  InsertNewCategory(categoria:string,descripcion:string){
     console.log(categoria);
-    return this.http.get(`/api/newcate/${categoria}`).toPromise();
+    return this.http.get(`/api/newcate/${categoria}/${descripcion}`).toPromise();
   }
 
   getAllCategoriasforUser(IdUser:number){
