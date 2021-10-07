@@ -59,6 +59,8 @@ import { GrupoCompra } from "../../shared/models/grupocompra.model";
 import { UnidadMedida } from "../../shared/models/umedida.model";
 import { Necesidad } from "../../shared/models/necesidad.model";
 import { Activo } from "../../shared/models/activo.model";
+
+import { LoadingComponent } from '../../shared/loading/loading.component'
 import { DialogAdvertenciaUpdateSolpedidoComponent } from "client/app/dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component";
 
 
@@ -227,6 +229,7 @@ export class AccountComponent implements OnInit {
   iseditchilds: boolean = false;
 
   empresa: Empresa;
+  almacen: Almacen;
   tiposol: Imputacion;
   requirente: string;
   puesto: string;
@@ -307,6 +310,8 @@ export class AccountComponent implements OnInit {
 
   ngOnInit() {
     this.openedDataSol=false;
+    this.empresa = new Empresa();
+    this.almacen = new Almacen();
     this.SelectedAlmacen = new Almacen();
     this.SelectedMaterial = new Materiales();
     this.SelectedCentroCost = new CentroCostos();
@@ -520,6 +525,9 @@ export class AccountComponent implements OnInit {
     this.iseditproduct = false;
     this.toast.setMessage("item editing cancelled.", "warning");
     this.getAllSolicitudforUser();
+    this.dataSource = new MatTableDataSource<Detallesol>();
+    this.dataChilds = new MatTableDataSource<Childs>();
+
   }
 
   EndEditingAndChangedStatus(){
@@ -534,10 +542,11 @@ export class AccountComponent implements OnInit {
   }
 
   VieEditProductos(products) {
-    console.log("-------*************--------");
-    console.log(products);
+    //console.log("-------*************--------");
+    //console.log(products);
     this.detalle_producto = products;
-    console.log("-------*************--------");
+    this.almacen.IdAlmacen = this.detalle_producto.IdAlmacen;
+    //console.log("-------*************--------");
     if (
       this.DataSolReg.Statname === "S. P. NUEVA PETICION" ||
       this.DataSolReg.Statname === "S. P. PRESUPUESTO RECHAZADO" ||
@@ -549,14 +558,15 @@ export class AccountComponent implements OnInit {
       this.iseditproduct = true;
     }
 
-    if (this.DataSolReg.IdSol == 5) {
-      console.log("dentro de Orden intera IF");
-      this.getunidadMedida(" ");
-    } else {
-      console.log("dentro de Orden Interna else");
-      this.getunidadMedida(this.detalle_producto.IdMaterial);
-    }
-
+    // if (this.DataSolReg.IdSol == 5) {
+    //   console.log("dentro de Orden intera IF");
+    //   this.getunidadMedida(" ");
+    // } else {
+    //   console.log("dentro de Orden Interna else");
+    //   this.getunidadMedida(this.detalle_producto.IdMaterial);
+    // }
+    
+    this.getunidadMedida(" ");
     this.getOrdenInterna();
     this.getAlmacen();
     this.getAllCentroCosto();
@@ -564,6 +574,8 @@ export class AccountComponent implements OnInit {
     this.getAllGrupoCompra();
     this.GetAllOrdenEstadistica();
     this.getAllNecesidad();
+    this.getAllActivo(this.empresa);
+    this.getAllMateriales(this.almacen);
     // console.log("Este es el Id del material "+this.detalle_producto.IdMaterial);
     // if(this.DataSolReg.IdSol != 5){
     //   // var Material: String = ' ';
@@ -702,17 +714,10 @@ export class AccountComponent implements OnInit {
     );
   }
 
-  getAllMateriales() {
-    console.log(
-      "Est es el id de la plaza para realizar las consultas----->" +
-        this.plaza.IdPlaza
-    );
-    console.log(
-      "Este es el Id del almacen seleccionado--->" + this.SelectedAlmacen
-    );
+  getAllMateriales(Almacen:Almacen) {
     this.ListMateriales = this.solicitudComp.getAllmateriales(
       this.plaza,
-      this.SelectedAlmacen
+      Almacen
     );
     this.MaterialesCtrl.setValue(this.ListMateriales[0]);
     this.filteredMaterial.next(this.ListMateriales);
@@ -943,6 +948,40 @@ export class AccountComponent implements OnInit {
       )
     );
   }
+
+  getAllActivo(emp:Empresa) {
+    console.log("/*/*/*/*/*/*/*/*/*/ACTIVO FIJO*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/")
+    
+    this.ListActivo = this.solicitudComp.getAllActivo(emp);
+    this.ActivoCrtl.setValue(this.ListActivo[0]);
+    this.filteredActivo.next(this.ListActivo);
+    this.ActivoFilterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterActivo();
+      });
+  }
+
+  filterActivo() {
+    if (!this.ActivoFilterCtrl) {
+      return;
+    }
+    //obtenemos la palabra clave
+    let search = this.ActivoFilterCtrl.value;
+    if (!search) {
+      this.filteredActivo.next(this.ListActivo.slice());
+      return;
+    } else {
+      search = search.toLowerCase();
+    }
+
+    this.filteredActivo.next(
+      this.ListActivo.filter(
+        (activo) => activo.Nombre.toLowerCase().indexOf(search) > -1
+      )
+    );
+  }
+
 
   getAllNecesidad() {
     //console.log("-----------------------------*/*/*/*/*/*/*/*/*/*/*/---------------------------------------------");
@@ -1214,9 +1253,8 @@ export class AccountComponent implements OnInit {
     if (this.DataSolReg.IdSol === 1) {
       console.log("COMPRAS DE ACTIVOS FIJOS");
       if (
-        this.precio == undefined ||
-        (this.precio == 0 && this.cantidad == undefined) ||
-        (this.cantidad == 0 &&
+          this.precio == undefined &&
+          this.cantidad == 0 &&
           this.Espesificaciones == undefined &&
           this.UsoBien == undefined &&
           // this.SelectedAlmacen.IdAlmacen === undefined || this.SelectedAlmacen.IdAlmacen === '' &&
@@ -1227,27 +1265,29 @@ export class AccountComponent implements OnInit {
           // this.SelectedCentroCost.Nombre === undefined || this.SelectedCentroCost.Nombre === '' &&
           // this.SelectedCuentaMayor.IdCuentaMayor === undefined || this.SelectedCuentaMayor.IdCuentaMayor === '' &&
           // this.SelectedCuentaMayor.Nombre === undefined || this.SelectedCuentaMayor.Nombre === '' &&
-          this.SelectedGrupoComp.IdGrupoCompra === undefined &&
-          this.SelectedGrupoComp.Nombre === undefined &&
-          this.SelectedUnidadMed.IdUnidadMedida === undefined &&
-          this.SelectedUnidadMed.NombreUnidadMedida === undefined &&
+          this.SelectedGrupoComp.IdGrupoCompra == undefined &&
+          this.SelectedGrupoComp.Nombre == undefined &&
+          this.SelectedUnidadMed.IdUnidadMedida == undefined &&
+          this.SelectedUnidadMed.NombreUnidadMedida == undefined &&
           // this.SelectOrdenEstadisitica.IdOrdenInterna === undefined || this.SelectOrdenEstadisitica.IdOrdenInterna === '' &&
           // this.SelectOrdenEstadisitica.NombreOrder === undefined || this.SelectOrdenEstadisitica.NombreOrder === '' &&
-          this.SelectedNumActivo.IdActivo === undefined &&
-          this.SelectedNumActivo.Nombre === undefined &&
-          this.SelectedNecesidad.IdNecesidad === undefined &&
-          this.SelectedNecesidad.Nombre === undefined)
+          this.SelectedNumActivo.IdActivo == undefined &&
+          this.SelectedNumActivo.Nombre == undefined &&
+          this.SelectedNecesidad.IdNecesidad == undefined &&
+          this.SelectedNecesidad.Nombre == undefined
       ) {
         this.toast.setMessage(
           "si se requiere actualizar un producto, se debe de llenar almenos un campo o seleccionar una opcion",
           "warning"
         );
       } else {
-        if (this.precio == undefined || this.precio == 0) {
+        if (this.precio === undefined || this.precio == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.precio = this.detalle_producto.Precio;
           //this.priceS = this.detalle_producto.PRECIO.toString();
         }
-        if (this.cantidad == undefined || this.cantidad == 0) {
+        if (this.cantidad === undefined || this.cantidad == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.cantidad = this.detalle_producto.CANTIDAD;
         }
         if (this.Espesificaciones == undefined || this.Espesificaciones == "") {
@@ -1256,30 +1296,12 @@ export class AccountComponent implements OnInit {
         if (this.UsoBien == undefined || this.UsoBien == "") {
           this.UsoBien = this.detalle_producto.BIENOSERV;
         }
-        if (
-          (this.SelectedAlmacen === undefined &&
-            this.detalle_producto.IdAlmacen === undefined) ||
-          (this.detalle_producto.IdAlmacen === null &&
-            this.detalle_producto.AlmacenName === undefined) ||
-          this.detalle_producto.AlmacenName === null
-        ) {
-          this.SelectedAlmacen.IdAlmacen = " ";
-          this.SelectedAlmacen.Nombre = " ";
-        } else {
+        if (this.SelectedAlmacen === undefined) {
           this.SelectedAlmacen.IdAlmacen = this.detalle_producto.IdAlmacen;
           this.SelectedAlmacen.Nombre = this.detalle_producto.AlmacenName;
         }
 
-        if (
-          (this.SelectedMaterial === undefined &&
-            this.detalle_producto.IdMaterial === undefined) ||
-          (this.detalle_producto.IdMaterial === null &&
-            this.detalle_producto.MaterialName === undefined) ||
-          this.detalle_producto.MaterialName === null
-        ) {
-          this.SelectedMaterial.IdMaterial = " ";
-          this.SelectedMaterial.Nombre = " ";
-        } else {
+        if (this.SelectedMaterial === undefined) {
           this.SelectedMaterial.IdMaterial = this.detalle_producto.IdMaterial;
           this.SelectedMaterial.Nombre = this.detalle_producto.MaterialName;
         }
@@ -1370,23 +1392,21 @@ export class AccountComponent implements OnInit {
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica === undefined &&
-          this.detalle_producto.OrdenEstadisiticaName === undefined
+          this.detalle_producto.IDOINT === undefined &&
+          this.detalle_producto.OINT === undefined
         ) {
-          console.log("datos de orden internaaaaa-----");
+          console.log("datos de orden internaaaaa----- en blanco");
           this.SelectOrdenEstadisitica.IdOrdenInterna = " ";
           this.SelectOrdenEstadisitica.NombreOrder = " ";
         } else if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica.length != 0 &&
-          this.detalle_producto.OrdenEstadisiticaName.length != 0
+          this.detalle_producto.IDOINT.length != 0 &&
+          this.detalle_producto.OINT.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna =
-            this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder =
-            this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =this.detalle_producto.IDOINT;
+          this.SelectOrdenEstadisitica.NombreOrder =this.detalle_producto.OINT;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -1507,9 +1527,8 @@ export class AccountComponent implements OnInit {
     } else if (this.DataSolReg.IdSol === 2) {
       console.log("SITIOS DE TRANSMISION");
       if (
-        this.precio == undefined ||
-        (this.precio == 0 && this.cantidad == undefined) ||
-        (this.cantidad == 0 &&
+          this.precio === undefined &&
+          this.cantidad == 0 &&
           this.Espesificaciones == undefined &&
           this.UsoBien == undefined &&
           // this.SelectedAlmacen.IdAlmacen === undefined || this.SelectedAlmacen.IdAlmacen === '' &&
@@ -1518,29 +1537,31 @@ export class AccountComponent implements OnInit {
           // this.SelectedMaterial.Nombre === undefined || this.SelectedMaterial.Nombre === '' &&
           // this.SelectedCentroCost.IdCentroCosto === undefined || this.SelectedCentroCost.IdCentroCosto === '' &&
           // this.SelectedCentroCost.Nombre === undefined || this.SelectedCentroCost.Nombre === '' &&
-          this.SelectedCuentaMayor.IdCuentaMayor === undefined &&
-          this.SelectedCuentaMayor.Nombre === undefined &&
-          this.SelectedGrupoComp.IdGrupoCompra === undefined &&
-          this.SelectedGrupoComp.Nombre === undefined &&
-          this.SelectedUnidadMed.IdUnidadMedida === undefined &&
-          this.SelectedUnidadMed.NombreUnidadMedida === undefined &&
+          this.SelectedCuentaMayor.IdCuentaMayor == undefined &&
+          this.SelectedCuentaMayor.Nombre == undefined &&
+          this.SelectedGrupoComp.IdGrupoCompra == undefined &&
+          this.SelectedGrupoComp.Nombre == undefined &&
+          this.SelectedUnidadMed.IdUnidadMedida == undefined &&
+          this.SelectedUnidadMed.NombreUnidadMedida == undefined &&
           // this.SelectOrdenEstadisitica.IdOrdenInterna === undefined || this.SelectOrdenEstadisitica.IdOrdenInterna === '' &&
           // this.SelectOrdenEstadisitica.NombreOrder === undefined || this.SelectOrdenEstadisitica.NombreOrder === '' &&
           // this.SelectedNumActivo.IdActivo === undefined || this.SelectedNumActivo.IdActivo === '' &&
           // this.SelectedNumActivo.Nombre === undefined || this.SelectedNumActivo.Nombre === '' &&
-          this.SelectedNecesidad.IdNecesidad === undefined &&
-          this.SelectedNecesidad.Nombre === undefined)
+          this.SelectedNecesidad.IdNecesidad == undefined &&
+          this.SelectedNecesidad.Nombre == undefined
       ) {
         this.toast.setMessage(
           "si se requiere actualizar un producto, se debe de llenar almenos un campo o seleccionar una opcion",
           "warning"
         );
       } else {
-        if (this.precio == undefined || this.precio == 0) {
+        if (this.precio === undefined || this.precio == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.precio = this.detalle_producto.Precio;
           //this.priceS = this.detalle_producto.PRECIO.toString();
         }
-        if (this.cantidad == undefined || this.cantidad == 0) {
+        if (this.cantidad === undefined || this.cantidad == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.cantidad = this.detalle_producto.CANTIDAD;
         }
         if (this.Espesificaciones == undefined || this.Espesificaciones == "") {
@@ -1550,30 +1571,12 @@ export class AccountComponent implements OnInit {
           this.UsoBien = this.detalle_producto.BIENOSERV;
         }
 
-        if (
-          (this.SelectedAlmacen === undefined &&
-            this.detalle_producto.IdAlmacen === undefined) ||
-          (this.detalle_producto.IdAlmacen === null &&
-            this.detalle_producto.AlmacenName === undefined) ||
-          this.detalle_producto.AlmacenName === null
-        ) {
-          this.SelectedAlmacen.IdAlmacen = " ";
-          this.SelectedAlmacen.Nombre = " ";
-        } else {
+        if (this.SelectedAlmacen === undefined) {
           this.SelectedAlmacen.IdAlmacen = this.detalle_producto.IdAlmacen;
           this.SelectedAlmacen.Nombre = this.detalle_producto.AlmacenName;
         }
 
-        if (
-          (this.SelectedMaterial === undefined &&
-            this.detalle_producto.IdMaterial === undefined) ||
-          (this.detalle_producto.IdMaterial === null &&
-            this.detalle_producto.MaterialName === undefined) ||
-          this.detalle_producto.MaterialName === null
-        ) {
-          this.SelectedMaterial.IdMaterial = " ";
-          this.SelectedMaterial.Nombre = " ";
-        } else {
+        if (this.SelectedMaterial === undefined) {
           this.SelectedMaterial.IdMaterial = this.detalle_producto.IdMaterial;
           this.SelectedMaterial.Nombre = this.detalle_producto.MaterialName;
         }
@@ -1664,23 +1667,21 @@ export class AccountComponent implements OnInit {
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica === undefined &&
-          this.detalle_producto.OrdenEstadisiticaName === undefined
+          this.detalle_producto.IDOINT === undefined &&
+          this.detalle_producto.OINT === undefined
         ) {
-          console.log("datos de orden internaaaaa-----");
+          console.log("datos de orden internaaaaa----- en blanco");
           this.SelectOrdenEstadisitica.IdOrdenInterna = " ";
           this.SelectOrdenEstadisitica.NombreOrder = " ";
         } else if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica.length != 0 &&
-          this.detalle_producto.OrdenEstadisiticaName.length != 0
+          this.detalle_producto.IDOINT.length != 0 &&
+          this.detalle_producto.OINT.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna =
-            this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder =
-            this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =this.detalle_producto.IDOINT;
+          this.SelectOrdenEstadisitica.NombreOrder =this.detalle_producto.OINT;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -1820,11 +1821,22 @@ export class AccountComponent implements OnInit {
       }
     } else if (this.DataSolReg.IdSol === 3) {
       console.log("COMPRAS EN GENERAL");
+      // console.log(this.precio)
+      // console.log(this.cantidad)
+      // console.log(this.Espesificaciones)
+      // console.log(this.UsoBien)
+      console.log(this.SelectedCentroCost.IdCentroCosto)
+      console.log(this.SelectedCentroCost.Nombre)
+      console.log(this.SelectedCuentaMayor.IdCuentaMayor)
+      console.log(this.SelectedCuentaMayor.Nombre)
+      console.log(this.SelectedGrupoComp.IdGrupoCompra)
+      console.log(this.SelectedGrupoComp.Nombre)
+      console.log(this.SelectedUnidadMed.IdUnidadMedida)
+      console.log(this.SelectedUnidadMed.NombreUnidadMedida)
+      console.log(this.SelectedNecesidad.IdNecesidad)
+      console.log(this.SelectedNecesidad.Nombre)
       if (
-          this.precio == undefined ||
-          this.precio == 0 && 
-          this.cantidad == undefined ||
-          this.cantidad == 0 &&
+          this.precio == undefined &&
           this.Espesificaciones == undefined &&
           this.UsoBien == undefined &&
           // this.SelectedAlmacen.IdAlmacen === undefined || this.SelectedAlmacen.IdAlmacen === '' &&
@@ -1833,8 +1845,8 @@ export class AccountComponent implements OnInit {
           // this.SelectedMaterial.Nombre === undefined || this.SelectedMaterial.Nombre === '' &&
           this.SelectedCentroCost.IdCentroCosto == undefined &&
           this.SelectedCentroCost.Nombre == undefined &&
-          this.SelectedCuentaMayor.IdCuentaMayor == undefined &&
-          this.SelectedCuentaMayor.Nombre == undefined &&
+          this.SelectedCuentaMayor.IdCuentaMayor == ''  &&
+          this.SelectedCuentaMayor.Nombre == '' &&
           this.SelectedGrupoComp.IdGrupoCompra == undefined &&
           this.SelectedGrupoComp.Nombre == undefined &&
           this.SelectedUnidadMed.IdUnidadMedida == undefined &&
@@ -1850,6 +1862,8 @@ export class AccountComponent implements OnInit {
           "si se requiere actualizar un producto, se debe de llenar almenos un campo o seleccionar una opcion",
           "warning"
         );
+        console.log("ERROR EN LA VALIDACION")
+        return 0;
       } else {
         if (this.precio == undefined || this.precio == 0) {
           this.precio = this.detalle_producto.Precio;
@@ -1858,36 +1872,19 @@ export class AccountComponent implements OnInit {
         if (this.cantidad == undefined || this.cantidad == 0) {
           this.cantidad = this.detalle_producto.CANTIDAD;
         }
-        if (this.Espesificaciones == undefined || this.Espesificaciones == "") {
+        if (this.Espesificaciones == undefined || this.Espesificaciones === "") {
           this.Espesificaciones = this.detalle_producto.EspGenerales;
         }
-        if (this.UsoBien == undefined || this.UsoBien == "") {
+        if (this.UsoBien == undefined || this.UsoBien === "") {
           this.UsoBien = this.detalle_producto.BIENOSERV;
         }
-        if (
-          (this.SelectedAlmacen === undefined &&
-            this.detalle_producto.IdAlmacen === undefined) ||
-          (this.detalle_producto.IdAlmacen === null &&
-            this.detalle_producto.AlmacenName === undefined) ||
-          this.detalle_producto.AlmacenName === null
-        ) {
-          this.SelectedAlmacen.IdAlmacen = " ";
-          this.SelectedAlmacen.Nombre = " ";
-        } else {
+        if (this.SelectedAlmacen == undefined ) {
+          console.log("se toma el valor de almacen");
           this.SelectedAlmacen.IdAlmacen = this.detalle_producto.IdAlmacen;
           this.SelectedAlmacen.Nombre = this.detalle_producto.AlmacenName;
         }
 
-        if (
-          (this.SelectedMaterial === undefined &&
-            this.detalle_producto.IdMaterial === undefined) ||
-          (this.detalle_producto.IdMaterial === null &&
-            this.detalle_producto.MaterialName === undefined) ||
-          this.detalle_producto.MaterialName === null
-        ) {
-          this.SelectedMaterial.IdMaterial = " ";
-          this.SelectedMaterial.Nombre = " ";
-        } else {
+        if (this.SelectedMaterial === undefined) {
           this.SelectedMaterial.IdMaterial = this.detalle_producto.IdMaterial;
           this.SelectedMaterial.Nombre = this.detalle_producto.MaterialName;
         }
@@ -1914,12 +1911,14 @@ export class AccountComponent implements OnInit {
         } else {
           console.log("se tomaran los valores del select");
         }
+
         if (
           this.SelectedCuentaMayor.IdCuentaMayor.length === 0 &&
           this.SelectedCuentaMayor.Nombre.length === 0 &&
           this.detalle_producto.IdCuentaMayor.length === 0 &&
           this.detalle_producto.CMAYOR.length === 0
         ) {
+          console.log("Cuenta de mayor dentro de IF")
           this.SelectedCuentaMayor.IdCuentaMayor = " ";
           this.SelectedCuentaMayor.Nombre = " ";
         } else if (
@@ -1928,10 +1927,12 @@ export class AccountComponent implements OnInit {
           this.detalle_producto.IdCuentaMayor.length != 0 &&
           this.detalle_producto.CMAYOR.length != 0
         ) {
+          console.log("Cuenta de mayor dentro de ELSEIF")
           this.SelectedCuentaMayor.IdCuentaMayor =
             this.detalle_producto.IdCuentaMayor;
           this.SelectedCuentaMayor.Nombre = this.detalle_producto.CMAYOR;
         }
+
         console.log("GRUPO DE COMRPA" + this.SelectedGrupoComp);
         console.log(this.detalle_producto.IdGrupoCompra);
         console.log(this.detalle_producto.GrupoCompraName);
@@ -1978,23 +1979,21 @@ export class AccountComponent implements OnInit {
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica === undefined &&
-          this.detalle_producto.OrdenEstadisiticaName === undefined
+          this.detalle_producto.IDOINT === undefined &&
+          this.detalle_producto.OINT === undefined
         ) {
-          console.log("datos de orden internaaaaa-----");
+          console.log("datos de orden internaaaaa----- en blanco");
           this.SelectOrdenEstadisitica.IdOrdenInterna = " ";
           this.SelectOrdenEstadisitica.NombreOrder = " ";
         } else if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica.length != 0 &&
-          this.detalle_producto.OrdenEstadisiticaName.length != 0
+          this.detalle_producto.IDOINT.length != 0 &&
+          this.detalle_producto.OINT.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna =
-            this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder =
-            this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =this.detalle_producto.IDOINT;
+          this.SelectOrdenEstadisitica.NombreOrder =this.detalle_producto.OINT;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -2033,7 +2032,7 @@ export class AccountComponent implements OnInit {
           this.SelectedNecesidad.Nombre =
             this.detalle_producto.NumeroNecesidadName;
         }
-
+        console.error("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/");
         console.log(
           this.precio +
             " -- " +
@@ -2053,7 +2052,7 @@ export class AccountComponent implements OnInit {
         // console.log(this.SelectOrdenEstadisitica);
         // console.log(this.SelectedNumActivo);
         // console.log(this.SelectedNecesidad);
-        //console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
+        console.log("-------//////  STATUS id" + this.DataSolReg.IdStatusSolicitud);
         var IdSol = this.DataSolReg.ID;
         //realizamos el update de los campos que se requeran, si no tiene ningun valor se llena con el que ya se tien en DB
         this.solicitudComp
@@ -2098,13 +2097,13 @@ export class AccountComponent implements OnInit {
               this.SelectOrdenEstadisitica = new OrdenInterna();
               this.SelectedNumActivo = new Activo();
               this.SelectedNecesidad = new Necesidad();
-              this.Espesificaciones = "";
-              this.UsoBien = "";
+              this.Espesificaciones = " ";
+              this.UsoBien = " ";
               this.toast.setMessage(
-                "Puedes seguir editando, datos guardados",
+                "Se actualizaron los datos.",
                 "success"
               );
-              //this.cancelEditing();
+
             },
             (err) => {
               console.log(err);
@@ -2127,6 +2126,7 @@ export class AccountComponent implements OnInit {
               );
             }
           );
+          return 1;
       }
     } else if (this.DataSolReg.IdSol === 4) {
       console.log("SERVICIOS");
@@ -2172,30 +2172,12 @@ export class AccountComponent implements OnInit {
         if (this.UsoBien == undefined) {
           this.UsoBien = this.detalle_producto.BIENOSERV;
         }
-        if (
-          (this.SelectedAlmacen === undefined &&
-            this.detalle_producto.IdAlmacen === undefined) ||
-          (this.detalle_producto.IdAlmacen === null &&
-            this.detalle_producto.AlmacenName === undefined) ||
-          this.detalle_producto.AlmacenName === null
-        ) {
-          this.SelectedAlmacen.IdAlmacen = " ";
-          this.SelectedAlmacen.Nombre = " ";
-        } else {
+        if (this.SelectedAlmacen === undefined) {
           this.SelectedAlmacen.IdAlmacen = this.detalle_producto.IdAlmacen;
           this.SelectedAlmacen.Nombre = this.detalle_producto.AlmacenName;
         }
 
-        if (
-          (this.SelectedMaterial === undefined &&
-            this.detalle_producto.IdMaterial === undefined) ||
-          (this.detalle_producto.IdMaterial === null &&
-            this.detalle_producto.MaterialName === undefined) ||
-          this.detalle_producto.MaterialName === null
-        ) {
-          this.SelectedMaterial.IdMaterial = " ";
-          this.SelectedMaterial.Nombre = " ";
-        } else {
+        if (this.SelectedMaterial === undefined) {
           this.SelectedMaterial.IdMaterial = this.detalle_producto.IdMaterial;
           this.SelectedMaterial.Nombre = this.detalle_producto.MaterialName;
         }
@@ -2286,23 +2268,21 @@ export class AccountComponent implements OnInit {
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica === undefined &&
-          this.detalle_producto.OrdenEstadisiticaName === undefined
+          this.detalle_producto.IDOINT === undefined &&
+          this.detalle_producto.OINT === undefined
         ) {
-          console.log("datos de orden internaaaaa-----");
+          console.log("datos de orden internaaaaa----- en blanco");
           this.SelectOrdenEstadisitica.IdOrdenInterna = " ";
           this.SelectOrdenEstadisitica.NombreOrder = " ";
         } else if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica.length != 0 &&
-          this.detalle_producto.OrdenEstadisiticaName.length != 0
+          this.detalle_producto.IDOINT.length != 0 &&
+          this.detalle_producto.OINT.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna =
-            this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder =
-            this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =this.detalle_producto.IDOINT;
+          this.SelectOrdenEstadisitica.NombreOrder =this.detalle_producto.OINT;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -2410,7 +2390,7 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "Puedes seguir editando, datos guardados",
+                "datos guardados",
                 "success"
               );
               
@@ -2440,49 +2420,41 @@ export class AccountComponent implements OnInit {
     } else if (this.DataSolReg.IdSol === 5) {
       console.log("COMPRAS DE ARTICULOS INVENTARIADOS");
       if (
-        this.precio == undefined ||
-        (this.precio == 0 && this.cantidad == undefined) ||
-        (this.cantidad == 0 && this.Espesificaciones == undefined) ||
-        (this.Espesificaciones == "" && this.UsoBien == undefined) ||
-        (this.UsoBien == "" && this.SelectedAlmacen.IdAlmacen === undefined) ||
-        (this.SelectedAlmacen.IdAlmacen === "" &&
-          this.SelectedAlmacen.Nombre === undefined) ||
-        (this.SelectedAlmacen.Nombre === "" &&
-          this.SelectedMaterial.IdMaterial === undefined) ||
-        (this.SelectedMaterial.IdMaterial === "" &&
-          this.SelectedMaterial.Nombre === undefined) ||
-        (this.SelectedMaterial.Nombre === "" &&
+        this.precio == undefined &&
+        this.cantidad == 0 && 
+        this.Espesificaciones == undefined &&
+        this.UsoBien == undefined &&
+        this.SelectedAlmacen.IdAlmacen == undefined &&
+        this.SelectedAlmacen.Nombre == undefined &&
+        this.SelectedMaterial.IdMaterial == undefined &&
+        this.SelectedMaterial.Nombre == undefined &&
           // this.SelectedCentroCost.IdCentroCosto === undefined || this.SelectedCentroCost.IdCentroCosto === '' &&
           // this.SelectedCentroCost.Nombre === undefined || this.SelectedCentroCost.Nombre === '' &&
           // this.SelectedCuentaMayor.IdCuentaMayor === undefined || this.SelectedCuentaMayor.IdCuentaMayor === '' &&
           // this.SelectedCuentaMayor.Nombre === undefined || this.SelectedCuentaMayor.Nombre === '' &&
-          this.SelectedGrupoComp.IdGrupoCompra === undefined) ||
-        (this.SelectedGrupoComp.IdGrupoCompra === 0 &&
-          this.SelectedGrupoComp.Nombre === undefined) ||
-        (this.SelectedGrupoComp.Nombre === "" &&
-          this.SelectedUnidadMed.IdUnidadMedida === undefined) ||
-        (this.SelectedUnidadMed.IdUnidadMedida === "" &&
-          this.SelectedUnidadMed.NombreUnidadMedida === undefined) ||
-        (this.SelectedUnidadMed.NombreUnidadMedida === "" &&
+        this.SelectedGrupoComp.IdGrupoCompra == undefined &&
+        this.SelectedGrupoComp.Nombre == undefined &&
+        this.SelectedUnidadMed.IdUnidadMedida == undefined &&
+        this.SelectedUnidadMed.NombreUnidadMedida == undefined &&
           // this.SelectOrdenEstadisitica.IdOrdenInterna === undefined || this.SelectOrdenEstadisitica.IdOrdenInterna === '' &&
           // this.SelectOrdenEstadisitica.NombreOrder === undefined || this.SelectOrdenEstadisitica.NombreOrder === '' &&
           // this.SelectedNumActivo.IdActivo === undefined || this.SelectedNumActivo.IdActivo === '' &&
           // this.SelectedNumActivo.Nombre === undefined || this.SelectedNumActivo.Nombre === '' &&
-          this.SelectedNecesidad.IdNecesidad === undefined) ||
-        (this.SelectedNecesidad.IdNecesidad === 0 &&
-          this.SelectedNecesidad.Nombre === undefined) ||
-        this.SelectedNecesidad.Nombre === ""
+        this.SelectedNecesidad.IdNecesidad == undefined &&
+        this.SelectedNecesidad.Nombre == undefined
       ) {
         this.toast.setMessage(
           "si se requiere actualizar un producto, se debe de llenar almenos un campo o seleccionar una opcion",
           "warning"
         );
       } else {
-        if (this.precio == undefined) {
+        if (this.precio === undefined || this.precio == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.precio = this.detalle_producto.Precio;
           //this.priceS = this.detalle_producto.PRECIO.toString();
         }
-        if (this.cantidad == undefined) {
+        if (this.cantidad === undefined || this.cantidad == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.cantidad = this.detalle_producto.CANTIDAD;
         }
         if (this.Espesificaciones == undefined) {
@@ -2491,32 +2463,17 @@ export class AccountComponent implements OnInit {
         if (this.UsoBien == undefined) {
           this.UsoBien = this.detalle_producto.BIENOSERV;
         }
-        if (
-          (this.SelectedAlmacen === undefined &&
-            this.detalle_producto.IdAlmacen === undefined) ||
-          (this.detalle_producto.IdAlmacen === null &&
-            this.detalle_producto.AlmacenName === undefined) ||
-          this.detalle_producto.AlmacenName === null
-        ) {
-          this.SelectedAlmacen.IdAlmacen = " ";
-          this.SelectedAlmacen.Nombre = " ";
-        } else {
+        if (this.SelectedAlmacen === undefined) {
           this.SelectedAlmacen.IdAlmacen = this.detalle_producto.IdAlmacen;
           this.SelectedAlmacen.Nombre = this.detalle_producto.AlmacenName;
         }
 
-        if (
-          (this.SelectedMaterial === undefined &&
-            this.detalle_producto.IdMaterial === undefined) ||
-          (this.detalle_producto.IdMaterial === null &&
-            this.detalle_producto.MaterialName === undefined) ||
-          this.detalle_producto.MaterialName === null
-        ) {
-          this.SelectedMaterial.IdMaterial = " ";
-          this.SelectedMaterial.Nombre = " ";
-        } else {
+        if (this.SelectedMaterial === undefined) {
           this.SelectedMaterial.IdMaterial = this.detalle_producto.IdMaterial;
           this.SelectedMaterial.Nombre = this.detalle_producto.MaterialName;
+        }else{
+          //el valor que se selecciona de el material es el que se pone en el uso bien o serv
+          this.UsoBien = this.SelectedMaterial.Nombre
         }
 
         if (
@@ -2605,23 +2562,21 @@ export class AccountComponent implements OnInit {
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica === undefined &&
-          this.detalle_producto.OrdenEstadisiticaName === undefined
+          this.detalle_producto.IDOINT === undefined &&
+          this.detalle_producto.OINT === undefined
         ) {
-          console.log("datos de orden internaaaaa-----");
+          console.log("datos de orden internaaaaa----- en blanco");
           this.SelectOrdenEstadisitica.IdOrdenInterna = " ";
           this.SelectOrdenEstadisitica.NombreOrder = " ";
         } else if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica.length != 0 &&
-          this.detalle_producto.OrdenEstadisiticaName.length != 0
+          this.detalle_producto.IDOINT.length != 0 &&
+          this.detalle_producto.OINT.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna =
-            this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder =
-            this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =this.detalle_producto.IDOINT;
+          this.SelectOrdenEstadisitica.NombreOrder =this.detalle_producto.OINT;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -2728,8 +2683,8 @@ export class AccountComponent implements OnInit {
               this.Espesificaciones = "";
               this.UsoBien = "";
               this.toast.setMessage(
-                "Puedes seguir editando , datos guardados",
-                "sucsess"
+                "datos guardados",
+                "success"
               );
               //this.cancelEditing();
             },
@@ -2757,10 +2712,12 @@ export class AccountComponent implements OnInit {
       }
     } else if (this.DataSolReg.IdSol === 6) {
       console.log("PRODUCCIONES");
+      console.log(this.precio);
+      console.log(this.cantidad);
+      console.log("*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/")
       if (
-        this.precio == undefined ||
-        (this.precio == 0 && this.cantidad == undefined) ||
-        (this.cantidad == 0 &&
+        this.precio === undefined ||
+        this.cantidad === 0 && this.cantidad === undefined &&
           this.Espesificaciones == undefined &&
           this.UsoBien == undefined &&
           // this.SelectedAlmacen.IdAlmacen === undefined || this.SelectedAlmacen.IdAlmacen === '' &&
@@ -2780,18 +2737,20 @@ export class AccountComponent implements OnInit {
           // this.SelectedNumActivo.IdActivo === undefined || this.SelectedNumActivo.IdActivo === '' &&
           // this.SelectedNumActivo.Nombre === undefined || this.SelectedNumActivo.Nombre === '' &&
           this.SelectedNecesidad.IdNecesidad === undefined &&
-          this.SelectedNecesidad.Nombre === undefined)
+          this.SelectedNecesidad.Nombre === undefined
       ) {
         this.toast.setMessage(
           "si se requiere actualizar un producto, se debe de llenar almenos un campo o seleccionar una opcion",
           "warning"
         );
       } else {
-        if (this.precio == undefined || this.precio == 0) {
+        if (this.precio === undefined || this.precio == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.precio = this.detalle_producto.Precio;
           //this.priceS = this.detalle_producto.PRECIO.toString();
         }
-        if (this.cantidad == undefined || this.cantidad == 0) {
+        if (this.cantidad === undefined || this.cantidad == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.cantidad = this.detalle_producto.CANTIDAD;
         }
         if (this.Espesificaciones == undefined || this.Espesificaciones == "") {
@@ -2915,23 +2874,21 @@ export class AccountComponent implements OnInit {
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica === undefined &&
-          this.detalle_producto.OrdenEstadisiticaName === undefined
+          this.detalle_producto.IDOINT === undefined &&
+          this.detalle_producto.OINT === undefined
         ) {
-          console.log("datos de orden internaaaaa-----");
+          console.log("datos de orden internaaaaa----- en blanco");
           this.SelectOrdenEstadisitica.IdOrdenInterna = " ";
           this.SelectOrdenEstadisitica.NombreOrder = " ";
         } else if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica.length != 0 &&
-          this.detalle_producto.OrdenEstadisiticaName.length != 0
+          this.detalle_producto.IDOINT.length != 0 &&
+          this.detalle_producto.OINT.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna =
-            this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder =
-            this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =this.detalle_producto.IDOINT;
+          this.SelectOrdenEstadisitica.NombreOrder =this.detalle_producto.OINT;
         }
         console.log("NUMERO DE ACTIVO   " + this.SelectedNumActivo);
         if (
@@ -3099,11 +3056,13 @@ export class AccountComponent implements OnInit {
         );
       } else {
         console.log("dentro del ELSE");
-        if (this.precio == undefined) {
+        if (this.precio === undefined || this.precio == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.precio = this.detalle_producto.Precio;
           //this.priceS = this.detalle_producto.PRECIO.toString();
         }
-        if (this.cantidad == undefined) {
+        if (this.cantidad === undefined || this.cantidad == 0) {
+          console.log("Entrand a precios -.-.-.-.-.-")
           this.cantidad = this.detalle_producto.CANTIDAD;
         }
         if (this.Espesificaciones == undefined) {
@@ -3113,30 +3072,12 @@ export class AccountComponent implements OnInit {
           this.UsoBien = this.detalle_producto.BIENOSERV;
         }
         //console.log(this.SelectedAlmacen+"------"+this.detalle_producto.IdAlmacen.count + "   " + this.detalle_producto.AlmacenName.count);
-        if (
-          (this.SelectedAlmacen === undefined &&
-            this.detalle_producto.IdAlmacen === undefined) ||
-          (this.detalle_producto.IdAlmacen === null &&
-            this.detalle_producto.AlmacenName === undefined) ||
-          this.detalle_producto.AlmacenName === null
-        ) {
-          this.SelectedAlmacen.IdAlmacen = " ";
-          this.SelectedAlmacen.Nombre = " ";
-        } else {
+        if (this.SelectedAlmacen === undefined) {
           this.SelectedAlmacen.IdAlmacen = this.detalle_producto.IdAlmacen;
           this.SelectedAlmacen.Nombre = this.detalle_producto.AlmacenName;
         }
 
-        if (
-          (this.SelectedMaterial === undefined &&
-            this.detalle_producto.IdMaterial === undefined) ||
-          (this.detalle_producto.IdMaterial === null &&
-            this.detalle_producto.MaterialName === undefined) ||
-          this.detalle_producto.MaterialName === null
-        ) {
-          this.SelectedMaterial.IdMaterial = " ";
-          this.SelectedMaterial.Nombre = " ";
-        } else {
+        if (this.SelectedMaterial === undefined) {
           this.SelectedMaterial.IdMaterial = this.detalle_producto.IdMaterial;
           this.SelectedMaterial.Nombre = this.detalle_producto.MaterialName;
         }
@@ -3227,23 +3168,21 @@ export class AccountComponent implements OnInit {
         if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica === undefined &&
-          this.detalle_producto.OrdenEstadisiticaName === undefined
+          this.detalle_producto.IDOINT === undefined &&
+          this.detalle_producto.OINT === undefined
         ) {
-          console.log("datos de orden internaaaaa-----");
+          console.log("datos de orden internaaaaa----- en blanco");
           this.SelectOrdenEstadisitica.IdOrdenInterna = " ";
           this.SelectOrdenEstadisitica.NombreOrder = " ";
         } else if (
           this.SelectOrdenEstadisitica.IdOrdenInterna.length === 0 &&
           this.SelectOrdenEstadisitica.NombreOrder.length === 0 &&
-          this.detalle_producto.IdOrdenEstadisitica.length != 0 &&
-          this.detalle_producto.OrdenEstadisiticaName.length != 0
+          this.detalle_producto.IDOINT.length != 0 &&
+          this.detalle_producto.OINT.length != 0
         ) {
           console.log("datos de orden estadistica 2 ------------");
-          this.SelectOrdenEstadisitica.IdOrdenInterna =
-            this.detalle_producto.IdOrdenEstadisitica;
-          this.SelectOrdenEstadisitica.NombreOrder =
-            this.detalle_producto.OrdenEstadisiticaName;
+          this.SelectOrdenEstadisitica.IdOrdenInterna =this.detalle_producto.IDOINT;
+          this.SelectOrdenEstadisitica.NombreOrder =this.detalle_producto.OINT;
         }
         if (
           this.SelectedNumActivo.IdActivo === undefined &&
@@ -3663,13 +3602,11 @@ export class AccountComponent implements OnInit {
     ) {
       //si el a excluir es null o vacio o igual a 3 que es el de Direccion se debe retornar un role 1 (nueva solicitud)
       //para que el gerente de area pueda visualizar la solicitud en su bandeja DENTRO DE LA INTRANET
-      console.log("primer if");
       retunrvalue = 1;
       return retunrvalue;
     } else if (this.DataSolReg.IdStatusSolicitud === 3 && exceptAuthException == 2) {
       //si entra en este if quiere decir que el role excluido es el del gerente por lo que se tiene retornar con un estatus 2 (autorizado por gerente)
       //para que lo puedea visualizar el director de area DENTRO DE LA INTRANET
-      console.log("2 if");
       retunrvalue = 2
       return retunrvalue;
     } else if (
@@ -3677,11 +3614,9 @@ export class AccountComponent implements OnInit {
       exceptAuthException == 0 ||
       exceptAuthException == undefined
     ) {
-      console.log("3 if");
         retunrvalue = 1;
        return retunrvalue;
     } else if (this.DataSolReg.IdStatusSolicitud === 5 && exceptAuthException == 2) {
-      console.log("4 if");
       retunrvalue = 2;
       return retunrvalue;
     } else if (
@@ -3689,16 +3624,13 @@ export class AccountComponent implements OnInit {
       exceptAuthException == 0 ||
       exceptAuthException == undefined
     ) {
-      console.log("5 if");
       retunrvalue =1;
       return retunrvalue;
     } else if (this.DataSolReg.IdStatusSolicitud === 7 && exceptAuthException == 2) {
-      console.log("5 if");
       retunrvalue = 2
       return retunrvalue;
     }
   }
-
 
   openDialog(typeUpdate: number) {
     const dialogRef = this.dialog.open(DialogAdvertenciaUpdateSolpedidoComponent, {
@@ -3731,11 +3663,11 @@ export class AccountComponent implements OnInit {
           console.log("Variable de retorno  " + valReturnStatus);
           this.newStatus = (result === true ) ? this.newStatus = valReturnStatus : this.newStatus = this.DataSolReg.IdStatusSolicitud;
           console.log("Variable global  " + this.newStatus)
-          await this.UpdateLVLProducts();
+          const message = await this.UpdateLVLProducts();
           this.iseditproduct = false;
-            if(result === true){
-              this.EndEditingAndChangedStatus();
-            }
+          if(result === true){
+            this.EndEditingAndChangedStatus();
+          }
         } catch (error) {
           console.log(error);
         }
@@ -4092,5 +4024,7 @@ export class AccountComponent implements OnInit {
 
   //   doc.save("Ejemplo" + ".pdf");
   // }
+
+  
 }
 
