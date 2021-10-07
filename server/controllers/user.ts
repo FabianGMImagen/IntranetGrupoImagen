@@ -30,56 +30,55 @@ export default class UserCtrl extends BaseCtrl {
   }*/
 
   login = (req, res) => {
-        var sql = require("mssql");
-        //env es una variable de entorno para realizar la conexion
-        var env = process.env.NODE_ENV || 'SERWEB';
-        //config es la variable de configuracion y le pide a env (enviroment) que traega el nodo llamado WEB
-        var config = require('../controllers/connections/servers')[env];              
-        var Query = "select IdEmpresa,Nombre from ImagenFinanzas.dbo.Empresas";
-        var Query = "select * from Usuario where Password = '" + req.body.password + "' and Email = '" + req.body.email + "' ;" ; 
-        new sql.ConnectionPool(config).connect().then(pool =>{
-          return pool.request().query(Query)
-        }).then(result =>{
-                console.log( "----------FFFF----------"+ result.rowsAffected );
-                console.log(req.body.password);
-                console.log(result.recordset);
-                if(result.rowsAffected == 0){
-                  return res.sendStatus(403);
-                  
-                }else if(result.rowsAffected == 1){
-                  //console.log("hola como estaaaa");
+    var sql = require("mssql");
+    //env es una variable de entorno para realizar la conexion
+    var env = process.env.NODE_ENV || 'SERWEB';
+    //config es la variable de configuracion y le pide a env (enviroment) que traega el nodo llamado WEB
+    var config = require('../controllers/connections/servers')[env];              
+    var Query = "select * from Usuario where Password = '" + req.body.password + "' and Email = '" + req.body.email + "' ;" ; 
+    new sql.ConnectionPool(config).connect().then(pool =>{
+      return pool.request().query(Query)
+    }).then(result =>{
+            console.log( "----------Registros Recuperados----------"+ result.rowsAffected );
+            console.log(req.body.password);
+            console.log(result.recordset);
+            if(result.rowsAffected == 0 || result.rowsAffected > 1){
+              return res.status(403).json({message:'Existe un error de correo duplicado, por favor contacta a Mesa de Control o Sistemas.'});
+              
+            }else if(result.rowsAffected == 1){
+              //console.log("hola como estaaaa");
 
-                  if(result.recordset[0].Password != req.body.password){
-                    
-                    return res.sendStatus(403);
-                  }
+              if(result.recordset[0].Password != req.body.password){
+                
+                return res.status(403).json({message: 'El Password es incorrecto'});
+              }
 
-                  //console.log("***********************************************");
-                  //console.log(result.recordset[0]);
+              //console.log("***********************************************");
+              //console.log(result.recordset[0]);
 
-                  
-                  //const token = jwt.sign({user: result.recordset[0]}, process.env.SECRET_TOKEN);
-                  const Token = this.token_serv.CreatNewToken(result.recordset[0]);
-                  //console.log(Token);
-                  // console.log("*/*/*/*/*/*/**/*/*/*/*/*/**/*/*/passssss-->" + req.body.password);
-                  // console.log("*/*/*/*/*/*/*/*/ passdel Schema -->" + result.recordset[0].LoginName);
-                  // console.log("*/*/*/*/*/*/*/*/* Nombre del schema -->" + result.recordset[0].NombreCompleto);
-                  // console.log("*/*/*/*/**/*/ ---> este es el Id del Usuario--" + result.recordset[0].IdUsuario);
-                  // console.log("*/*/*/*/*//*/ ---> este es el id de el ROL --" + result.recordset[0].IdRole);
-                  //console.log("TOOOOOKEEEEENNNNNNNNNNNN      " + Token);
-                  //console.log("*/*/*/*/*/*/*/*--> este el id de la direccion--"+ result.recordset[0].IdDireccion);
-                  // const descodeTOKEN = this.token_serv.decodeToken(Token);
-                  // console.log("---------------------------")
-                  // console.log(descodeTOKEN);
-                  res.status(200).json({token: Token});
-                }
+              
+              //const token = jwt.sign({user: result.recordset[0]}, process.env.SECRET_TOKEN);
+              const Token = this.token_serv.CreatNewToken(result.recordset[0]);
+              //console.log(Token);
+              // console.log("*/*/*/*/*/*/**/*/*/*/*/*/**/*/*/passssss-->" + req.body.password);
+              // console.log("*/*/*/*/*/*/*/*/ passdel Schema -->" + result.recordset[0].LoginName);
+              // console.log("*/*/*/*/*/*/*/*/* Nombre del schema -->" + result.recordset[0].NombreCompleto);
+              // console.log("*/*/*/*/**/*/ ---> este es el Id del Usuario--" + result.recordset[0].IdUsuario);
+              // console.log("*/*/*/*/*//*/ ---> este es el id de el ROL --" + result.recordset[0].IdRole);
+              //console.log("TOOOOOKEEEEENNNNNNNNNNNN      " + Token);
+              //console.log("*/*/*/*/*/*/*/*--> este el id de la direccion--"+ result.recordset[0].IdDireccion);
+              // const descodeTOKEN = this.token_serv.decodeToken(Token);
+              // console.log("---------------------------")
+              // console.log(descodeTOKEN);
+              res.status(200).json({token: Token});
+            }
 
-                sql.close();
-        }).catch(err =>{
-            if(err) console.log(err);
             sql.close();
-        });
-      }
+    }).catch(err =>{
+        if(err) console.log(err);
+        sql.close();
+    });
+  }
 
 
 

@@ -568,6 +568,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.DataInsert.Empresa.Bukrs);
     // console.log(this.DataInsert.Empresa.Butxt);
     // console.log("entrando al metodo filtro");
+    this.DataInsert.Imputacion = undefined;
     this.DataInsert.Cantidad = 0;
     this.price ='0';
     this.DataInsert.Almacen = undefined;
@@ -653,6 +654,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log("dentro de el metodo que selecciona");
     // console.log(this.DataInsert.Plaza.IdPlaza);
     // console.log(this.DataInsert.Plaza.Nombre);
+    this.DataInsert.Imputacion = undefined;
     this.DataInsert.Cantidad = 0;
     this.price ='0';
     this.DataInsert.Almacen = undefined;
@@ -2200,20 +2202,24 @@ export class ListadoSolicitudesComponent implements OnInit {
   //fin de los metoso para poder agregar o eliminar materiales o servicios
 
   buscaIdAutorizador(idarea: Area) {
-    this.solicitudComp.getIdAutorizador(idarea.IdDireccion).subscribe(
-      (data) => {
-        //console.log(data);
-        this.ListUser = data;
-        this.DataInsert.Autorizador = this.ListUser[0];
-      },
-      (error) => {
-        if (error.status == 403 || error.status == 404) {
-          this.toast.setMessage(error.message, "danger");
-          this.auth.logout();
+    if(idarea != undefined){
+      this.solicitudComp.getIdAutorizador(idarea.IdDireccion).subscribe(
+        (data) => {
+          //console.log(data);
+          this.ListUser = data;
+          this.DataInsert.Autorizador = this.ListUser[0];
+        },
+        (error) => {
+          if (error.status == 403 || error.status == 404) {
+            this.toast.setMessage(error.message, "danger");
+            this.auth.logout();
+          }
+          console.log("error al recuperar usuario autorizador" + error);
         }
-        console.log("error al recuperar usuario autorizador" + error);
-      }
-    );
+      );
+    }else{
+      this.toast.setMessage("Por favor valida los datos de Usuario, si continual el problema contactar a sistemas.", "danger");
+    }
   }
 
   //------------------------------------------------------------------Seccion de Hijos-------------------------------------------------------*/
@@ -2531,7 +2537,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       this.DataInsert.Plaza === undefined ||
       this.DataInsert.Moneda === undefined ||
       this.DataInsert.Imputacion === undefined ||
-      this.DataInsert.Justificacion === undefined
+      this.DataInsert.Justificacion === undefined ||
+      this.DataInsert.Justificacion === ''
 
       //  || this.DataInsert.Posicion === undefined
       //|| this.DataInsert.Tipo === undefined
@@ -2542,10 +2549,18 @@ export class ListadoSolicitudesComponent implements OnInit {
       //  || this.DataInsert.GArticulo === undefined
       //  || this.DataInsert.GCompra === undefined
     ) {
-      this.toast.setMessage(
-        "Los Campos de Usuario y Datos Generales son requeridos, Revisar Informacion",
-        "warning"
-      );
+      if(this.DataInsert.Justificacion === undefined ||
+        this.DataInsert.Justificacion === ''){
+          this.toast.setMessage(
+            "El campo de Justificacion es un campo obligatorio, por favor ingresa una Justificacion.",
+            "warning"
+          );
+      }else{
+        this.toast.setMessage(
+          "Los Campos de Usuario y Datos Generales son requeridos, Revisar Informacion",
+          "warning"
+        );
+      }
       this.progressbar = false;
     } else {
       //this.uploader._fileSizeFilter;
@@ -2692,7 +2707,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -2719,6 +2733,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -2732,6 +2747,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -2852,7 +2868,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -2879,8 +2894,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (err) => {
+                                          this.ngOnInit();
                                           console.log(err);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -2984,7 +3001,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   this.tel.reset();
                                   this.ext.reset();
                                   this.nombreProduccion.reset();
-                                  this.ngOnInit();
                                   this.addProdForm.reset();
                                   this.BloqMoreItem = false;
                                   var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -3011,10 +3027,12 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "success"
                                         );
                                         this.progressbar = false;
+                                        this.ngOnInit();
                                       },
                                       (err) => {
                                         //console.log("----ÑÑÑÑÑÑÑÑÑÑ");
                                         //location.reload();
+                                        this.ngOnInit();
                                         console.log(err);
                                         this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -3173,7 +3191,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -3200,6 +3217,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -3213,6 +3231,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -3322,7 +3341,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -3349,8 +3367,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (err) => {
+                                          this.ngOnInit();
                                           console.log(err);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -3448,7 +3468,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   this.tel.reset();
                                   this.ext.reset();
                                   this.nombreProduccion.reset();
-                                  this.ngOnInit();
                                   this.addProdForm.reset();
                                   this.BloqMoreItem = false;
                                   var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -3475,8 +3494,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "success"
                                         );
                                         this.progressbar = false;
+                                        this.ngOnInit();
                                       },
                                       (err) => {
+                                        this.ngOnInit();
                                         console.log(err);
                                         this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -3746,6 +3767,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "success"
                                     );
                                     //si se guardo la Solicitud limpiamos los registros
+                                    this.ngOnInit();
                                     this.isEnviadoSolPed = false;
                                     this.date = "";
                                     this.usr.reset();
@@ -3754,12 +3776,12 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
                                     var SendStatusmailRechazo = 5; //este numero se pondra en el boton de rechaar para saber que el directore rechaza la nueva solicitud desde el mail.
                                     //esta parte es para el envio de correo para el dir de area.
+                                    
                                     this.solicitudComp
                                       .SendEmailNewSolicitud(
                                         res,
@@ -3775,12 +3797,14 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       )
                                       .subscribe(
                                         (res) => {
+                                          console.log("antes de mandar al ngOinit")
                                           console.log(res);
                                           this.toast.setMessage(
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -3794,6 +3818,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -3897,7 +3922,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -3924,6 +3948,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -3937,6 +3962,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -4040,7 +4066,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   this.tel.reset();
                                   this.ext.reset();
                                   this.nombreProduccion.reset();
-                                  this.ngOnInit();
                                   this.addProdForm.reset();
                                   this.BloqMoreItem = false;
                                   var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4067,6 +4092,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "success"
                                         );
                                         this.progressbar = false;
+                                        this.ngOnInit();
                                       },
                                       (error) => {
                                         if (
@@ -4080,6 +4106,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           this.auth.logout();
                                           this.progressbar = false;
                                         }
+                                        this.ngOnInit();
                                         console.log(error);
                                         this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -4268,7 +4295,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4295,6 +4321,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -4308,6 +4335,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -4417,7 +4445,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4444,6 +4471,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -4457,6 +4485,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -4564,7 +4593,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   this.tel.reset();
                                   this.ext.reset();
                                   this.nombreProduccion.reset();
-                                  this.ngOnInit();
                                   this.addProdForm.reset();
                                   this.BloqMoreItem = false;
                                   var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4591,6 +4619,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "success"
                                         );
                                         this.progressbar = false;
+                                        this.ngOnInit();
                                       },
                                       (error) => {
                                         if (
@@ -4604,6 +4633,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           this.auth.logout();
                                           this.progressbar = false;
                                         }
+                                        this.ngOnInit();
                                         console.log(error);
                                         this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -4721,7 +4751,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              const update = this.uploader.uploadAll();
+                              console.log("-.-.-.-.-.-.-.-.-.-.-Valor de regreso del UPDATE DEL ARCHIVO -.-.-.-.-.-.-.-.-.-.")
+                              console.log(update)
+                              console.log("-.-.-.-.-.-.-.-.-.-.-Valor de regreso del UPDATE DEL ARCHIVO -.-.-.-.-.-.-.-.-.-.")
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -4765,7 +4798,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
+                                    
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4792,6 +4825,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -4805,6 +4839,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -4823,10 +4858,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       this.auth.logout();
                                       this.progressbar = false;
                                     }
-                                    console.log(
-                                      "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                    this.toast.setMessage(
+                                      "Error al recuperar la informacion del usuario aotorizador por Direccion y al Enviar el mail",
+                                      "danger"
                                     );
+                                    console.log(error);
                                     this.progressbar = false;
                                   }
                                 );
@@ -4910,7 +4946,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
+                                    
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4937,6 +4973,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -4950,6 +4987,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -5051,7 +5089,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   this.tel.reset();
                                   this.ext.reset();
                                   this.nombreProduccion.reset();
-                                  this.ngOnInit();
                                   this.addProdForm.reset();
                                   this.BloqMoreItem = false;
                                   var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -5078,6 +5115,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "success"
                                         );
                                         this.progressbar = false;
+                                        this.ngOnInit();
                                       },
                                       (error) => {
                                         if (
@@ -5091,6 +5129,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           this.auth.logout();
                                           this.progressbar = false;
                                         }
+                                        this.ngOnInit();
                                         console.log(error);
                                         this.progressbar = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -5260,7 +5299,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -5287,6 +5325,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -5300,6 +5339,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -5403,7 +5443,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -5430,6 +5469,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -5443,6 +5483,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -5546,7 +5587,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   this.tel.reset();
                                   this.ext.reset();
                                   this.nombreProduccion.reset();
-                                  this.ngOnInit();
                                   this.addProdForm.reset();
                                   this.BloqMoreItem = false;
                                   var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -5573,6 +5613,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "success"
                                         );
                                         this.progressbar = false;
+                                        this.ngOnInit();
                                       },
                                       (error) => {
                                         if (
@@ -5608,6 +5649,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
+                                  this.ngOnInit();
                                   this.progressbar = false;
                                 }
                               );
@@ -5878,7 +5920,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -5905,6 +5946,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -5917,6 +5959,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             );
                                             this.auth.logout();
                                           }
+                                          this.progressbar = false;
+                                          this.ngOnInit();
                                           console.log(error);
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
@@ -5933,6 +5977,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       );
                                       this.auth.logout();
                                     }
+                                    this.ngOnInit();
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
@@ -6015,7 +6060,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    this.ngOnInit();
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -6042,6 +6086,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "success"
                                           );
                                           this.progressbar = false;
+                                          this.ngOnInit();
                                         },
                                         (error) => {
                                           if (
@@ -6055,6 +6100,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             this.auth.logout();
                                             this.progressbar = false;
                                           }
+                                          this.ngOnInit();
                                           console.log(error);
                                           this.progressbar = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -6156,7 +6202,6 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   this.tel.reset();
                                   this.ext.reset();
                                   this.nombreProduccion.reset();
-                                  this.ngOnInit();
                                   this.addProdForm.reset();
                                   this.BloqMoreItem = false;
                                   var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -6183,6 +6228,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "success"
                                         );
                                         this.progressbar = false;
+                                        this.ngOnInit();
                                       },
                                       (error) => {
                                         if (
@@ -6195,6 +6241,8 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           );
                                           this.auth.logout();
                                         }
+                                        this.ngOnInit();
+                                        this.progressbar = false;
                                         console.log(error);
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
@@ -6240,130 +6288,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                     );
                   }
                 );
-
-              // this.DataInsert.TipoSolicitud = 7;
-              // this.solicitudComp.InsertSolicitudPedido1(this.DataInsert).subscribe(
-              //   res => {
-              //     // console.log("**********************");
-              //     // console.log(res);
-              //     // console.log("*************************");
-              //     //console.log(this.DataInsert.Area.IdDireccion);
-              //     this.IdSoliforFile = res;
-              //     var Role;
-              //     var status;
-
-              //     this.solicitudComp.checkdirauthexeption(this.DataInsert.Area.IdDireccion).subscribe(data =>{
-              //         //se envia parametro de IdSOlicitud para identificar correctamente la cotizacion
-              //         this.uploader.options.headers=[];
-              //         this.uploader.options.headers.push({name:'IdSol', value:this.IdSoliforFile.toString()});
-              //         this.uploader.setOptions(this.uploader);
-              //         this.uploader.uploadAll();
-              //       console.log(data[0]);
-              //       console.log("¡¡¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?¡?");
-              //       console.log(this.DataInsert.Area.IdDireccion);
-              //       if(data[0] != undefined || data[0] != null){
-              //         Role = data[0].IdRole + 1;
-              //         status = data[0].IdRole;
-              //         console.log(Role);
-              //         console.log(status);
-              //         //console.log(this.DataInsert.Area.IdDireccion);
-              //         var Solicitante = this.DataInsert.Usr;
-              //         var IdDIreccion = this.DataInsert.Area.IdDireccion;
-              //         var NombreDir = this.DataInsert.Area.Nombre;
-              //             this.solicitudComp.getUserAutorizador(this.DataInsert.Area.IdDireccion,Role).subscribe(data =>{
-              //               this.UsrAuthEmail = data;
-              //               console.log("------------------------------");
-              //               console.log(this.UsrAuthEmail[0]);
-              //               console.log("------------------0------------");
-              //               console.log("Id de la DIreccion a enviar correo"+IdDIreccion);
-              //               console.log("Nombre de la DIrecion a la que se enviara mail--->" + NombreDir);
-              //               this.toast.setMessage('Envio de Solicitud Correcto. ', 'success');
-              //               //si se guardo la Solicitud limpiamos los registros
-              //               this.isEnviadoSolPed = false;
-              //               this.date = '';
-              //               this.usr.reset();
-              //               this.puesto.reset();
-              //               this.email.reset();
-              //               this.tel.reset();
-              //               this.ext.reset();
-              //               this.nombreProduccion.reset();
-              //               this.ngOnInit();
-              //               this.addProdForm.reset();
-              //               this.BloqMoreItem = false;
-              //               //esta parte es para el envio de correo para el dir de area.
-              //               this.solicitudComp.SendEmailNewSolicitud(res, status, IdDIreccion,  NombreDir, Solicitante, this.UsrAuthEmail[0].IdRole, this.UsrAuthEmail[0].NombreCompleto, this.UsrAuthEmail[0].Email )
-              //               .subscribe( res =>{
-              //                 console.log(res);
-              //                 this.toast.setMessage('Se realizo el envio del Email a Dir de Area','success');
-              //               }, err=>{
-              //                 console.log(err);
-              //                 //this.toast.setMessage('Error en el envio de el Correo','success');
-              //               })
-              //             },
-              //             err=>{
-              //               console.log("error al recuperar la informacion del usuario aotorizador por DIreccion" + err);
-              //             });
-              //       }else{
-              //             Role = 2;
-              //             status = 1;
-              //             console.log(Role);
-              //             console.log(status);
-              //             console.log(this.DataInsert.Area.IdDireccion);
-              //             var Solicitante = this.DataInsert.Usr;
-              //             var IdDIreccion = this.DataInsert.Area.IdDireccion;
-              //             var NombreDir = this.DataInsert.Area.Nombre;
-              //                 this.solicitudComp.getUserAutorizador(this.DataInsert.Area.IdDireccion,Role).subscribe(data =>{
-              //                   this.UsrAuthEmail = data;
-              //                   console.log("------------------------------");
-              //                   console.log(this.UsrAuthEmail[0]);
-              //                   console.log("------------------0------------");
-              //                   console.log("Id de la DIreccion a enviar correo"+IdDIreccion);
-              //                   console.log("Nombre de la DIrecion a la que se enviara mail--->" + NombreDir);
-              //                   this.toast.setMessage('Envio de Solicitud Correcto. ', 'success');
-              //                   //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
-              //                   this.isEnviadoSolPed = false;
-              //                   this.ngOnInit();
-              //                   //si se guardo la Solicitud limpiamos los registros
-              //                   this.date = '';
-              //                   this.usr.reset();
-              //                   this.puesto.reset();
-              //                   this.email.reset();
-              //                   this.tel.reset();
-              //                   this.ext.reset();
-              //                   this.nombreProduccion.reset();
-              //              F     this.ngOnInit();
-              //                   this.addProdForm.reset();
-              //                   this.BloqMoreItem = false;
-              //                   //esta parte es para el envio de correo para el dir de area.
-              //                   this.solicitudComp.SendEmailNewSolicitud(res, status, IdDIreccion,  NombreDir, Solicitante, this.UsrAuthEmail[0].IdRole, this.UsrAuthEmail[0].NombreCompleto, this.UsrAuthEmail[0].Email )
-              //                   .subscribe( res =>{
-              //                     console.log(res);
-              //                     this.toast.setMessage('Se realizo el envio del Email a Dir de Area','success');
-
-              //                   }, err=>{
-              //                     console.log(err);
-              //                     //this.toast.setMessage('Error en el envio de el Correo','success');
-              //                   })
-              //                 },
-              //                 err=>{
-              //                   console.log("error al recuperar la informacion del usuario aotorizador por DIreccion" + err);
-              //                 });
-              //       }
-              //     }, err=>{
-              //       console.log("error al recuperar la informacion de las Exxcepcions" + err );
-              //     });
-
-              //   },
-              //   error => {
-              //     this.isEnviadoSolPed = false;
-              //     console.log(error)
-              //     this.toast.setMessage('Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor '+ error, 'danger');
-              //   }
-              // );
             } else {
               console.log("intento faillido");
               this.toast.setMessage(
-                "Ocurrio un problema al enviar la solicitud, Por Favor verifica la informacion ",
+                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un  Sub Producto, Por Favor verifica la informacion ",
                 "danger"
               );
               this.progressbar = false;

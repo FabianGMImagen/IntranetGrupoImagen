@@ -13,6 +13,7 @@ import { DialogDetalleSolConsumoInternoComponent } from '../dialog-detalle-sol-c
 })
 export class DialogNewCategoryComponent implements OnInit {
   newcategory:string;
+  descripcioncat:string;
   constructor( 
     public solcompraSRV:SolicitudCompraService,
     public dialog: MatDialog,
@@ -26,8 +27,8 @@ export class DialogNewCategoryComponent implements OnInit {
   }
 
    onYesClick(){
-    if(this.newcategory != undefined){
-      this.solcompraSRV.InsertNewCategory(this.newcategory).then(result=>{
+    if(this.newcategory != undefined || this.descripcioncat == undefined || this.newcategory == '' || this.descripcioncat == ''){
+      this.solcompraSRV.InsertNewCategory(this.newcategory, this.descripcioncat).then(result=>{
         if(result == undefined){
           this.toast.setMessage("Error al guardar la Categoría" ,"warning");
         }

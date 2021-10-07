@@ -11,8 +11,8 @@ import { read } from 'fs';
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
 
-const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
-const DIR = '../IntranetProduccion/datos';
+const ruta = "http://10.29.148.40:3000/public/"
+const DIR = '../IntranetGrupoImagen/datos';
 //const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
 var id = 0;
 let storage = multer.diskStorage({
@@ -47,41 +47,46 @@ export default class UploadFilesController {
            console.log("fin de los varoles de los archuvos-------------------------");
 
            var uploadfile = multer({storage: storage}).single(' ');
-           uploadfile(req, res, function (err) {
-                //console.log("File = " + req.file.originalname + " - " + path.extname(req.file.originalname) );
-                if (err) {
-                    console.log("Se genero un error al enviar el archivo"+ err);
-                    return res.send({
-                        success: false
-                    });
-                }
-                // Everything went fine.
-                //console.log("GOOOOD------- guardamos la ruta del archivo subido a la DB");
-                var RutaCotizacion = encodeURI(ruta + req.headers.idsol+' '+req.file.originalname);
-                console.log(req.file);
-                console.log("Esta es la ruta del archivo---" + RutaCotizacion);
+           try {
+            uploadfile(req, res, function (err) {
+              //console.log("File = " + req.file.originalname + " - " + path.extname(req.file.originalname) );
+              if (err) {
+                  console.log("Se genero un error al enviar el archivo"+ err);
+                  
+                  return res.send({
+                      success: false
+                  });
+              }
+              // Everything went fine.
+              //console.log("GOOOOD------- guardamos la ruta del archivo subido a la DB");
+              var RutaCotizacion = encodeURI(ruta + req.headers.idsol+' '+req.file.originalname);
+              console.log(req.file);
+              console.log("Esta es la ruta del archivo---" + RutaCotizacion);
 
-                var sql = require("mssql");
-                //variable de entorno para realizar la coneccion
-                var env = process.env.NODE_ENV || 'SERWEB';
-                //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
-                var config = require('../controllers/connections/servers')[env];
-                new sql.ConnectionPool(config).connect().then(pool =>{
-                    return pool.request()
-                                      .input('Ruta', sql.VarChar, RutaCotizacion)
-                                      .execute('InsertRutaCotizacion')
-                  }).then(resultt => {
-                    console.log(resultt);
-                    res.status(201).json(resultt.recordset);
-                    sql.close();
-                  }).catch(err => {
-                    if(err) console.log("errror al hacer el insert--->" + err);
-                    sql.close();
-                  }); 
-                return res.send({
-                    success: true
-                })
-            });
+              var sql = require("mssql");
+              //variable de entorno para realizar la coneccion
+              var env = process.env.NODE_ENV || 'SERWEB';
+              //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
+              var config = require('../controllers/connections/servers')[env];
+              new sql.ConnectionPool(config).connect().then(pool =>{
+                  return pool.request()
+                                    .input('Ruta', sql.VarChar, RutaCotizacion)
+                                    .execute('InsertRutaCotizacion')
+                }).then(resultt => {
+                  sql.close();
+                  res.status(200).json(resultt);
+                  res.end();
+                }).catch(err => {
+                  sql.close();
+                  if(err) console.log(err);
+                  res.end();
+                }); 
+              //return res.send({success: true})
+          });
+       } catch (error) {
+         console.log("Error en la carga del archivo en UploadFilesController");
+         console.log(error)
+       }
     }
 
     createFileComrpas = (req, res) => {
