@@ -306,7 +306,7 @@ export class AdminComponent implements OnInit {
         );
         this.auth.logout();
       }
-      this.toast.setMessage('Error al actualizar.'+ error , 'danger');
+      this.toast.setMessage('Error al actualizar, '+ error.error , 'danger');
     })
   }
 
