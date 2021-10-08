@@ -498,10 +498,18 @@ export default class UserCtrl extends BaseCtrl {
           res.status(200).json(result.recordset);
           sql.close();
         }).catch(err=>{
-          if(err) console.log(err);
           sql.close();
+          if(err){
+            console.log(err.number);
+            console.log(err.originalError.info.message)
+            if(err.number == 2627){
+              res.status(401).json('El usuario ya tiene la direccion seleccionada ligada.')
+            }else{
+              res.status(401).json(err)
+            }
+          } 
+          
         });
-
       }
 
       DeleteDirUser = (req, res) =>{
