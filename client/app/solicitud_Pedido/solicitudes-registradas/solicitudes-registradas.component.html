@@ -123,7 +123,9 @@
                 <div class="example-element-name">
                   <a class="titles">CATEGORIA: </a> {{ element.CATEGORIA }}
                 </div>
-                <!--<div class="example-element-name"><a>Empresa:</a> {{element.Empresa}}</div>-->
+                <div class="example-element-name">
+                  <a class="titles">MONEDA:</a> {{element.Moneda}}
+                </div>
               </div>
               <div class="example-element-description">
                 <div>
@@ -134,6 +136,9 @@
                   <div class="example-element-name">
                     <a class="titles">JUSTIFICACION:</a>
                     {{ element.Justificacion }}
+                  </div>
+                  <div class="example-element-name" *ngIf="this.auth.isAdmin">
+                    <a class="monto">TOTAL <i class="fas fa-coins"></i> : {{element.MONTO | currency }}</a>  
                   </div>
                   <mat-label *ngIf="
                       this.auth.isCheckPresupuesto || this.auth.isCompras ||this.auth.isComprador &&

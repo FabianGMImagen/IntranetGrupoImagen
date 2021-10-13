@@ -29,9 +29,11 @@ export class SolicitudesCompraRegistradas{
     Tel:string;
     Ext:string;
     Produccion:string;
+    Moneda:string;
     Justificacion:string;
     MotivoRechazo?:string;
     RutaCotizacion:string;
+    MONTO:number;
     //IdSAP:string;
 
     //valores para mostrar contenido en vista dependiendo si se cambio el satus de la solciitud y si se tiene registro de un SAP ID

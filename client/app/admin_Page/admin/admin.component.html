@@ -3,6 +3,7 @@
 <app-toast [message]="toast.message"></app-toast>
 
 <mat-tab-group *ngIf="!isLoading">
+  
   <mat-tab label="Usuarios">
     <div *ngIf="isViewListUsr">
       <div class="card">
@@ -65,7 +66,6 @@
           </div>
         </div>
     </div>
-  
     <div *ngIf="isEditingUsr">
       <div class="card">
           <div class="card-header">
@@ -206,6 +206,7 @@
       </div>
     </div>  
   </mat-tab>
+
   <mat-tab label="Direcciones"> 
     <div *ngIf="isViewListDir">
 
@@ -289,5 +290,6 @@
       </mat-card>
     </div>
   </mat-tab>
+
   <mat-tab label="Categorías"> <app-admin-categoria></app-admin-categoria> </mat-tab>
 </mat-tab-group>

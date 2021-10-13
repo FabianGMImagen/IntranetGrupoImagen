@@ -95,13 +95,10 @@
     <ng-template mat-tab-label>
       <mat-icon>library_books</mat-icon>
       <div style="padding-left: 5px; padding-right: 5px;"> Sol. Consumo Int</div>
-      <!-- <div class="spinner-border text-danger" role="status" *ngIf="isload">
-        <span class="visually-hidden"></span>
-      </div> -->
     </ng-template>
-    
     <app-account-sol-consumo-list></app-account-sol-consumo-list>
   </mat-tab>
+  
   <div class="spinner-border text-danger" role="status" *ngIf="isload">
     <span class="visually-hidden"></span>
   </div>
@@ -339,7 +336,7 @@
                               <ngx-mat-select-search [formControl]="OrdenEstadisticaFilterCtrl"></ngx-mat-select-search>
                             </mat-option>
                             <mat-option *ngFor="let oesestadistica of filteredOrdenEstadistica | async"
-                              [value]="oesestadistica">{{oesestadistica.IdOrdenInterna}}-{{oesestadistica.NombreOrder}}
+                              [value]="oesestadistica">{{detalle_subproducts.IDOINT}}-{{detalle_subproducts.OINT}}
                             </mat-option>
                           </mat-select>
                           <mat-hint>{{detalle_subproducts.NameOrdenEstadisticaChild}}</mat-hint>
@@ -581,7 +578,7 @@
                 <mat-option *ngFor="let oesestadistica of filteredOrdenEstadistica | async" [value]="oesestadistica">
                   {{oesestadistica.IdOrdenInterna}}-{{oesestadistica.NombreOrder}}</mat-option>
               </mat-select>
-              <mat-hint>{{detalle_producto.OrdenEstadisticaName}}</mat-hint>
+              <mat-hint>{{detalle_producto.OINT}}</mat-hint>
             </mat-form-field>
           </div>
         </div>

@@ -46,6 +46,10 @@
     width: 300px !important;
 }
 
+.catLarge{
+    width: 350px !important;
+}
+
 .moreLarge{
     width: 400px !important;
 }
@@ -73,3 +77,6 @@
     bottom: 0.25em !important;
 } */
 
+.progressbar{
+    padding: 15px;
+}

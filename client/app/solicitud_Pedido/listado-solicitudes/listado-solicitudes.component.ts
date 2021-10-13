@@ -1496,20 +1496,24 @@ export class ListadoSolicitudesComponent implements OnInit {
       var Id = this.DataInsert.Productos.length;
       this.Producto.IdPrduct = Id + 1;
     }
-    console.log("Cenro de Costos  " + this.Producto.CentroCosto);
-    console.log("Orden de Invercion  " + this.SelectedOInvercion);
-    console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
-    console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
-    console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
-    console.log("Numero de Activo   " + this.Producto.NumActivo);
-    console.log("Numero de Necesidad   " + this.Producto.NumNeces);
-    console.log("Uso de Producto  " + this.Producto.UsoProd);
-    console.log("Especificaciones   " + this.Producto.Espf.length);
-    console.log("Material   " + this.Producto.Material);
-    console.log("Almacen  " + this.Producto.Almacen);
-    console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
+    // console.log("Cantidad ----> " + this.DataInsert.Cantidad)
+    // console.log("Precio ----> " + this.DataInsert.Precio)
+    // console.log("Cenro de Costos  " + this.Producto.CentroCosto);
+    // console.log("Orden de Invercion  " + this.SelectedOInvercion);
+    // console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
+    // console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
+    // console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
+    // console.log("Numero de Activo   " + this.Producto.NumActivo);
+    // console.log("Numero de Necesidad   " + this.Producto.NumNeces);
+    // console.log("Uso de Producto  " + this.Producto.UsoProd);
+    // console.log("Especificaciones   " + this.Producto.Espf.length);
+    // console.log("Material   " + this.Producto.Material);
+    // console.log("Almacen  " + this.Producto.Almacen);
+    // console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 1) {
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1587,6 +1591,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       }
       this.getAllCuentasMayor(this.DataInsert.Empresa,this.DataInsert.Imputacion.Acronimo);
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion != undefined &&
         this.Producto.CuentaMayor != undefined &&
@@ -1661,6 +1667,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         });
       }
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto != undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor !== undefined &&
@@ -1746,6 +1754,8 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1824,6 +1834,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         });
       }
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 0 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1833,8 +1845,7 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd.length != 0 &&
-        this.Producto.Espf.length != 0
+        this.Producto.UsoProd.length != 0
       ) {
         this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
           this.Producto.UsoProd
@@ -1919,6 +1930,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         });
       }
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto != undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor != undefined &&
@@ -2004,6 +2017,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES")
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -2337,14 +2352,14 @@ export class ListadoSolicitudesComponent implements OnInit {
     console.log("estos son los valores de los Hijos");
     console.log(this.ChildsProduct.Cantidad);
     console.log(this.ChildsProduct.Precio);
-    console.log(this.ChildsProduct.IdUMedidaChild);
-    console.log(this.ChildsProduct.NameUMedidaChild);
-    console.log(this.ChildsProduct.IdOrdenEstadisticaChild);
-    console.log(this.ChildsProduct.NameOrdenEstadisticaChild);
-    console.log(this.ChildsProduct.IdCentroCostoChild);
-    console.log(this.ChildsProduct.CentroCostoNameChild);
-    console.log(this.ChildsProduct.IdCuentaMayorChild);
-    console.log(this.ChildsProduct.NameCuentaMayorChild);
+    // console.log(this.ChildsProduct.IdUMedidaChild);
+    // console.log(this.ChildsProduct.NameUMedidaChild);
+    // console.log(this.ChildsProduct.IdOrdenEstadisticaChild);
+    // console.log(this.ChildsProduct.NameOrdenEstadisticaChild);
+    // console.log(this.ChildsProduct.IdCentroCostoChild);
+    // console.log(this.ChildsProduct.CentroCostoNameChild);
+    // console.log(this.ChildsProduct.IdCuentaMayorChild);
+    // console.log(this.ChildsProduct.NameCuentaMayorChild);
     this.ChildsProduct.TextoServicio = this.RemoveCaracteresEpeciales(
       this.ChildsProduct.TextoServicio
     ); //quitamos caracteres especiales con la exprecion regular
@@ -6291,7 +6306,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             } else {
               console.log("intento faillido");
               this.toast.setMessage(
-                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un  Sub Producto, Por Favor verifica la informacion ",
+                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un Sub Producto, Por Favor verifica la informacion ",
                 "danger"
               );
               this.progressbar = false;

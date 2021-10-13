@@ -299,6 +299,9 @@ export class AdminComponent implements OnInit {
       this.getUsers();
       this.GetAllDirecciones();
     }, error=>{
+      //console.log("Dentro del metodo para agregar una direccion a un usuario")
+      //console.log(error)
+
       if(error.status == 403 || error.status == 404){
         this.toast.setMessage(
           error.message,
