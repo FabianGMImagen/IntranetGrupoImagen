@@ -430,7 +430,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.solicitudComp.getAllSolicitudNewSoli(status, this.Direcc).subscribe(
       (data) => {
         this.ListSolRegistr = data;
-        //console.log(this.ListSolRegistr);
+        if(data.length == 0){
+          this.toast.setMessage("Ninguna Solicitud Pendiente para esta Direccion.", "warning");
+        }
       },
       (error) => {
         if (error.status == 403 || error.status == 404) {
@@ -440,14 +442,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
         console.log("error al recuperar las solicitudes" + error);
       },
       () => {
-        //  this.ListSolRegistr.forEach(element =>{
-        //    if(element.Acronimo == 4 || element.Acronimo == 7){
-        //     this.bloqbuttonchild = false;
-        //    }else{
-        //      this.bloqbuttonchild = true;
-        //    }
-        //  });
-        //console.log("%&/&/)=(&/(&/%&/()(= "+this.bloqbuttonchild);
         this.datSource = new MatTableDataSource(this.ListSolRegistr);
         this.datSource.paginator = this.paginator;
         this.datSource.sort = this.sort;
@@ -466,6 +460,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
     var status = 2;
     this.solicitudComp.getAllSolicitudNewSoli(status, this.Direcc).subscribe(
       (data) => {
+        if(data.length == 0){
+          this.toast.setMessage("Ninguna Solicitud Pendiente para esta Direccion.", "warning");
+        }
         this.ListSolRegistr = data;
         //console.log(this.ListSolRegistr);
         // this.ListSolRegistr.forEach(element =>{
@@ -503,6 +500,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
     var status = 4;
     this.solicitudComp.getAllSolicitudNewSoli(status, this.Direcc).subscribe(
       (data) => {
+        if(data.length == 0){
+          this.toast.setMessage("Ninguna Solicitud Pendiente para esta Direccion.", "warning");
+        }
         this.ListSolRegistr = data;
         //console.log(this.ListSolRegistr);
       },
@@ -557,6 +557,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.solicitudComp.getAllSolicitudNewSoli(status.IdStatusSolicitud, this.Direcc)
       .subscribe(
         (data) => {
+          if(data.length == 0){
+            this.toast.setMessage("Ninguna Solicitud Pendiente para esta Direccion.", "warning");
+          }
           this.ListSolRegistr = data;
           //console.log(this.ListSolRegistr);
         },
@@ -577,8 +580,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
     this.solicitudComp.getAllSolicitudNewSoliforCategori(status.IdStatusSolicitud, this.Direcc, IdUser)
       .subscribe(
         (data) => {
+          if(data.length == 0){
+            this.toast.setMessage("Ninguna Solicitud Pendiente para esta Direccion.", "warning");
+          }
           this.ListSolRegistr = data;
-          console.log(this.ListSolRegistr);
         },
         (error) => console.log("error al recuperar las solicitudes" + error),
         () => {
@@ -1203,6 +1208,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                   console.log(
                                     "Error al enviar el correo " + error
                                   );
+                                  this.isrechazada = false;
                                   this.motivo_Rechazo = '';
                                   this.SelectedStatus = undefined;
                                   this.toast.setMessage(
@@ -1256,7 +1262,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
         console.log(data2.DIVISION);
         this.SelectedStatus.IdSolicitud = data2.ID;
         console.log(this.SelectedStatus.IdSolicitud);
-        if(this.SelectedStatus.IdStatusSolicitud != 5 && this.motivo_Rechazo != undefined){
+        if(this.SelectedStatus.IdStatusSolicitud == 5 && this.motivo_Rechazo != undefined){
           //console.log("es otro estatus o no esta indefinido la variable de rechazo")
           this.solicitudComp
             .UpdateStatusSolicitud(

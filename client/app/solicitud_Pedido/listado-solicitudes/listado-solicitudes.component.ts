@@ -1496,20 +1496,22 @@ export class ListadoSolicitudesComponent implements OnInit {
       var Id = this.DataInsert.Productos.length;
       this.Producto.IdPrduct = Id + 1;
     }
-    console.log("Cenro de Costos  " + this.Producto.CentroCosto);
-    console.log("Orden de Invercion  " + this.SelectedOInvercion);
-    console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
-    console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
-    console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
-    console.log("Numero de Activo   " + this.Producto.NumActivo);
-    console.log("Numero de Necesidad   " + this.Producto.NumNeces);
-    console.log("Uso de Producto  " + this.Producto.UsoProd);
-    console.log("Especificaciones   " + this.Producto.Espf.length);
-    console.log("Material   " + this.Producto.Material);
-    console.log("Almacen  " + this.Producto.Almacen);
-    console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
+    // console.log("Cenro de Costos  " + this.Producto.CentroCosto);
+    // console.log("Orden de Invercion  " + this.SelectedOInvercion);
+    // console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
+    // console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
+    // console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
+    // console.log("Numero de Activo   " + this.Producto.NumActivo);
+    // console.log("Numero de Necesidad   " + this.Producto.NumNeces);
+    // console.log("Uso de Producto  " + this.Producto.UsoProd);
+    // console.log("Especificaciones   " + this.Producto.Espf.length);
+    // console.log("Material   " + this.Producto.Material);
+    // console.log("Almacen  " + this.Producto.Almacen);
+    // console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 1) {
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1587,6 +1589,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       }
       this.getAllCuentasMayor(this.DataInsert.Empresa,this.DataInsert.Imputacion.Acronimo);
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion != undefined &&
         this.Producto.CuentaMayor != undefined &&
@@ -1661,6 +1665,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         });
       }
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto != undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor !== undefined &&
@@ -1746,6 +1752,8 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1824,6 +1832,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         });
       }
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 0 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1919,6 +1929,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         });
       }
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto != undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor != undefined &&
@@ -2004,6 +2016,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES")
       if (
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&

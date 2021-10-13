@@ -29,6 +29,7 @@ export class SolicitudesCompraRegistradas{
     Tel:string;
     Ext:string;
     Produccion:string;
+    Moneda:string;
     Justificacion:string;
     MotivoRechazo?:string;
     RutaCotizacion:string;

@@ -97,3 +97,11 @@ tr.example-element-row:not(.example-expanded-row):active {
   margin-left: 50px !important
 }
 
+
+.monto{
+  text-decoration: none;
+  padding-top: 8px;
+  color: #00BF23;
+  font-size: large;
+}
+
