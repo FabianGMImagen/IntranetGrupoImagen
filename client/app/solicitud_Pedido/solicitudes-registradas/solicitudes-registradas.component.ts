@@ -892,7 +892,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.SelectedStatus.Nombre == "S. P. RECHAZADA POR GERENTE" ||
         this.SelectedStatus.IdStatusSolicitud == 3
       ) {
-        this.toast.setMessage("Si tienes permisos----", "success");
 
         console.log("valores de la solicitud por autorizar o rechazar");
         console.log(data2);
@@ -953,6 +952,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                       console.log("dento de el metodo para enviar el correo" +res);
                                     },
                                     (error) => {
+                                      this.isrechazada = false;
                                       this.motivo_Rechazo = '';
                                       this.SelectedStatus = undefined;
                                       console.log("Error al enviar el correo " + error);
@@ -1009,6 +1009,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                       console.log("dento de el metodo para enviar el correo" +res);
                                     },
                                     (error) => {
+                                      this.isrechazada = false;
                                       this.motivo_Rechazo = '';
                                       this.SelectedStatus = undefined;
                                       console.log("Error al enviar el correo " + error);
@@ -1101,9 +1102,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                     );
                                   },
                                   (error) => {
-                                    console.log(
-                                      "Error al enviar el correo " + error
-                                    );
+                                    this.isrechazada = false;
                                     this.motivo_Rechazo = '';
                                     this.SelectedStatus = undefined;
                                     this.toast.setMessage(
@@ -1257,12 +1256,12 @@ export class SolicitudesRegistradasComponent implements OnInit {
         this.SelectedStatus.Nombre == "S. P. Presupuesto Autorizado" ||
         this.SelectedStatus.IdStatusSolicitud == 5
       ) {
-        this.toast.setMessage("Si tienes permisos----", "success");
-        console.log(data2.ID);
-        console.log(data2.DIVISION);
+       
+        //console.log(data2.ID);
+        //console.log(data2.DIVISION);
         this.SelectedStatus.IdSolicitud = data2.ID;
-        console.log(this.SelectedStatus.IdSolicitud);
-        if(this.SelectedStatus.IdStatusSolicitud == 5 && this.motivo_Rechazo != undefined){
+        //console.log(this.SelectedStatus.IdSolicitud);
+        if(this.SelectedStatus.IdStatusSolicitud == 4 && this.motivo_Rechazo != undefined){
           //console.log("es otro estatus o no esta indefinido la variable de rechazo")
           this.solicitudComp
             .UpdateStatusSolicitud(
@@ -1314,13 +1313,8 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             this.isrechazada = false;
                             this.motivo_Rechazo = '';
                             this.SelectedStatus = undefined;
-                            this.toast.setMessage(
-                              "Error en el envio de el Correo",
-                              "warning"
-                            );
-                            console.log(
-                              "dento de el metodo para enviar el correo" + res
-                            );
+                            this.toast.setMessage("Error en el envio de el Correo","warning");
+                            console.log("dento de el metodo para enviar el correo" + res);
                           },
                           (error) => {
                             console.log("Error al enviar el correo " + error);
@@ -1429,6 +1423,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 this.auth.logout();
                               }
                               console.log("Error al enviar el correo " + error);
+                              this.isrechazada = false;
                               this.motivo_Rechazo = '';
                               this.SelectedStatus = undefined;
                               this.toast.setMessage(
@@ -1545,7 +1540,9 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               this.auth.logout();
                             }
                             console.log("Error al enviar el correo " + error);
-
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
                             this.toast.setMessage(
                               "Envio de Email Correcto",
                               "success"
@@ -1636,6 +1633,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
                 }
+                this.isrechazada = false;
                 this.motivo_Rechazo = '';
                 this.SelectedStatus = undefined;
                 console.log(error);
@@ -1643,7 +1641,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
             );
         }
       }
-    }else if(this.auth.isComprador){
+    } else if(this.auth.isComprador){
       if (
         (this.SelectedStatus.Nombre == "S. P. REVISADA POR COMPRAS" &&
           this.SelectedStatus.IdStatusSolicitud == 8) ||
@@ -1696,6 +1694,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
                 }
+                this.isrechazada = false;
                 this.motivo_Rechazo = '';
                 this.SelectedStatus = undefined;
                 console.log(error);
