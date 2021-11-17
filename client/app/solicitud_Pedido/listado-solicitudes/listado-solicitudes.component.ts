@@ -4200,7 +4200,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("  OEstadisitica   " + this.SelectedOrEstChild);
             this.SelectedCostos = undefined;
             this.SelectedCMayor = undefined;
-            this.DataInsert.Productos.forEach((element) => {
+            this.DataInsert.Productos.map(element =>{ 
               console.log(element.ChildsProducts.length);
               if (element.ChildsProducts.length === 0 || element.ChildsProducts.length === undefined || element.ChildsProducts.length === null) {
                 console.log("dentro del if que dice que tenemos cero hijos");
@@ -4705,7 +4705,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                 );
             } else {
               this.toast.setMessage(
-                "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
+                "Una Solicitud de Tipo Servicio debe contener un Sub Producto por Partida, favor de validar C/U de las Partidas",
                 "danger"
               );
               this.progressbar = false;
@@ -5834,7 +5834,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("OR  H " + this.SelectedOrdenEstaHijo);
             console.log("CM  H " + this.SelectedCMayorHijo);
             console.log("CC  H " + this.SelectCentroCostosHijo);
-            this.DataInsert.Productos.forEach((element) => {
+            this.DataInsert.Productos.map(element => {
               console.log(element.ChildsProducts.length);
               if (element.ChildsProducts.length === 0 ||element.ChildsProducts.length === undefined ||element.ChildsProducts.length === null
               ) {
@@ -6308,7 +6308,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             } else {
               console.log("intento faillido");
               this.toast.setMessage(
-                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un  Sub Producto, Por Favor verifica la informacion ",
+                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un  Sub Producto por Partida , Por Favor verifica la informacion por C/U de las Partidas. ",
                 "danger"
               );
               this.progressbar = false;
@@ -6316,7 +6316,7 @@ export class ListadoSolicitudesComponent implements OnInit {
           }
         } else {
           this.toast.setMessage(
-            "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
+            "Una Solicitud de Tipo Servicio debe contener un Producto, favor de validar informacion",
             "warning"
           );
           this.progressbar = false;
