@@ -90,7 +90,7 @@ export class AdminCategoriaComponent implements OnInit {
             console.log(`No esta indefinida la variable, le dieron en si`);
             const isdelete = await this.solicitudComp.DeleteCategoria(result.category.IdCategoria);
             if(isdelete){
-              this.toast.setMessage('Se elimino la Direccion', 'success')
+              this.toast.setMessage('Se elimino la Categoria', 'success')
             }else{
               this.toast.setMessage('Error al eliminar la categoria', 'danger')
             }

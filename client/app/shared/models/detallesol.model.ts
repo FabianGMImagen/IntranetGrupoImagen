@@ -19,8 +19,6 @@ export class Detallesol {
   GrupoCompraName:any;
   IdUnidadMedida:any;
   MEDIDA:any;
-  IdOrdenEstadisitica:any;
-  OrdenEstadisiticaName:any;
   IdNumeroActivo:any;
   ACTFIJ:any;
   IdNecesidad:any;

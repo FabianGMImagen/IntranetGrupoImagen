@@ -61,7 +61,7 @@ export class SolicitudComponent implements OnInit {
     this.solicitudService.getAllSolicitudesRegAdmin().subscribe(data =>{
       console.log("entrando al mentodo que nos regresa las solicitudes");
       this.ListSolPedsReg = data;
-      console.log(this.ListSolPedsReg);
+      //console.log(this.ListSolPedsReg);
     }, error=>{
       if(error.status == 403 || error.status == 404){
         this.toast.setMessage(
@@ -83,7 +83,7 @@ export class SolicitudComponent implements OnInit {
   getAllStatusSolicitud(){
     console.log("dentro del metodo para recuperar los status de las solicitudes");
     this.solicitudService.getAllStatusSOlicituPedido().subscribe(data =>{
-      console.log(data);
+      //console.log(data);
       this.ListStatus = data;
     }, error=>{
       if(error.status == 403 || error.status == 404){

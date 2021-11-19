@@ -1,7 +1,7 @@
 export class SolicitudesConsumoIntRegistradas {
     ID:number;
     IdStatusSolicitud:number;
-    StatusName:string;
+    STATUSNAME:string;
     IdUsuarioSolicitante: number;
     UserSolicitante:string;
     IdDireccion: number;
@@ -11,7 +11,8 @@ export class SolicitudesConsumoIntRegistradas {
     NameEmpresa: string
     IdCentro:number;
     NameCentro: string;
-    Justificacion:string;
+    JUSTIFICACION:string;
     MotivoRechazo:string;
-    USERSOLICITANTE?:string
+    USERSOLICITANTE?:string;
+    classcolor:string;
 }

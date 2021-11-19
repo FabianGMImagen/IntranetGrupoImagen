@@ -1756,6 +1756,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       if (
         this.Producto.Cantidad == 0 &&
         this.Producto.Precio == 0 &&
+
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1845,8 +1846,7 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UnidadMedida != undefined &&
         this.Producto.NumActivo == undefined &&
         this.Producto.NumNeces != undefined &&
-        this.Producto.UsoProd.length != 0 &&
-        this.Producto.Espf.length != 0
+        this.Producto.UsoProd.length != 0
       ) {
         this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
           this.Producto.UsoProd
@@ -2020,6 +2020,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       if (
         this.Producto.Cantidad == 0 &&
         this.Producto.Precio == 0 &&
+
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -2353,14 +2354,14 @@ export class ListadoSolicitudesComponent implements OnInit {
     console.log("estos son los valores de los Hijos");
     console.log(this.ChildsProduct.Cantidad);
     console.log(this.ChildsProduct.Precio);
-    console.log(this.ChildsProduct.IdUMedidaChild);
-    console.log(this.ChildsProduct.NameUMedidaChild);
-    console.log(this.ChildsProduct.IdOrdenEstadisticaChild);
-    console.log(this.ChildsProduct.NameOrdenEstadisticaChild);
-    console.log(this.ChildsProduct.IdCentroCostoChild);
-    console.log(this.ChildsProduct.CentroCostoNameChild);
-    console.log(this.ChildsProduct.IdCuentaMayorChild);
-    console.log(this.ChildsProduct.NameCuentaMayorChild);
+    // console.log(this.ChildsProduct.IdUMedidaChild);
+    // console.log(this.ChildsProduct.NameUMedidaChild);
+    // console.log(this.ChildsProduct.IdOrdenEstadisticaChild);
+    // console.log(this.ChildsProduct.NameOrdenEstadisticaChild);
+    // console.log(this.ChildsProduct.IdCentroCostoChild);
+    // console.log(this.ChildsProduct.CentroCostoNameChild);
+    // console.log(this.ChildsProduct.IdCuentaMayorChild);
+    // console.log(this.ChildsProduct.NameCuentaMayorChild);
     this.ChildsProduct.TextoServicio = this.RemoveCaracteresEpeciales(
       this.ChildsProduct.TextoServicio
     ); 

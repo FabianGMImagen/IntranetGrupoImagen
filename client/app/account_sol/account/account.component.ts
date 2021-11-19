@@ -331,6 +331,7 @@ export class AccountComponent implements OnInit {
 
     this.getAllSolicitudforUser();
     this.SelectedOInvercion = new OrdenInterna();
+    
     if (
       this.auth.currentUser.IdRole == 2 ||
       this.auth.currentUser.IdRole == 3 ||
@@ -348,7 +349,7 @@ export class AccountComponent implements OnInit {
 
   //solo aplica para usuario solicitante
   getAllSolicitudforUser() {
-    console.log(this.auth.currentUser.IdUsuario);
+    //console.log(this.auth.currentUser.IdUsuario);
     //console.log(thi s.auth.currentUser.LoginName);
     //console.log(this.auth.currentUser.IdDireccion);
     //console.log(this.auth.currentUser.IdRole);
@@ -431,8 +432,8 @@ export class AccountComponent implements OnInit {
   }
 
   EditSolicitud(data: SolicitudesCompraRegistradas) {
-    console.log("Dentro de el metodo que permite editar la solicitud ");
-    console.log(data);
+    //console.log("Dentro de el metodo que permite editar la solicitud ");
+    //console.log(data);
 
     if (
       data.Statname === "S. P. RECHAZADA POR GERENTE" ||
@@ -451,7 +452,7 @@ export class AccountComponent implements OnInit {
     this.isViewEditingSol = true;
     this.isviewChilds = false;
 
-    console.log(data.Statname);
+    //console.log(data.Statname);
 
     if (
       data.Statname == "S. P. PRESUPUESTO AUTORIZADO" ||
@@ -465,10 +466,11 @@ export class AccountComponent implements OnInit {
     this.DataSolReg = data;
     this.validacionTipoSOlicitud(this.DataSolReg);
 
-    console.log("este es el id de EMpresa----" + this.DataSolReg.IdEmpresa);
+    //console.log("este es el id de EMpresa----" + this.DataSolReg.IdEmpresa);
     this.empresa = new Empresa();
     this.tiposol = new Imputacion();
     this.empresa.Bukrs = this.DataSolReg.IdEmpresa;
+    
     this.tiposol.Acronimo = this.DataSolReg.Acronimo;
     this.plaza = new SucursalPlaza();
     this.plaza.IdPlaza = this.DataSolReg.IdPlaza;
@@ -486,8 +488,8 @@ export class AccountComponent implements OnInit {
         console.log("error al traer el detalle de la solicitud");
       },
       () => {
-        console.log("Esta es el detalle de los items");
-        console.log(this.ListDetallesol);
+        //console.log("Esta es el detalle de los items");
+        //console.log(this.ListDetallesol);
         this.isload = false;
         this.ListDetallesol.forEach((element) => {
           if (data.IdSol == 4 || data.IdSol == 7) {
@@ -517,11 +519,11 @@ export class AccountComponent implements OnInit {
   }
 
   cancelEditing() {
+    this.iseditproduct = false;
+    this.iseditsolped = false;
     this.viewcoutn = true;
     this.isViewEditingSol = false;
     this.isviewChilds = false;
-    this.iseditproduct = false;
-    this.iseditsolped = false;
     this.iseditproduct = false;
     this.toast.setMessage("item editing cancelled.", "warning");
     this.getAllSolicitudforUser();
@@ -558,14 +560,15 @@ export class AccountComponent implements OnInit {
       this.iseditproduct = true;
     }
 
-    // if (this.DataSolReg.IdSol == 5) {
+    // if (this.DataSolReg.IdSol == 5 || 
+    //     this.DataSolReg.IdSol == 3 ||
+    //     this.DataSolReg.IdSol == 4 || ) {
     //   console.log("dentro de Orden intera IF");
     //   this.getunidadMedida(" ");
     // } else {
     //   console.log("dentro de Orden Interna else");
     //   this.getunidadMedida(this.detalle_producto.IdMaterial);
     // }
-    
     this.getunidadMedida(" ");
     this.getOrdenInterna();
     this.getAlmacen();
@@ -591,8 +594,8 @@ export class AccountComponent implements OnInit {
   }
 
   ViewChilds(SolPed: Detallesol) {
-    console.log("Este es el ide del Item a consultar----");
-    console.log(SolPed.IdProducto);
+    //console.log("Este es el ide del Item a consultar----");
+    //console.log(SolPed.IdProducto);
 
     this.getunidadMedida(" ");
 
@@ -610,8 +613,8 @@ export class AccountComponent implements OnInit {
         console.log(this.DatosSubProd);
         this.ListDetallesol.forEach((element) => {
           element.SubHijos = this.ListChilds;
-          console.log("*/*/*/*/*/*/*");
-          console.log(element);
+          //console.log("*/*/*/*/*/*/*");
+          //console.log(element);
           this.dataChilds = new MatTableDataSource(element.SubHijos);
 
           if (SolPed.IdProducto == element.IdProducto) {
@@ -628,7 +631,7 @@ export class AccountComponent implements OnInit {
           this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        console.log("error al recuperar la informacion de los Hijos");
+       // console.log("error al recuperar la informacion de los Hijos");
         console.log(error);
       },
       () => {
@@ -656,10 +659,10 @@ export class AccountComponent implements OnInit {
   }
 
   getOrdenInterna() {
-    console.log(
-      "este es el Acronimo del Tipo de SOlicitud ---" + this.DataSolReg.Acronimo
-    );
-    console.log("este es el id de EMpresa----" + this.DataSolReg.IdEmpresa);
+    // console.log(
+    //   "este es el Acronimo del Tipo de SOlicitud ---" + this.DataSolReg.Acronimo
+    // );
+    //console.log("este es el id de EMpresa----" + this.DataSolReg.IdEmpresa);
     this.empresa = new Empresa();
     this.tiposol = new Imputacion();
     this.empresa.Bukrs = this.DataSolReg.IdEmpresa;
@@ -674,15 +677,12 @@ export class AccountComponent implements OnInit {
     this.isload = false;
   }
 
-  selectedOInterna() {
-    console.log(this.SelectedOInvercion);
-  }
 
   getAlmacen() {
-    console.log(
-      "Recuperamos los almacenes con este Id de Plaza-->" +
-        this.DataSolReg.IdPlaza
-    );
+    // console.log(
+    //   "Recuperamos los almacenes con este Id de Plaza-->" +
+    //     this.DataSolReg.IdPlaza
+    // );
 
     this.ListAlmacen = this.solicitudComp.getAllAlmacen(this.plaza);
     this.AlmacenCrtl.setValue(this.ListAlmacen[0]);
@@ -715,6 +715,13 @@ export class AccountComponent implements OnInit {
   }
 
   getAllMateriales(Almacen:Almacen) {
+    // console.log(
+    //   "Est es el id de la plaza para realizar las consultas----->" +
+    //     this.plaza.IdPlaza
+    // );
+    // console.log(
+    //   "Este es el Id del almacen seleccionado--->" + this.SelectedAlmacen
+    // );
     this.ListMateriales = this.solicitudComp.getAllmateriales(
       this.plaza,
       Almacen
@@ -749,12 +756,12 @@ export class AccountComponent implements OnInit {
   }
 
   getAllCentroCosto() {
-    console.log(
-      "Centro de Costos--->>" +
-        this.empresa.Bukrs +
-        "     " +
-        this.plaza.IdPlaza
-    );
+    // console.log(
+    //   "Centro de Costos--->>" +
+    //     this.empresa.Bukrs +
+    //     "     " +
+    //     this.plaza.IdPlaza
+    // );
     this.ListCCostos = this.solicitudComp.getCentoCosto(
       this.empresa,
       this.plaza
@@ -775,7 +782,7 @@ export class AccountComponent implements OnInit {
     }
     //obtenemos la palabra clave buscar
     let search = this.CCosotosFilterCtrl.value;
-    console.log(search);
+    //console.log(search);
     if (!search) {
       this.filteredCCostos.next(this.ListCCostos.slice());
       return;
@@ -792,10 +799,10 @@ export class AccountComponent implements OnInit {
   }
 
   getAllCuntaMayor() {
-    console.log(
-      "Dentro del metodo que regresa las cuentas de mayor--->" +
-        this.empresa.Bukrs
-    );
+    // console.log(
+    //   "Dentro del metodo que regresa las cuentas de mayor--->" +
+    //     this.empresa.Bukrs
+    // );
 
     if (this.DataSolReg.IdTipoSolicitud == 2) {
       this.ListCmayor = this.solicitudComp.getCuentaMayor(
@@ -842,10 +849,10 @@ export class AccountComponent implements OnInit {
   }
 
   getAllGrupoCompra() {
-    console.log(
-      "Este es el Id de la empresa para recuperar los grupos de compras    " +
-        this.empresa
-    );
+    // console.log(
+    //   "Este es el Id de la empresa para recuperar los grupos de compras    " +
+    //     this.empresa
+    // );
     this.ListGrupoCompra = this.solicitudComp.getAllGrupoCompra(this.empresa);
     this.GCompraCtrl.setValue(this.ListGrupoCompra[0]);
     this.filteredGCompra.next(this.ListGrupoCompra);
@@ -910,10 +917,10 @@ export class AccountComponent implements OnInit {
   }
 
   GetAllOrdenEstadistica() {
-    console.log(
-      "Recuperando informacion de Orden estadisitica -->" + this.empresa.Bukrs,
-      this.DataSolReg.Acronimo
-    );
+    // console.log(
+    //   "Recuperando informacion de Orden estadisitica -->" + this.empresa.Bukrs,
+    //   this.DataSolReg.Acronimo
+    // );
     this.tiposol.Acronimo = this.DataSolReg.Acronimo;
     this.ListOrdEstadistica = this.solicitudComp.getAllOrdenInterna(
       this.empresa,
@@ -3658,6 +3665,7 @@ export class AccountComponent implements OnInit {
           }
       } else if (typeUpdate === 1) {
         //manda a llamar metodo par actualizar datos de producto
+        console.log("Actualizando los datos de producto.")
         try {
           const valReturnStatus = await this.ChecknextStatus(this.auth.currentUser.IdUsuario);
           console.log("Variable de retorno  " + valReturnStatus);
