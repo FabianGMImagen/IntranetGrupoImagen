@@ -6,8 +6,9 @@ export class User {
   Telefono?:number;
   Extension?:number;
   IdRole?:number;
-  IdRoleConsumoInterno?:number;
   NombreRol?:string;
+  IdRoleConsumoInterno?:number;
+  RoleConsumo?:string;
   LoginName?:string;
   Password?:string;
 

@@ -884,6 +884,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
   }
 
   validaStatus(data2: SolicitudesCompraRegistradas) {
+    console.log(this.SelectedStatus.IdStatusSolicitud)
     if (this.auth.isJefeArea) {
       console.log("Es generente de Direccion");
       if (
