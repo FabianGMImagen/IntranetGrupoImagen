@@ -6,8 +6,8 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-const SERVER = 'http://10.29.148.40:3000';
-const Intranet = 'http://10.29.148.40:3000';
+const SERVER = 'http://solicitud.adgimm.com.mx:3000';
+const Intranet = 'http://solicitud.adgimm.com.mx:3000';
 
 const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
 const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
@@ -263,7 +263,6 @@ export default class SolicitudCompraCTR {
     });
   }
 
-
   getAllAlmacenes = (req, res) => {
     var sql = require("mssql");
     //variable de entorno para realizar la coneccion
@@ -434,15 +433,17 @@ export default class SolicitudCompraCTR {
     var env = process.env.NODE_ENV || 'SERWEB';
     //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
     var config = require('../controllers/connections/servers')[env];
-    var query = "Select * from Categoria";
-    const pool1 = new sql.ConnectionPool(config, err => {
-      pool1.request()
-        .query(query, (err, result) => {
-          if (err){ console.log(err);}
-          resp.status(200).json(result.recordset);
-          resp.end();
-        });
-    });
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .execute('GetAllCategorias')
+    }).then(result => {
+      resp.status(201).json(result.recordset);
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
   }
 
   NewCategory = (req, resp)=>{
@@ -2551,7 +2552,8 @@ export default class SolicitudCompraCTR {
         //Opciones de correo para enviar a gerente de area
         var mailOptionJefeDirecto = {
           to: req.params.EmailAutorizador,
-          cc: 'marco.garcia@gimm.com.mx',
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
           subject: 'SOLICITUD DE PEDIDO NUEVA',
           html: '<div style="font-family: "Roboto", "Helvetica", "Arial", sans-serif;">'+
                 '<Strong>TIENES UNA SOLICITUD DE PEDIDO PENDIENTE POR REVISAR DE : </Strong>' + req.params.Solicitante + '<br>' +
@@ -2648,7 +2650,6 @@ export default class SolicitudCompraCTR {
 
     }
 
-
     try {
       const oauth2Client = new google.auth.OAuth2(
         CLIENTID, //client ID
@@ -2658,9 +2659,6 @@ export default class SolicitudCompraCTR {
   
       oauth2Client.setCredentials({
         refresh_token: REFRESH_TOKEN
-      }, err => {
-        console.log("error al recuperar el token");
-        console.log(err);
       });
   
   
@@ -2688,8 +2686,8 @@ export default class SolicitudCompraCTR {
         //Opciones de correo para enviar a gerente de area
         var mailOptionDirectorArea = {
           to: req.params.EmailAutorizador,
-          //to:'marco.garcia@gimm.com.mx',
-          cc: 'marco.garcia@gimm.com.mx',
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
           subject: 'SOLICITUD DE PEDIDO PENDIENTE',
           html:
             "<head>" +
@@ -2726,8 +2724,8 @@ export default class SolicitudCompraCTR {
         //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
         var mailOptiongerenteRechaza = {
           to: EmailSolicitante,
-          //to:'marco.garcia@gimm.com.mx',
-          //cc: 'marco.garcia@gimm.com.mx',
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
           subject: 'SOLICITUD DE PEDIDO RECHAZADA',
           html:
             ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
@@ -2846,9 +2844,6 @@ export default class SolicitudCompraCTR {
   
       oauth2Client.setCredentials({
         refresh_token: REFRESH_TOKEN
-      }, err => {
-        console.log("error al recuperar el token");
-        console.log(err);
       });
   
   
@@ -2877,7 +2872,8 @@ export default class SolicitudCompraCTR {
         //Opciones de correo para enviar a gerente de area
         var mailOptionGerenteF = {
           to: req.params.EmailAutorizador,
-          cc: 'marco.garcia@gimm.com.mx',
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
           subject: 'SOLICITUD DE PEDIDO PENDIENTE',
           html:
             "<head>" +
@@ -2913,7 +2909,8 @@ export default class SolicitudCompraCTR {
         //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
         var mailOptionDirectRechaza = {
           to: EmailSolicitante,
-          //cc: 'mmp@gimm.com.mx',
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
           subject: 'SOLICITUD DE PEDIDO RECHAZADA',
           html:
             ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
@@ -3019,9 +3016,6 @@ export default class SolicitudCompraCTR {
   
       oauth2Client.setCredentials({
         refresh_token: REFRESH_TOKEN
-      }, err => {
-        console.log("error al recuperar el token");
-        console.log(err);
       });
   
   
@@ -3047,7 +3041,8 @@ export default class SolicitudCompraCTR {
         //Opciones de correo para enviar a gerente de area
         var mailOptionAdmin = {
           to: req.params.EmailAutorizador,
-          cc: 'marco.garcia@gimm.com.mx',
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
           subject: Nombre,
           html:
             "<head>" +
@@ -3085,7 +3080,8 @@ export default class SolicitudCompraCTR {
         //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
         var mailOptionPresupuestoRechaza = {
           to: EmailSolicitante,
-          cc: 'mmp@gimm.com.mx',
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
           subject: Nombre,
           html:
             ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
@@ -3136,6 +3132,8 @@ export default class SolicitudCompraCTR {
         res.end("error");
     }
   }
+
+
 
   //Metodo de actualiza el status de la solicitud desde el correo enviado
   UpStatus = (req, res) => {
@@ -3217,7 +3215,7 @@ export default class SolicitudCompraCTR {
                 StatusSolicitud + "    Status para Envio  Autoriza  " +
                 EnvioStatusAutoriza + "Status para Envio Rechaza  " + EnvioStatusRechaza);
 
-              var accessToken;
+              var accessToken:any;
               const oauth2Client = new google.auth.OAuth2(
                 CLIENTID, //client ID
                 CLIENTSECRET, // Client Secret 
@@ -3255,7 +3253,8 @@ export default class SolicitudCompraCTR {
                 //Este mail se crea para el siguiente autorizador
                 var maiOptionAutoriza = {
                   to: emailSig,
-                  cc: 'marco.garcia@gimm.com.mx',
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
                   subject: 'SOLICITUD DE PEDIDO PENDIENTE',
                   html:
                     "<head>" +
@@ -3293,7 +3292,8 @@ export default class SolicitudCompraCTR {
                 //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
                 var mailOptionRechaza = {
                   to: emailAnter,
-                  cc: 'marco.garcia@gimm.com.mx',
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
                   subject: 'SOLICITUD DE PEDIDO RECHAZADA',
                   html:
                     '' + StatusNameSolPed + ' : ' + resultexept.recordsets[3][0].NombreCompleto + '<br>' +
@@ -3439,18 +3439,15 @@ export default class SolicitudCompraCTR {
                 StatusSolicitud + "    Status para Envio  Autoriza  " +
                 EnvioStatusAutoriza + "Status para Envio Rechaza  " + EnvioStatusRechaza);
 
-              var accessToken;
+              var accessToken:any;
               const oauth2Client = new google.auth.OAuth2(
-                '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com', //client ID
-                '8EVBFB3CsQGdl1hmo8Ga1RjC', // Client Secret 
-                'https://developers.google.com/oauthplayground' // Redirect URL 
+                CLIENTID, //client ID
+                CLIENTSECRET, // Client Secret 
+                REDIRECTURL // Redirect URL 
               );
 
               oauth2Client.setCredentials({
-                refresh_token: '1//04xqQ6zQHnTxOCgYIARAAGAQSNwF-L9IrrUWA0VUp9hSd5-OMO8bysrt1bgInq2UQaTPjkFGkFsKD80GhoZHF6RcGvi4r0whljwI'
-              }, err => {
-                console.log("error al recuperar el token");
-                console.log(err);
+                refresh_token: REFRESH_TOKEN
               });
 
               oauth2Client.getAccessToken().then(token => {
@@ -3469,14 +3466,10 @@ export default class SolicitudCompraCTR {
                   auth: {
                     user: "intranet@gimm.com.mx",
                     type: 'OAuth2',
-                    // clientId: '544106101605-rovj6b5vibmu9i8o6gt7f4ug08bc9sq0.apps.googleusercontent.com',
-                    // clienteSecret: '1qoVyt-wBMWxfP1y1-mgB0OS',
-                    // refreshToken: '1//0462blb5qVoUqCgYIARAAGAQSNwF-L9IreGtA-FOLTrvYbj_8Y0iwK5HOfm_MbpJO-NaKYuYlT0drUZM55A5jiYltqbf5mcVDr0M',
-                    clientId: '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com',
-                    clienteSecret: '8EVBFB3CsQGdl1hmo8Ga1RjC',
-                    refreshToken: '1//04xqQ6zQHnTxOCgYIARAAGAQSNwF-L9IrrUWA0VUp9hSd5-OMO8bysrt1bgInq2UQaTPjkFGkFsKD80GhoZHF6RcGvi4r0whljwI',
+                    clientId: CLIENTID,
+                    clienteSecret: CLIENTSECRET,
+                    refreshToken: REFRESH_TOKEN,
                     accessToken: accessToken
-                    //expires: 1494388182480
                   },
                   tls: { rejectUnauthorized: false },
                   debug: false
@@ -3485,7 +3478,8 @@ export default class SolicitudCompraCTR {
                 //Este mail se crea para el siguiente autorizador
                 var maiOptionAutoriza = {
                   to: emailSig,
-                  cc: 'marco.garcia@gimm.com.mx',
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
                   subject: 'SOLICITUD DE PEDIDO PENDIENTE',
                   html:
                     "<head>" +
@@ -3507,8 +3501,8 @@ export default class SolicitudCompraCTR {
                     '<br>' +
                     '<br>' +
                     // Envio de botones para aprovar o un denegar la solicitud de pedido
-                    '<button type="button" class="btn btn-primary" ><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none">AUTORIZAR</a></button>' +
-                    '----- <button type="button" class="btn btn-danger"><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none">RECHAZAR</a></button>' +
+                    '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none">AUTORIZAR</a></button>' +
+                    '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #f48fb1; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none">RECHAZAR</a></button>' +
                     '<br>' +
                     '<br>' +
                     '<p> Porfavor no Responder a este Mensaje, Este es un Mensaje Automatico<p/>' +
@@ -3523,7 +3517,8 @@ export default class SolicitudCompraCTR {
                 //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
                 var mailOptionRechaza = {
                   to: emailAnter,
-                  cc: 'marco.garcia@gimm.com.mx',
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
                   subject: 'SOLICITUD DE PEDIDO RECHAZADA',
                   html:
                     '' + StatusNameSolPed + ' : ' + resultexept.recordsets[3][0].NombreCompleto + '<br>' +
@@ -3621,6 +3616,7 @@ export default class SolicitudCompraCTR {
                     }
                   });
                 }
+                
               });
             }).catch(err => {
               console.log("error al realizar la actualizacion del estatus");
@@ -3711,9 +3707,6 @@ export default class SolicitudCompraCTR {
         
             oauth2Client.setCredentials({
               refresh_token: REFRESH_TOKEN
-            }, err => {
-              console.log("error al recuperar el token");
-              console.log(err);
             });
         
         
@@ -3739,7 +3732,8 @@ export default class SolicitudCompraCTR {
               //Este mail se crea para el siguiente autorizador
               var maiOptionAutoriza = {
                 to: emailSig,
-                cc: 'marco.garcia@gimm.com.mx',
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
                 subject: 'SOLICITUD DE PEDIDO PENDIENTE',
                 html:
                 "<head>" +
@@ -3774,7 +3768,8 @@ export default class SolicitudCompraCTR {
               //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
               var mailOptionRechaza = {
                 to: emailAnter,
-                cc: 'marco.garcia@gimm.com.mx',
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
                 subject: 'SOLICITUD DE PEDIDO RECHAZADA',
                 html:
                   ' ' + StatusNameSolPed + ' :' + resultexept.recordsets[3][0].NombreCompleto + '<br>' +
@@ -3792,6 +3787,7 @@ export default class SolicitudCompraCTR {
                   '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
 
               }
+
               if (req.params.IdStatus == 5) {
                 console.log("Se envia Mail de Rechazo a Usuario Solicitante");
                 smtpTransport.sendMail(mailOptionRechaza, function (err, resp) {
@@ -3873,6 +3869,7 @@ export default class SolicitudCompraCTR {
                   }
                 });
               }
+
             });
           });
         } else {
@@ -4016,9 +4013,6 @@ export default class SolicitudCompraCTR {
         
             oauth2Client.setCredentials({
               refresh_token: REFRESH_TOKEN
-            }, err => {
-              console.log("error al recuperar el token");
-              console.log(err);
             });
         
         
@@ -4044,7 +4038,8 @@ export default class SolicitudCompraCTR {
               //Este mail se crea para el siguiente autorizador
               var maiOptionAutoriza = {
                 to: emailSig,
-                cc: 'marco.garcia@gimm.com.mx',
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
                 subject: 'SOLICITUD DE PEDIDO PENDIENTE',
                 html:
                   "<head>" +
@@ -4082,10 +4077,10 @@ export default class SolicitudCompraCTR {
               //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
               var mailOptionRechaza = {
                 to: emailAnter,
-                cc: 'marco.garcia@gimm.com.mx',
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
                 subject: 'SOLICITUD DE PEDIDO RECHAZADA',
-                html:
-                  ' ' + StatusNameSolPed + ' :' + resultauth.recordsets[3][0].NombreCompleto + '<br>' +
+                html:' ' + StatusNameSolPed + ' :' + resultauth.recordsets[3][0].NombreCompleto + '<br>' +
                   '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
                   '<Strong>FAVOR DE ENTRAR A LA INTRANET PARA SU REVISION DETALLADA</Strong>' +
                   '<br>' +
@@ -4285,9 +4280,6 @@ export default class SolicitudCompraCTR {
         
             oauth2Client.setCredentials({
               refresh_token: REFRESH_TOKEN
-            }, err => {
-              console.log("error al recuperar el token");
-              console.log(err);
             });
         
         
@@ -4313,7 +4305,8 @@ export default class SolicitudCompraCTR {
               //Este mail se crea para el siguiente autorizador
               var maiOptionAutoriza = {
                 to: emailSig,
-                cc: 'marco.garcia@gimm.com.mx',
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
                 subject: 'SOLICITUD DE PEDIDO PENDIENTE',
                 html:
                   "<head>" +
@@ -4353,7 +4346,8 @@ export default class SolicitudCompraCTR {
               //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
               var mailOptionRechaza = {
                 to: emailSig,
-                cc: 'marco.garcia@gimm.com.mx',
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
                 subject: 'SOLICITUD DE PEDIDO RECHAZADA',
                 html:
                   ' ' + StatusNameSolPed + ' : ' + resultauth.recordsets[3][0].NombreCompleto + '<br>' +

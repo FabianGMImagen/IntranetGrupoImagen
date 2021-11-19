@@ -11,8 +11,8 @@ import { read } from 'fs';
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
 
-const ruta = "http://10.29.148.40:3000/public/"
-const DIR = '../IntranetGrupoImagen/datos';
+const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
+const DIR = '../IntranetProduccion/datos';
 //const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
 var id = 0;
 let storage = multer.diskStorage({
@@ -113,7 +113,7 @@ export default class UploadFilesController {
                                     .input('IdSolPed', sql.Int, req.params.ID)
                                     .execute('DatosFileCompras')
               }).then(result =>{
-                const ExcelJS = require('exceljs');
+                //const ExcelJS = require('exceljs');
                 
                 var stringify = require('csv-stringify');
                 var path = require('path');
@@ -121,7 +121,7 @@ export default class UploadFilesController {
                 var Data = new Object();
                 Data = result.recordset;
                 if(Data != undefined || Data != ''){
-                  var FileName = 'datos '+dia+'-'+MES+'-'+año+','+hora+':'+minutos+'.csv';
+                  var FileName = 'datos '+dia+'-'+MES+'-'+año+' , '+hora+':'+minutos+'.csv';
                   console.log( stringify(Data));
                   var path = path.join(__dirname ,'../../../datos/DatosCompras/'+FileName);
                   stringify(Data, function(err, output){
@@ -130,7 +130,7 @@ export default class UploadFilesController {
                         console.log("ocurrió un error de algún tipo        " + err);
                       }else{
                         console.log(".....Se creo el Archivo CSV.... ");
-                        var RutaCotizacion = ruta+'DatosCompras/'+FileName;
+                        var RutaCotizacion = ruta + "/DatosCompras/" + FileName;
                         console.log(RutaCotizacion);
                         res.status(201).json(RutaCotizacion);
                       }
@@ -138,7 +138,7 @@ export default class UploadFilesController {
                   });
                   
                 }else{
-                  //return 0;
+                  res.status(400).json('No se pudo Generar el archivo ya que no ahi datos existentes para generarlo.')
                 }
               });
 
