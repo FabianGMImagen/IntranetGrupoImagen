@@ -137,21 +137,20 @@
                     <a class="titles">JUSTIFICACION:</a>
                     {{ element.Justificacion }}
                   </div>
-                  <div class="example-element-name" *ngIf="this.auth.isAdmin">
+                  <div class="example-element-name" *ngIf="this.auth.isAdmin || this.auth.isCheckPresupuesto">
                     <a class="monto">TOTAL <i class="fas fa-coins"></i> : {{element.MONTO | currency }}</a>  
                   </div>
-                  <mat-label *ngIf="
-                      this.auth.isCheckPresupuesto || this.auth.isCompras ||this.auth.isComprador &&
-                      element.Statname == 'S. P. PRESUPUESTO RECHAZADO' || 
-                      element.Statname == 'S. P. RECHAZADA POR COMPRAS'">
-                      <a class="titles">MOTIVO DE RECHAZO:</a> {{ element.MotivoRechazo }}
-                  </mat-label>
-                  <br>
-                  <div class="icons" *ngIf="this.auth.isCheckPresupuesto ">
-                    <i class="fas fa-user-tie"></i>
+                  <div class="icons modifchekpresupuesto" *ngIf="this.auth.isCheckPresupuesto ">
+                    <i class="fas fa-user-tie iconchecpresupuesto"></i>
                     <mat-label>
                       AUTORIZADOR DE PRESUPUESTO ASIGNADO:
                       <a>{{ element.NAMEAUTH }}</a></mat-label>
+                  </div>
+                  <br>
+                  <div *ngIf='this.auth.isCheckPresupuesto || this.auth.isCompras || this.auth.isComprador '>
+                    <mat-label *ngIf="element.IdStatusSolicitud == 7 || element.IdStatusSolicitud == 9">
+                        <a class="titles">MOTIVO DE RECHAZO:</a> {{ element.MotivoRechazo }}
+                    </mat-label>
                   </div>
                 </div>
                 <div class="row">

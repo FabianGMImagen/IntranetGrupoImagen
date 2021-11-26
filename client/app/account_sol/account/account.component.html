@@ -54,6 +54,13 @@
                                 <a class="titles">MOTIVO RECHAZO </a>:
                                 {{element.MotivoRechazo}}
                             </div>
+                            <div *ngIf="element.RutaCotizacion === null" >
+                              <button type="button" class="btn btn-outline-info btn-sm mr-2"
+                                ngbTooltip="Intenta Cargar de nuevo las Especificaciones"
+                                [openDelay]="300" [closeDelay]="520" (click)="openDialogReUploadEspesifiaction()">
+                                <i class="fas fa-upload"></i>
+                              </button>
+                            </div>
                           </div>
                         </div>
 

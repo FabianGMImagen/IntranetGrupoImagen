@@ -106,3 +106,12 @@ tr.example-element-row:not(.example-expanded-row):active {
   font-size: large;
 }
 
+
+.iconchecpresupuesto{
+  font-size: 20px;
+  color:dodgerblue;
+}
+.modifchekpresupuesto{
+  padding: 9px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
