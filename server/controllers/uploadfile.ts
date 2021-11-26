@@ -11,15 +11,15 @@ import SolicitudCompraCTR  from '../controllers/SolicitudCompra';
 
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
-<<<<<<< HEAD
+
 const Log = new SolicitudCompraCTR();
-const ruta = "http://10.29.148.40:3000/public/";
-const DIR = '../IntranetGrupoImagen/datos';
-=======
+// const ruta = "http://10.29.148.40:3000/public/";
+// const DIR = '../IntranetGrupoImagen/datos';
+
 
 const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
 const DIR = '../IntranetProduccion/datos';
->>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
+
 //const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
 var id = 0;
 let storage = multer.diskStorage({
