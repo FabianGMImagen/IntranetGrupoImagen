@@ -6,8 +6,8 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-const SERVER = 'http://10.29.148.40:3000';
-const Intranet = 'http://10.29.148.40:3000';
+const SERVER = 'http://solicitud.adgimm.com.mx:3000';
+const Intranet = 'http://solicitud.adgimm.com.mx:3000';
 
 const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
 const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
@@ -263,7 +263,6 @@ export default class SolicitudCompraCTR {
     });
   }
 
-
   getAllAlmacenes = (req, res) => {
     var sql = require("mssql");
     //variable de entorno para realizar la coneccion
@@ -434,15 +433,17 @@ export default class SolicitudCompraCTR {
     var env = process.env.NODE_ENV || 'SERWEB';
     //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
     var config = require('../controllers/connections/servers')[env];
-    var query = "Select * from Categoria";
-    const pool1 = new sql.ConnectionPool(config, err => {
-      pool1.request()
-        .query(query, (err, result) => {
-          if (err){ console.log(err);}
-          resp.status(200).json(result.recordset);
-          resp.end();
-        });
-    });
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .execute('GetAllCategorias')
+    }).then(result => {
+      resp.status(201).json(result.recordset);
+      sql.close();
+    }).catch(err => {
+      if (err) console.log(err);
+      resp.status(304).json({message: "Error-...." + err});
+      sql.close();
+    })
   }
 
   NewCategory = (req, resp)=>{
@@ -2531,6 +2532,102 @@ export default class SolicitudCompraCTR {
     } else {
       statusRechaza = 3;
     }
+<<<<<<< HEAD
+=======
+    //datos anteriores de la cuenta marco.garcia@gimm.com.mx
+    // const oauth2Client = new google.auth.OAuth2( 
+    //   '544106101605-rovj6b5vibmu9i8o6gt7f4ug08bc9sq0.apps.googleusercontent.com', //client ID
+    //   'bVJu1bG1sTItiabEzt4uEIyu', // Client Secret 
+    //   'https://developers.google.com/oauthplayground' // Redirect URL 
+    // );
+    try {
+      
+      const oauth2Client = new google.auth.OAuth2(
+        CLIENTID, //client ID
+        CLIENTSECRET, // Client Secret 
+        REDIRECTURL // Redirect URL 
+      );
+      // oAuth2Client.setCredentials({ refresh_token: userAuth.refreshToken })
+        oauth2Client.setCredentials({refresh_token: REFRESH_TOKEN});
+        // }, err => {
+        //   console.log("error al recuperar el token");
+        //   console.log(err);
+        // });
+  
+  
+  
+      oauth2Client.getAccessToken().then(token => {
+        accessToken = token.token;
+        //cuanta de correo de donde se enviaran los diferentes correos 
+        var nodemailer = require("nodemailer");
+        var smtpTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+          auth: {
+            user: "intranet@gimm.com.mx",
+            type: 'OAuth2',
+            clientId: CLIENTID,
+            clienteSecret: CLIENTSECRET,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: accessToken
+          },
+          tls: { rejectUnauthorized: false },
+          debug: false
+        });
+        
+        
+  
+        //Opciones de correo para enviar a gerente de area
+        var mailOptionJefeDirecto = {
+          to: req.params.EmailAutorizador,
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
+          subject: 'SOLICITUD DE PEDIDO NUEVA',
+          html: '<div style="font-family: "Roboto", "Helvetica", "Arial", sans-serif;">'+
+                '<Strong>TIENES UNA SOLICITUD DE PEDIDO PENDIENTE POR REVISAR DE : </Strong>' + req.params.Solicitante + '<br>' +
+                '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong> <br>' +
+                '<br>' +
+                '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+                '<br>' +
+                '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                '<br>' +
+                '<br>' +
+                //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+                '<button type="button" style="text-decoration: none; border: 1px solid #90caf9;  border-radius: 5px; padding-rigth: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + statusAutoriza + '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
+                '<button type="button" style="text-decoration: none; border: 1px solid #f48fb1;  border-radius: 5px; padding-rigth: 5px; background-color: #f48fb1; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + statusRechaza + '" style="text-decoration:none; color: #fff !important;">DENEGAR</a></button>' +
+                '<br>' +
+                '<br>' +
+                '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'+
+                '</div>'
+  
+        }
+  
+        smtpTransport.sendMail(mailOptionJefeDirecto, (err, resp) => {
+          console.log(resp)
+          if (err) {
+            //console.log(err);
+            //console.log("*******************************"+resp + "************************************************");
+            res.status(400)
+            res.end("error");
+          } else {
+            console.log("se envio correctamente  a Director area: ");
+            res.status(200)
+            res.end("sent");
+          }
+        });
+  
+      }).catch(err => {
+        console.log("Error en el metodo de nuevo envio de correo");
+        console.log(err);
+        res.end(err);
+      });
+    } catch (error) {
+      console.log(".-.-.--.-.-.-. ERROR IN SendEmailNew -.-.-.-.-.-.-.-.-.-.-")
+      console.log(error);
+    }
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
 
 
 
@@ -2608,6 +2705,7 @@ export default class SolicitudCompraCTR {
       //si ese es el status de la solicitud solicitamos al abse de datos el corre para reportarle al solicitante
     }
 
+<<<<<<< HEAD
     var sql = require("mssql");
     var env = process.env.NODE_ENV || 'SERWEB';
     var config = require('../controllers/connections/servers')[env];
@@ -2637,6 +2735,13 @@ export default class SolicitudCompraCTR {
         TitleName,
         statusAutoriza,
         statusRechaza
+=======
+    try {
+      const oauth2Client = new google.auth.OAuth2(
+        CLIENTID, //client ID
+        CLIENTSECRET, // Client Secret 
+        REDIRECTURL // Redirect URL 
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
       );
       
       console.log("*/*/*/*/*/VALOR DE ENVIO DE MAIL*//*/*/");
@@ -2646,6 +2751,7 @@ export default class SolicitudCompraCTR {
       console.log(isLog);
       console.log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//");
   
+<<<<<<< HEAD
       if (isSendEmail == false) {
           //console.log(err);
           //console.log("*******************************"+resp + "************************************************");
@@ -2656,6 +2762,128 @@ export default class SolicitudCompraCTR {
           res.status(200);
           res.end("sent");
       }
+=======
+      oauth2Client.setCredentials({
+        refresh_token: REFRESH_TOKEN
+      });
+  
+  
+      oauth2Client.getAccessToken().then(token => {
+        accessToken = token.token;
+        //cuanta de correo de donde se enviaran los diferentes correos 
+        var nodemailer = require("nodemailer");
+        var smtpTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+          auth: {
+            user: "intranet@gimm.com.mx",
+            type: 'OAuth2',
+            clientId: CLIENTID,
+            clienteSecret: CLIENTSECRET,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: accessToken
+          },
+          tls: { rejectUnauthorized: false },
+          debug: false
+        });
+  
+  
+        //Opciones de correo para enviar a gerente de area
+        var mailOptionDirectorArea = {
+          to: req.params.EmailAutorizador,
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
+          subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+          html:
+            "<head>" +
+            "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
+            "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+            "</head>" +
+            "<body>" +
+  
+            '<Strong>TIENES UNA SOLICITUD DE PEDIDO PENDIENTE DE REVISAR DE : </Strong>' + req.params.Solicitante + '<br>' +
+            '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+            '<Strong>FAVOR DE ENTRAR A LA INTRANET PARA SU REVISION DETALLADA</Strong>' +
+            '<br>' +
+            '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+            '<br>' +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+            '<br>' +
+            '<br>' +
+            //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+            '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 4 + '" style="text-decoration:none; color: #fff !important;">AUTORIZA</a></button>' +
+            '<button type="button" style="text-decoration: none; border: 1px solid #f48fb1; border-radius: 5px; padding: 5px; background-color: #f48fb1; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 5 + '" style="text-decoration:none; color: #fff !important;">DENEGAR</a></button>' +
+            '<br>' +
+            '<br>' +
+            '<p> Porfavor no Responder a este Mensaje, Este es un Mensaje Automatico<p/>' +
+  
+            "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js'" +
+            "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+            "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'" +
+            "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+            "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'" +
+            "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+            "</body>"
+        }
+  
+        //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
+        var mailOptiongerenteRechaza = {
+          to: EmailSolicitante,
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
+          subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+          html:
+            ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
+            '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+            '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+            '<br>' +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+            '<br>' +
+            '<br>' +
+            //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+            //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+            //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+            '<br>' +
+            '<br>' +
+            '<p> POR FAVOR NO RESPONDER ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+  
+        }
+  
+  
+  
+        //Envio de correo para Director de Area
+        if (req.params.IdStatus == 3) {
+          //console.log("El correo para el Director de Area no Se autorizo");
+          //Envio de Correo para El Solicitante
+          smtpTransport.sendMail(mailOptiongerenteRechaza, function (error, response) {
+            console.log(response)
+            if (error) {
+              //console.log(error);
+              res.end("error");
+            } else {
+              //console.log("Message sent: " + response.Message);
+              res.end("sent");
+            }
+          });
+        } else {
+          smtpTransport.sendMail(mailOptionDirectorArea, function (err, resp) {
+            if (err) {
+              //console.log(err);
+              res.end("error");
+            } else {
+              //console.log("se envio correctamente  a Director area: ");
+              res.end("sent");
+            }
+          });
+        }
+      });
+    } catch (error) {
+      console.log("-.-.-.-.-.Error in SendEmailDirectorArea -.-.--.-.-.-.-.-.");
+      console.log(error);
+    }
+    
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
 
       sql.close();
     }).catch(err => {
@@ -2799,6 +3027,143 @@ export default class SolicitudCompraCTR {
 
         sql.close();
       });
+<<<<<<< HEAD
+=======
+
+    }
+
+    // if(req.params.IdArea == 1){
+    //   Direccion = "Operaciones";  
+    // }else if(req.params.IdArea == 2){
+    //   Direccion = "Finanzas"; 
+    // }else if(req.params.IdArea == 3){
+    //   Direccion = "Presupuestal";
+    // }
+    try {
+      const oauth2Client = new google.auth.OAuth2(
+        CLIENTID, //client ID
+        CLIENTSECRET, // Client Secret 
+        REDIRECTURL // Redirect URL 
+      );
+  
+      oauth2Client.setCredentials({
+        refresh_token: REFRESH_TOKEN
+      });
+  
+  
+      oauth2Client.getAccessToken().then(token => {
+        accessToken = token.token;
+        //cuanta de correo de donde se enviaran los diferentes correos 
+        var nodemailer = require("nodemailer");
+        var smtpTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+          auth: {
+            user: "intranet@gimm.com.mx",
+            type: 'OAuth2',
+            clientId: CLIENTID,
+            clienteSecret: CLIENTSECRET,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: accessToken
+          },
+          tls: { rejectUnauthorized: false },
+          debug: false
+        });
+  
+  
+  
+        //Opciones de correo para enviar a gerente de area
+        var mailOptionGerenteF = {
+          to: req.params.EmailAutorizador,
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
+          subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+          html:
+            "<head>" +
+            "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
+            "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+            "</head>" +
+            "<body>" +
+  
+            '<Strong>TIENES UNA SOLICITUD DE PEDIDO PENDIENTE DE : </Strong>' + req.params.Solicitante + '<br>' +
+            '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+            '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+            '<br>' +
+            '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+            '<br>' +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+            '<br>' +
+            '<br>' +
+            //envio de botones para validar la solicitud o denegarla para la gente de finanzas
+            //'<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; " ><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 6 + '" style="text-decoration:none; color: #fff !important;">AUTORIZA</a></button>' +
+            // '<button type="button" class="btn btn-danger"><a href="'+SERVER+'/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+7+'" style="text-decoration:none">DENEGAR</a></button>'+
+            '<br>' +
+            '<br>' +
+            '<p> POR FAVOR NO RESPONDER ESTE MESNSAJE, ES UN MENSAJE AUTOMATICO<p/>' +
+            "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js'" +
+            "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+            "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'" +
+            "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+            "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'" +
+            "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+            "</body>"
+        }
+  
+        //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
+        var mailOptionDirectRechaza = {
+          to: EmailSolicitante,
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
+          subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+          html:
+            ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
+            '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+            '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+            '<br>' +
+            '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+            '<br>' +
+            '<br>' +
+            //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+            //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+            //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+            '<br>' +
+            '<br>' +
+            '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+  
+        }
+  
+        if (req.params.IdStatus == 5) {
+          //Envio de Correo para El Solicitante
+          smtpTransport.sendMail(mailOptionDirectRechaza, function (error, response) {
+            if (error) {
+              console.log(error);
+              res.end("error");
+            } else {
+              console.log("Message sent: " + response.Message);
+              res.end("sent");
+            }
+          });
+  
+        } else {
+          //Envio de correo para Gerente de Finanzas
+          smtpTransport.sendMail(mailOptionGerenteF, function (err, res) {
+            if (err) {
+              console.log(err);
+              res.end("error");
+            } else {
+              console.log("se envio correctamente  Gerente Finanzas: ");
+              res.end("sent");
+            }
+          });
+        }
+  
+      });
+    } catch (error) {
+      console.log("-.-.-.-.-.-.ERRORN in SendEmailGerenteFinanzas");
+      console.log(error)
+    }
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
   }
 
   SendEmailAdmin = async (req, res) => {
@@ -2829,6 +3194,7 @@ export default class SolicitudCompraCTR {
       TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
     }
 
+<<<<<<< HEAD
       var sql = require("mssql");
       var env = process.env.NODE_ENV || 'SERWEB';
       var config = require('../controllers/connections/servers')[env];
@@ -2864,6 +3230,100 @@ export default class SolicitudCompraCTR {
         console.log("*/*/*/*/*/VALOR DEL LOG*//*/*/");
         console.log(isLog);
         console.log("/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*//");
+=======
+    try {
+      const oauth2Client = new google.auth.OAuth2(
+        CLIENTID, //client ID
+        CLIENTSECRET, // Client Secret 
+        REDIRECTURL // Redirect URL 
+      );
+  
+      oauth2Client.setCredentials({
+        refresh_token: REFRESH_TOKEN
+      });
+  
+  
+      oauth2Client.getAccessToken().then(token => {
+        accessToken = token.token;
+        //cuanta de correo de donde se enviaran los diferentes correos 
+        var nodemailer = require("nodemailer");
+        var smtpTransport = nodemailer.createTransport({
+          service: 'Gmail',
+          host: 'smtp.gmail.com',
+          port: 587,
+          auth: {
+            user: "intranet@gimm.com.mx",
+            type: 'OAuth2',
+            clientId: CLIENTID,
+            clienteSecret: CLIENTSECRET,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: accessToken
+          },
+          tls: { rejectUnauthorized: false },
+          debug: false
+        });
+        //Opciones de correo para enviar a gerente de area
+        var mailOptionAdmin = {
+          to: req.params.EmailAutorizador,
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
+          subject: Nombre,
+          html:
+            "<head>" +
+            "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
+            "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+            "</head>" +
+            "<body>" +
+    
+            
+            '<Strong>TU SOLICITUD DE PEDIDO CON UN ID : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+            '<Strong>DE : </Strong>' + req.params.Solicitante + '<br>' +
+            '<Strong>CAMBIO DE ESTATUS A S. P. PRESUPUESTO AUTORIZADO </Strong>' +
+            '<br>' +
+            '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION MAS DETALLADA</Strong>' +
+            '<br>' +
+            '<div>' +
+            '<a href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+            '<div>' +
+            '<br>' +
+            '<br>' +
+            // Envio de botones para aprovar o un denegar la solicitud de pedido
+            // '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 6 + '" style="text-decoration:none">AUTORIZAR</a></button>' +
+            // '<button type="button" style="text-decoration: none; border: 1px solid #f48f93; border-radius: 5px; padding: 5px; background-color: #f48f93; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + 7 + '" style="text-decoration:none">RECHAZAR</a></button>' +
+            '<br>' +
+            '<br>' +
+            '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>' +
+            "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js'" +
+            "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+            "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'" +
+            "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+            "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'" +
+            "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+            "</body>"
+        }
+        //Envio de mail para Creador de la SOlicitud con estatus de Rechazado
+        var mailOptionPresupuestoRechaza = {
+          to: EmailSolicitante,
+          cc: 'yuki.estrada@gimm.com.mx',
+          bcc: 'marco.garcia@gimm.com.mx',
+          subject: Nombre,
+          html:
+            ' ' + Nombre + ' : ' + req.params.NombreAutorizador + '<br>' +
+            '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+            '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION MAS DETALLADA</Strong>' +
+            '<br>' +
+            '<a href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+            '<br>' +
+            '<br>' +
+            //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+            //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+            //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+            '<br>' +
+            '<br>' +
+            '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+    
+        }
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
     
         if (isSendEmail == false) {
             //console.log(err);
@@ -2883,7 +3343,13 @@ export default class SolicitudCompraCTR {
       });
   }
 
+<<<<<<< HEAD
   //Metodo de actualiza el status de la solicitud desde el correo
+=======
+
+
+  //Metodo de actualiza el status de la solicitud desde el correo enviado
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
   UpStatus = (req, res) => {
     // console.log("Dentro de el metodo que Actualiza el status metodo Solicitado desde la pagina de el correo");
     // console.log(req.params.IdSolicitud);
@@ -2964,6 +3430,7 @@ export default class SolicitudCompraCTR {
                 TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
               }
 
+<<<<<<< HEAD
                 console.log("----IdStatus solicitud----");
                 console.log(resultexept.recordsets[1][0]);
                 console.log("------------------------------");
@@ -3013,6 +3480,109 @@ export default class SolicitudCompraCTR {
 
                       "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' " +
                       "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+=======
+              console.log("Estos son los datos para enviar MAIL-->" +
+                NombreCompleto + "<-->" +
+                emailSig + "<-Status de la SOlictud directo de la DB->" +
+                StatusSolicitud + "    Status para Envio  Autoriza  " +
+                EnvioStatusAutoriza + "Status para Envio Rechaza  " + EnvioStatusRechaza);
+
+              var accessToken:any;
+              const oauth2Client = new google.auth.OAuth2(
+                CLIENTID, //client ID
+                CLIENTSECRET, // Client Secret 
+                REDIRECTURL // Redirect URL 
+              );
+          
+              oauth2Client.setCredentials({
+                refresh_token: REFRESH_TOKEN
+              }, err => {
+                console.log("error al recuperar el token");
+                console.log(err);
+              });
+          
+          
+              oauth2Client.getAccessToken().then(token => {
+                accessToken = token.token;
+                //cuanta de correo de donde se enviaran los diferentes correos 
+                var nodemailer = require("nodemailer");
+                var smtpTransport = nodemailer.createTransport({
+                  service: 'Gmail',
+                  host: 'smtp.gmail.com',
+                  port: 587,
+                  auth: {
+                    user: "intranet@gimm.com.mx",
+                    type: 'OAuth2',
+                    clientId: CLIENTID,
+                    clienteSecret: CLIENTSECRET,
+                    refreshToken: REFRESH_TOKEN,
+                    accessToken: accessToken
+                  },
+                  tls: { rejectUnauthorized: false },
+                  debug: false
+                });
+
+                //Este mail se crea para el siguiente autorizador
+                var maiOptionAutoriza = {
+                  to: emailSig,
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
+                  subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+                  html:
+                    "<head>" +
+                    "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' " +
+                    "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+                    "</head>" +
+                    "<body>" +
+
+                    '<Strong>TIENES UNA SOLICITUD PENDIENTE POR REVISAR DE : </Strong>' + req.params.Solicitante + '<br>' +
+                    '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                    '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                    '<br>' +
+                    '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+                    '<br>' +
+                    '<br>' +
+                    '<div>' +
+                    '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                    '<div>' +
+                    '<br>' +
+                    '<br>' +
+                    // Envio de botones para aprovar o un denegar la solicitud de pedido
+                    //'<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
+                    //'<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
+                    '<br>' +
+                    '<br>' +
+                    '<p> Porfavor no Responder a este Mensaje, Este es un Mensaje Automatico<p/>' +
+                    "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' " +
+                    "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+                    "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' " +
+                    "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+                    "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' " +
+                    "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+                    "</body>"
+                }
+                //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
+                var mailOptionRechaza = {
+                  to: emailAnter,
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
+                  subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+                  html:
+                    '' + StatusNameSolPed + ' : ' + resultexept.recordsets[3][0].NombreCompleto + '<br>' +
+                    '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                    '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                    '<br>' +
+                    '<br>' +
+                    '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANT</a>' +
+                    '<br>' +
+                    '<br>' +
+                    //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+                    //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+                    //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+                    '<br>' +
+                    '<br>' +
+                    '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
 
                       "<title>Intranet Grupo Imagen</title>" +
                       "</head>" +
@@ -3159,6 +3729,7 @@ export default class SolicitudCompraCTR {
                 EnvioStatusAutoriza = 4;
                 EnvioStatusRechaza = 5;
               }
+<<<<<<< HEAD
 
 
                 console.log("----IdStatus solicitud----");
@@ -3211,6 +3782,110 @@ export default class SolicitudCompraCTR {
 
                   "<meta charset='utf-8'>" +
                   "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>" +
+=======
+              console.log("Estos son los datos para enviar MAIL-->" +
+                NombreCompleto + "<-->" +
+                emailSig + "<-Status de la SOlictud directo de la DB->" +
+                StatusSolicitud + "    Status para Envio  Autoriza  " +
+                EnvioStatusAutoriza + "Status para Envio Rechaza  " + EnvioStatusRechaza);
+
+              var accessToken:any;
+              const oauth2Client = new google.auth.OAuth2(
+                CLIENTID, //client ID
+                CLIENTSECRET, // Client Secret 
+                REDIRECTURL // Redirect URL 
+              );
+
+              oauth2Client.setCredentials({
+                refresh_token: REFRESH_TOKEN
+              });
+
+              oauth2Client.getAccessToken().then(token => {
+                //console.log(token);
+                //console.log("****************Dentro del Mterodo************************");
+                //console.log(token.token);
+                //console.log("****************Dentro del metodo************************");
+                accessToken = token.token;
+                console.log(accessToken);
+
+                var nodemailer = require("nodemailer");
+                var smtpTransport = nodemailer.createTransport({
+                  service: 'Gmail',
+                  host: 'smtp.gmail.com',
+                  port: 587,
+                  auth: {
+                    user: "intranet@gimm.com.mx",
+                    type: 'OAuth2',
+                    clientId: CLIENTID,
+                    clienteSecret: CLIENTSECRET,
+                    refreshToken: REFRESH_TOKEN,
+                    accessToken: accessToken
+                  },
+                  tls: { rejectUnauthorized: false },
+                  debug: false
+                });
+
+                //Este mail se crea para el siguiente autorizador
+                var maiOptionAutoriza = {
+                  to: emailSig,
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
+                  subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+                  html:
+                    "<head>" +
+                    "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' " +
+                    "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+                    "</head>" +
+                    "<body>" +
+
+                    '<Strong>TIENES UNA SOLICITUD PENDIENTE POR REVISAR DE : </Strong>' + req.params.Solicitante + '<br>' +
+                    '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                    '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                    '<br>' +
+                    '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+                    '<br>' +
+                    '<br>' +
+                    '<div>' +
+                    '<a href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                    '<div>' +
+                    '<br>' +
+                    '<br>' +
+                    // Envio de botones para aprovar o un denegar la solicitud de pedido
+                    '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none">AUTORIZAR</a></button>' +
+                    '<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #f48fb1; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none">RECHAZAR</a></button>' +
+                    '<br>' +
+                    '<br>' +
+                    '<p> Porfavor no Responder a este Mensaje, Este es un Mensaje Automatico<p/>' +
+                    "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' " +
+                    "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+                    "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' " +
+                    "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+                    "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' " +
+                    "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+                    "</body>"
+                }
+                //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
+                var mailOptionRechaza = {
+                  to: emailAnter,
+                  cc: 'yuki.estrada@gimm.com.mx',
+                  bcc: 'marco.garcia@gimm.com.mx',
+                  subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+                  html:
+                    '' + StatusNameSolPed + ' : ' + resultexept.recordsets[3][0].NombreCompleto + '<br>' +
+                    '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                    '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                    '<br>' +
+                    '<br>' +
+                    '<a href="'+Intranet+'">ENTRAR A INTRANT</a>' +
+                    '<br>' +
+                    '<br>' +
+                    //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+                    //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+                    //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+                    '<br>' +
+                    '<br>' +
+                    '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
 
                   "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' " +
                   "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
@@ -3294,6 +3969,11 @@ export default class SolicitudCompraCTR {
                     res.end();
                   }
                 }
+<<<<<<< HEAD
+=======
+                
+              });
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
             }).catch(err => {
                 console.log("error al realizar la actualizacion del estatus");
                 console.log("error al actualizar el estatus de la Solicitud");
@@ -3401,6 +4081,7 @@ export default class SolicitudCompraCTR {
               EnvioStatusAutoriza,
               EnvioStatusRechaza
             );
+<<<<<<< HEAD
 
             console.log("*/*/*/*/*/SE ENVIO EL MAIL PARA --PF-- ECHO POR DIRECTO*//*/*/");
             console.log(isSendEmail);
@@ -3413,6 +4094,40 @@ export default class SolicitudCompraCTR {
               res.status(400)
               res.write("<!doctype html>" +
                 "<html lang='en'>" +
+=======
+        
+            oauth2Client.setCredentials({
+              refresh_token: REFRESH_TOKEN
+            });
+        
+        
+            oauth2Client.getAccessToken().then(token => {
+              accessToken = token.token;
+              //cuanta de correo de donde se enviaran los diferentes correos 
+              var nodemailer = require("nodemailer");
+              var smtpTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                host: 'smtp.gmail.com',
+                port: 587,
+                auth: {
+                  user: "intranet@gimm.com.mx",
+                  type: 'OAuth2',
+                  clientId: CLIENTID,
+                  clienteSecret: CLIENTSECRET,
+                  refreshToken: REFRESH_TOKEN,
+                  accessToken: accessToken
+                },
+                tls: { rejectUnauthorized: false },
+                debug: false
+              });
+              //Este mail se crea para el siguiente autorizador
+              var maiOptionAutoriza = {
+                to: emailSig,
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
+                subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+                html:
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                 "<head>" +
 
                 "<meta charset='utf-8'>" +
@@ -3435,6 +4150,7 @@ export default class SolicitudCompraCTR {
                 "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
                 "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' " +
                 "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+<<<<<<< HEAD
                 "</body>" +
                 "</html>");
                 res.end();
@@ -3445,6 +4161,46 @@ export default class SolicitudCompraCTR {
                 res.write("<!doctype html>" +
                     "<html lang='en'>" +
                     "<head>" +
+=======
+                "</body>"
+              }
+              //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
+              var mailOptionRechaza = {
+                to: emailAnter,
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
+                subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+                html:
+                  ' ' + StatusNameSolPed + ' :' + resultexept.recordsets[3][0].NombreCompleto + '<br>' +
+                  '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                  '<Strong>FAVOR DE ENTRAR A LA INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                  '<br>' +
+                  '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                  '<br>' +
+                  '<br>' +
+                  //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+                  //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+                  //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+                  '<br>' +
+                  '<br>' +
+                  '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+
+              }
+
+              if (req.params.IdStatus == 5) {
+                console.log("Se envia Mail de Rechazo a Usuario Solicitante");
+                smtpTransport.sendMail(mailOptionRechaza, function (err, resp) {
+                  console.log(resp);
+                  if (err) {
+                    console.log(err);
+                    res.end("error");
+                  } else {
+                    console.log("se envio correctamente  A Solicitante: ");
+                    res.status(200);
+                    res.write("<!doctype html>" +
+                      "<html lang='en'>" +
+                      "<head>" +
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
 
                     "<meta charset='utf-8'>" +
                     "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>" +
@@ -3499,8 +4255,13 @@ export default class SolicitudCompraCTR {
                 "</html>");
                 res.end();
               }
+<<<<<<< HEAD
             }
             
+=======
+
+            });
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
           });
         } else {
           console.log("no se envia ningun mail solo se regresa un mensaje indicando que" +
@@ -3623,6 +4384,135 @@ export default class SolicitudCompraCTR {
               EnvioStatusAutoriza = 6;
               EnvioStatusRechaza = 7;
             }
+<<<<<<< HEAD
+=======
+            console.log("Estos son los datos para enviar MAIL-->" +
+              NombreCompleto + "<-->" +
+              emailSig + "<-Status de la SOlictud directo de la DB->" +
+              StatusSolicitud + "    Status para Envio  Autoriza  " +
+              EnvioStatusAutoriza + "Status para Envio Rechaza  " + EnvioStatusRechaza);
+
+            var accessToken;
+            const oauth2Client = new google.auth.OAuth2(
+              CLIENTID, //client ID
+              CLIENTSECRET, // Client Secret 
+              REDIRECTURL // Redirect URL 
+            );
+        
+            oauth2Client.setCredentials({
+              refresh_token: REFRESH_TOKEN
+            });
+        
+        
+            oauth2Client.getAccessToken().then(token => {
+              accessToken = token.token;
+              //cuanta de correo de donde se enviaran los diferentes correos 
+              var nodemailer = require("nodemailer");
+              var smtpTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                host: 'smtp.gmail.com',
+                port: 587,
+                auth: {
+                  user: "intranet@gimm.com.mx",
+                  type: 'OAuth2',
+                  clientId: CLIENTID,
+                  clienteSecret: CLIENTSECRET,
+                  refreshToken: REFRESH_TOKEN,
+                  accessToken: accessToken
+                },
+                tls: { rejectUnauthorized: false },
+                debug: false
+              });
+              //Este mail se crea para el siguiente autorizador
+              var maiOptionAutoriza = {
+                to: emailSig,
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
+                subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+                html:
+                  "<head>" +
+                  "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
+                  "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+                  "</head>" +
+                  "<body>" +
+
+                  '<Strong>TIENES UNA SOLICITUD PENDIENTE POR REVISAR DE : </Strong>' + req.params.Solicitante + '<br>' +
+                  '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                  '<Strong>FAVOR DE ENTRAR A LA INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                  '<br>' +
+                  '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+                  '<br>' +
+                  '<br>' +
+                  '<div>' +
+                  '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                  '<div>' +
+                  '<br>' +
+                  '<br>' +
+                  // Envio de botones para aprovar o un denegar la solicitud de pedido
+                  //'<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusAutoriza + '" style="text-decoration:none; color: #fff !important;">AUTORIZAR</a></button>' +
+                  //'<button type="button" style="text-decoration: none; border: 1px solid #90caf9; border-radius: 5px; padding: 5px; background-color: #90caf9; "><a href="'+SERVER+'/api/upstatus/' + req.params.IdSolicitud + '/' + req.params.Solicitante + '/' + EnvioStatusRechaza + '" style="text-decoration:none; color: #fff !important;">RECHAZAR</a></button>' +
+                  '<br>' +
+                  '<br>' +
+                  '<p> PORFAVOR NO RESPONDER A ESTE MENSAJE, ESTE ES UN MENSAJE AUTORMATICO <p/>' +
+                  "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js'" +
+                  "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+                  "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'" +
+                  "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+                  "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'" +
+                  "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+                  "</body>"
+              }
+              //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
+              var mailOptionRechaza = {
+                to: emailAnter,
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
+                subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+                html:' ' + StatusNameSolPed + ' :' + resultauth.recordsets[3][0].NombreCompleto + '<br>' +
+                  '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                  '<Strong>FAVOR DE ENTRAR A LA INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                  '<br>' +
+                  '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                  '<br>' +
+                  '<br>' +
+                  //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+                  //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+                  //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+                  '<br>' +
+                  '<br>' +
+                  '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+
+              }
+
+              if (req.params.IdStatus == 5) {
+                console.log("Se envia Mail de Rechazo a Usuario Solicitante");
+                smtpTransport.sendMail(mailOptionRechaza, function (err, resp) {
+                  console.log(resp);
+                  if (err) {
+                    console.log(err);
+                    res.end("error");
+                  } else {
+                    console.log("se envio correctamente  A Solicitante: ");
+                    res.status(200);
+                    res.write("<!doctype html>" +
+                      "<html lang='en'>" +
+                      "<head>" +
+
+                      "<meta charset='utf-8'>" +
+                      "<meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>" +
+
+                      "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'" +
+                      "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+
+                      "<title>Intranet Grupo Imagen</title>" +
+                      "</head>" +
+                      "<body>" +
+
+                      "<div class='alert alert-danger' role='alert'>" +
+                      "Se notificará rechazo al solicitante" +
+                      "</div>" +
+                      // "<h1>¡Solicitud de Pedido Actualizada!</h1>"+
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
 
             console.log("----IdStatus solicitud----");
             console.log(StatusSolicitud);
@@ -3920,6 +4810,7 @@ export default class SolicitudCompraCTR {
               Nombre = 'S. P. PRESUPUESTO RECHAZADO';
               TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
             }
+<<<<<<< HEAD
 
             console.log("----IdStatus solicitud----");
             console.log(StatusSolicitud);
@@ -3951,6 +4842,101 @@ export default class SolicitudCompraCTR {
               EnvioStatusAutoriza,
               EnvioStatusRechaza
             );
+=======
+            var accessToken;
+            const oauth2Client = new google.auth.OAuth2(
+              CLIENTID, //client ID
+              CLIENTSECRET, // Client Secret 
+              REDIRECTURL // Redirect URL 
+            );
+        
+            oauth2Client.setCredentials({
+              refresh_token: REFRESH_TOKEN
+            });
+        
+        
+            oauth2Client.getAccessToken().then(token => {
+              accessToken = token.token;
+              //cuanta de correo de donde se enviaran los diferentes correos 
+              var nodemailer = require("nodemailer");
+              var smtpTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                host: 'smtp.gmail.com',
+                port: 587,
+                auth: {
+                  user: "intranet@gimm.com.mx",
+                  type: 'OAuth2',
+                  clientId: CLIENTID,
+                  clienteSecret: CLIENTSECRET,
+                  refreshToken: REFRESH_TOKEN,
+                  accessToken: accessToken
+                },
+                tls: { rejectUnauthorized: false },
+                debug: false
+              });
+              //Este mail se crea para el siguiente autorizador
+              var maiOptionAutoriza = {
+                to: emailSig,
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
+                subject: 'SOLICITUD DE PEDIDO PENDIENTE',
+                html:
+                  "<head>" +
+                  "<link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' " +
+                  "integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>" +
+                  "</head>" +
+                  "<body>" +
+
+                  '<Strong>TU SOLICITUD FUE AUTORIZADA, POR FAVOR VALIDAR LA INFORMACION</Strong>' +
+                  '<br>' +
+                  '<Strong>EL NOMBRE DEL SOLICITANTE: </Strong>' + req.params.Solicitante + '<br>' +
+                  '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                  '<Strong>FAVOR DE ENTRAR A INTRANT PARA SU REVISION MAS DETALLADA</Strong>' +
+                  '<br>' +
+                  '<Strong>EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</Strong>' +
+                  '<br>' +
+                  '<br>' +
+                  '<div>' +
+                  '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                  '<div>' +
+                  '<br>' +
+                  '<br>' +
+                  // Envio de botones para aprovar o un denegar la solicitud de pedido
+                  //'<button type="button" class="btn btn-primary" ><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+EnvioStatusAutoriza+'" style="text-decoration:none">Autorizar</a></button>'+ 
+                  //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+EnvioStatusRechaza+'" style="text-decoration:none">Rechazar</a></button>'+
+                  '<br>' +
+                  '<br>' +
+                  '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>' +
+                  "<script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' " +
+                  "integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>" +
+                  "<script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' " +
+                  "integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>" +
+                  "<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' " +
+                  "integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>" +
+                  "</body>"
+              }
+              //Este mail se crea si es que se rechaza la solicitud se envia al Solicitante.
+              var mailOptionRechaza = {
+                to: emailSig,
+                cc: 'yuki.estrada@gimm.com.mx',
+                bcc: 'marco.garcia@gimm.com.mx',
+                subject: 'SOLICITUD DE PEDIDO RECHAZADA',
+                html:
+                  ' ' + StatusNameSolPed + ' : ' + resultauth.recordsets[3][0].NombreCompleto + '<br>' +
+                  '<Strong>CON UN ID DE SOLICITUD : </Strong>' + req.params.IdSolicitud + '<br><br>' +
+                  '<Strong>FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</Strong>' +
+                  '<br>' +
+                  '<br>' +
+                  '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                  '<br>' +
+                  '<br>' +
+                  //Envio de Botones para la confirmacion desde el correo Autorizacion o Denegacion de Solicitud
+                  //'<button type="button" class="btn btn-primary"><a href="http://189.240.98.66:4200/api/upstatus/'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+2+'" style="text-decoration:none">Autoriza</a></button>'+ 
+                  //'----- <button type="button" class="btn btn-danger"><a href="http://189.240.98.66:4200/api/upstatus'+req.params.IdSolicitud+'/'+req.params.Solicitante+'/'+3+'" style="text-decoration:none">Denegar</a></button>'+
+                  '<br>' +
+                  '<br>' +
+                  '<p> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO<p/>'
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
 
             console.log("*/*/*/*/*/SE ENVIO EL MAIL EN PLANEACION FINANZAS *//*/*/");
             console.log(isSendEmail);

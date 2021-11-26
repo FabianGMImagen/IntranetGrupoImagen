@@ -664,7 +664,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
           this.toast.setMessage(error.message, "danger");
           this.auth.logout();
         }
-        this.toast.setMessage(error, "danger");
+        this.toast.setMessage(error.message, "danger");
         console.log(error);
       }
     );
@@ -929,7 +929,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 this.UserAuth = res;
                                 console.log(this.UserAuth[0].Email);
 
+<<<<<<< HEAD
                                 
+=======
+                                this.isrechazada = false;
+                                this.motivo_Rechazo = '';
+                                this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                                 //Parte donde se envia El correo para los Diferentes autorizadores
                                 this.solicitudComp.SendEmailGerenteFianzas(
                                     data2.ID,
@@ -986,7 +992,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 console.log(res);
                                 this.UserAuth = res;
                                 console.log(this.UserAuth[0].Email);
+<<<<<<< HEAD
                                 
+=======
+                                this.isrechazada = false;
+                                this.motivo_Rechazo = '';
+                                this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                                 //Parte donde se envia El correo para los Diferentes autorizadores
                                 this.solicitudComp.SendEmailGerenteFianzas(
                                     data2.ID,
@@ -1044,7 +1056,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               //console.log(res);
                               this.UserAuth = res;
                               //console.log(this.UserAuth[0].Email);
+<<<<<<< HEAD
                               
+=======
+                              this.isrechazada = false;
+                              this.motivo_Rechazo = '';
+                              this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                               //Parte donde se envia El correo para los Diferentes autorizadore
                               this.solicitudComp
                                 .SendEmailDirectorArea(
@@ -1126,6 +1144,12 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             //console.log(res);
                             this.UserAuth = res;
                             //onsole.log(this.UserAuth[0].Email);
+<<<<<<< HEAD
+=======
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                             //Parte donde se envia El correo para los Diferentes autorizadores
                             //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
 
@@ -1142,6 +1166,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 this.UserAuth[0].Email
                               )
                               .subscribe(
+<<<<<<< HEAD
                                   (res) => {
                                       this.toast.setMessage(
                                           "Error en el envio de el Correo",
@@ -1155,6 +1180,27 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                             "success"
                                             );
                                   }
+=======
+                                (res) => {
+                                  
+                                  this.toast.setMessage(
+                                    "Error en el envio de el Correo",
+                                    "warning"
+                                  );
+                                },
+                                (error) => {
+                                  console.log(
+                                    "Error al enviar el correo " + error
+                                  );
+                                  // this.isrechazada = false;
+                                  // this.motivo_Rechazo = '';
+                                  // this.SelectedStatus = undefined;
+                                  this.toast.setMessage(
+                                    "Envio de Email Correcto",
+                                    "success"
+                                  );
+                                }
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                               );
                               this.isrechazada = false;
                               this.motivo_Rechazo = '';
@@ -1245,7 +1291,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                         //   "El mail por usuario Autrorizador --->" +
                         //     this.UserAuth[0].Email
                         // );
+<<<<<<< HEAD
                        
+=======
+                        this.isrechazada = false;
+                        this.motivo_Rechazo = '';
+                        this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                         this.solicitudComp.SendEmailGerenteFianzas(
                             data2.ID,
                             this.SelectedStatus.IdStatusSolicitud,
@@ -1268,9 +1320,12 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               );
                             }
                           );
+<<<<<<< HEAD
                           this.isrechazada = false;
                           this.motivo_Rechazo = '';
                           this.SelectedStatus = undefined;
+=======
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                       },
                       (err) => {
                         console.log(
@@ -1320,7 +1375,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                       //   "El mail por usuario Autrorizador --->" +
                       //     this.UserAuth[0].Email
                       // );
+<<<<<<< HEAD
                       
+=======
+                      this.isrechazada = false;
+                      this.motivo_Rechazo = '';
+                      this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                       this.solicitudComp.SendEmailGerenteFianzas(
                           data2.ID,
                           this.SelectedStatus.IdStatusSolicitud,
@@ -1409,6 +1470,12 @@ export class SolicitudesRegistradasComponent implements OnInit {
                       (res) => {
                         //console.log(res);
                         this.UserAuth = res;
+<<<<<<< HEAD
+=======
+                        this.isrechazada = false;
+                        this.motivo_Rechazo = '';
+                        this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                         //console.log(this.UserAuth[0]);
                         //Pedimos el usuario creador de la solicitude de pedido para notificarle que ya se envio a SAP la SOLPED
                         // console.log(this.auth.currentUser.Email);
@@ -1520,7 +1587,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                     (res) => {
                       //console.log(res);
                       this.UserAuth = res;
+<<<<<<< HEAD
                       
+=======
+                      this.isrechazada = false;
+                      this.motivo_Rechazo = '';
+                      this.SelectedStatus = undefined;
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                       //console.log(this.UserAuth[0]);
                       //Pedimos el usuario creador de la solicitude de pedido para notificarle que ya se envio a SAP la SOLPED
                       //console.log(this.auth.currentUser.Email);

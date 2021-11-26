@@ -1496,20 +1496,20 @@ export class ListadoSolicitudesComponent implements OnInit {
       var Id = this.DataInsert.Productos.length;
       this.Producto.IdPrduct = Id + 1;
     }
-    // console.log("Cantidad ----> " + this.DataInsert.Cantidad)
-    // console.log("Precio ----> " + this.DataInsert.Precio)
-    // console.log("Cenro de Costos  " + this.Producto.CentroCosto);
-    // console.log("Orden de Invercion  " + this.SelectedOInvercion);
-    // console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
-    // console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
-    // console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
-    // console.log("Numero de Activo   " + this.Producto.NumActivo);
-    // console.log("Numero de Necesidad   " + this.Producto.NumNeces);
-    // console.log("Uso de Producto  " + this.Producto.UsoProd);
-    // console.log("Especificaciones   " + this.Producto.Espf.length);
-    // console.log("Material   " + this.Producto.Material);
-    // console.log("Almacen  " + this.Producto.Almacen);
-    // console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
+    console.log("Cantidad   " + this.Producto.Cantidad);
+    console.log("Price    " + this.Producto.Precio)
+    console.log("Cenro de Costos  " + this.Producto.CentroCosto);
+    console.log("Orden de Invercion  " + this.SelectedOInvercion);
+    console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
+    console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
+    console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
+    console.log("Numero de Activo   " + this.Producto.NumActivo);
+    console.log("Numero de Necesidad   " + this.Producto.NumNeces);
+    console.log("Uso de Producto  " + this.Producto.UsoProd);
+    console.log("Especificaciones   " + this.Producto.Espf.length);
+    console.log("Material   " + this.Producto.Material);
+    console.log("Almacen  " + this.Producto.Almacen);
+    console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 1) {
       if (
         this.Producto.Cantidad != 0 &&
@@ -1754,8 +1754,9 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
       if (
-        this.Producto.Cantidad != 0 &&
-        this.Producto.Precio != 1 &&
+        this.Producto.Cantidad == 0 &&
+        this.Producto.Precio == 0 &&
+
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -2017,8 +2018,9 @@ export class ListadoSolicitudesComponent implements OnInit {
       // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES")
       if (
-        this.Producto.Cantidad != 0 &&
-        this.Producto.Precio != 1 &&
+        this.Producto.Cantidad == 0 &&
+        this.Producto.Precio == 0 &&
+
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -2362,7 +2364,8 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.ChildsProduct.NameCuentaMayorChild);
     this.ChildsProduct.TextoServicio = this.RemoveCaracteresEpeciales(
       this.ChildsProduct.TextoServicio
-    ); //quitamos caracteres especiales con la exprecion regular
+    ); 
+    //quitamos caracteres especiales con la exprecion regular
 
     console.log(this.DataInsert.Imputacion.IdTipoSolicitud);
     if (this.ChildsProduct.TextoServicio.length <= 40) {
@@ -4198,7 +4201,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("  OEstadisitica   " + this.SelectedOrEstChild);
             this.SelectedCostos = undefined;
             this.SelectedCMayor = undefined;
-            this.DataInsert.Productos.forEach((element) => {
+            this.DataInsert.Productos.map(element =>{ 
               console.log(element.ChildsProducts.length);
               if (element.ChildsProducts.length === 0 || element.ChildsProducts.length === undefined || element.ChildsProducts.length === null) {
                 console.log("dentro del if que dice que tenemos cero hijos");
@@ -4703,7 +4706,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                 );
             } else {
               this.toast.setMessage(
-                "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
+                "Una Solicitud de Tipo Servicio debe contener un Sub Producto por Partida, favor de validar C/U de las Partidas",
                 "danger"
               );
               this.progressbar = false;
@@ -5832,7 +5835,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("OR  H " + this.SelectedOrdenEstaHijo);
             console.log("CM  H " + this.SelectedCMayorHijo);
             console.log("CC  H " + this.SelectCentroCostosHijo);
-            this.DataInsert.Productos.forEach((element) => {
+            this.DataInsert.Productos.map(element => {
               console.log(element.ChildsProducts.length);
               if (element.ChildsProducts.length === 0 ||element.ChildsProducts.length === undefined ||element.ChildsProducts.length === null
               ) {
@@ -6306,7 +6309,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             } else {
               console.log("intento faillido");
               this.toast.setMessage(
-                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un Sub Producto, Por Favor verifica la informacion ",
+                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un  Sub Producto por Partida , Por Favor verifica la informacion por C/U de las Partidas. ",
                 "danger"
               );
               this.progressbar = false;
@@ -6314,7 +6317,7 @@ export class ListadoSolicitudesComponent implements OnInit {
           }
         } else {
           this.toast.setMessage(
-            "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
+            "Una Solicitud de Tipo Servicio debe contener un Producto, favor de validar informacion",
             "warning"
           );
           this.progressbar = false;

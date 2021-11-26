@@ -107,8 +107,7 @@
         <ng-container matColumnDef="expandedDetail">
           <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
             <div class="example-element-detail" [@detailExpand]="
-                element == expandedElement ? 'expanded' : 'collapsed'
-              ">
+                element == expandedElement ? 'expanded' : 'collapsed'">
               <div class="example-element-diagram">
                 <div class="example-element-position">
                   <a class="titles">REQUIRENTE:</a> {{ element.NombreUsuario }}
@@ -142,7 +141,11 @@
                   </div>
                   <div class="icons modifchekpresupuesto" *ngIf="this.auth.isCheckPresupuesto ">
                     <i class="fas fa-user-tie iconchecpresupuesto"></i>
+<<<<<<< HEAD
                     <mat-label>
+=======
+                    <mat-label >
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e
                       AUTORIZADOR DE PRESUPUESTO ASIGNADO:
                       <a>{{ element.NAMEAUTH }}</a></mat-label>
                   </div>

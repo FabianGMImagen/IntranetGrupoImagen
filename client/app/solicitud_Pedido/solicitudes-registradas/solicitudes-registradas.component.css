@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Structure */
 table {
   width: 100%;
@@ -115,3 +116,121 @@ tr.example-element-row:not(.example-expanded-row):active {
   padding: 9px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+=======
+/* Structure */
+table {
+  width: 100%;
+  
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.highlight{
+  color: white;
+  background: #673AB7;
+}
+
+tr.example-detail-row {
+  height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+  background: #f5f5f5;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+  background: #efefef;
+}
+
+.example-element-row td {
+  border-bottom-width: 0;
+}
+
+.example-element-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+.example-element-namespesifications{
+  padding: 25px !important;
+  display: flex;
+}
+.example-element-diagram {
+  min-width: 350px;
+  border: 2px solid rgb(179, 179, 179);
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: auto;
+  width: 380px;
+}
+
+.example-element-symbol {
+  font-weight: bold;
+  font-size: 40px;
+  line-height: normal;
+}
+
+.example-element-description {
+  padding: 16px;
+  width: auto;
+  height: auto;
+}
+
+.example-element-description-attribution {
+  opacity: 0.5;
+  padding: 5px;
+}
+
+.titles{
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
+.cuadro{
+  min-width: 80px;
+  border: 2px solid rgb(0, 0, 0);
+  padding: 8px;
+  font-weight: lighter;
+  margin: 8px 0;
+  height: 140px;
+  width: 350px;
+} 
+
+.sap{
+  color: #00BF23 !important;
+  font-size: 19px !important;
+}
+
+.firma{
+  border: 1px dashed #333333;
+}
+
+.motjust{
+  width: 900px !important;
+}
+
+.selestat{
+  margin-left: 50px !important
+}
+
+.monto{
+  text-decoration: none;
+  padding-top: 8px;
+  color: #00BF23;
+  font-size: large;
+}
+
+.iconchecpresupuesto{
+  font-size: 20px;
+  color:dodgerblue;
+}
+.modifchekpresupuesto{
+  padding: 9px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+>>>>>>> 4b08ee5ce64f1af64d34ecd1d67c7466c009612e

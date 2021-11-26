@@ -472,6 +472,7 @@ export class AdminComponent implements OnInit {
         this.toast.setMessage('Se actualizo correctamente la Direccion o Sub-Direccion', 'success');
         this.isEditingDir = false;
         this.isViewListDir = true;
+        this.newName = '';
         this.getDirecciones();
       }
     },error=>{
