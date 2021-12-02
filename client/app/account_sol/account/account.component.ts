@@ -526,9 +526,9 @@ export class AccountComponent implements OnInit {
     this.isviewChilds = false;
     this.iseditproduct = false;
     this.toast.setMessage("item editing cancelled.", "warning");
-    this.getAllSolicitudforUser();
-    this.dataSource = new MatTableDataSource<Detallesol>();
-    this.dataChilds = new MatTableDataSource<Childs>();
+    // this.getAllSolicitudforUser();
+    // this.dataSource = new MatTableDataSource<Detallesol>();
+    // this.dataChilds = new MatTableDataSource<Childs>();
 
   }
 
@@ -541,6 +541,8 @@ export class AccountComponent implements OnInit {
     this.iseditproduct = false;
     this.toast.setMessage("Los datos fueron actualizados correctamente y la solicitud cambios a un estatus S. P. NUEVA PETICION.", "success");
     this.getAllSolicitudforUser();
+    this.dataSource = new MatTableDataSource<Detallesol>();
+    this.dataChilds = new MatTableDataSource<Childs>();
   }
 
   VieEditProductos(products) {

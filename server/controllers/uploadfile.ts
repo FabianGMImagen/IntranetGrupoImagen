@@ -2,6 +2,7 @@
 import * as multer from 'multer' //libreria que instalar desde NPM
 import *  as path from 'path';
 import { read } from 'fs';
+import SolicitudCompraCTR  from '../controllers/SolicitudCompra';
 
 
 
@@ -11,8 +12,14 @@ import { read } from 'fs';
 //ruta donde se guardan los archivos PDF
 //const DIR = '//10.29.128.161/audio/Fabi';
 
+const Log = new SolicitudCompraCTR();
+// const ruta = "http://10.29.148.40:3000/public/";
+// const DIR = '../IntranetGrupoImagen/datos';
+
+
 const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
 const DIR = '../IntranetProduccion/datos';
+
 //const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
 var id = 0;
 let storage = multer.diskStorage({
@@ -62,7 +69,8 @@ export default class UploadFilesController {
               var RutaCotizacion = encodeURI(ruta + req.headers.idsol+' '+req.file.originalname);
               console.log(req.file);
               console.log("Esta es la ruta del archivo---" + RutaCotizacion);
-
+              
+              Log.InsertLog( req.headers.idsol, 'Carga de Precotizacion', RutaCotizacion);
               var sql = require("mssql");
               //variable de entorno para realizar la coneccion
               var env = process.env.NODE_ENV || 'SERWEB';
@@ -73,12 +81,12 @@ export default class UploadFilesController {
                                     .input('Ruta', sql.VarChar, RutaCotizacion)
                                     .execute('InsertRutaCotizacion')
                 }).then(resultt => {
-                  sql.close();
                   res.status(200).json(resultt);
+                  sql.close();
                   res.end();
                 }).catch(err => {
-                  sql.close();
                   if(err) console.log(err);
+                  sql.close();
                   res.end();
                 }); 
               //return res.send({success: true})

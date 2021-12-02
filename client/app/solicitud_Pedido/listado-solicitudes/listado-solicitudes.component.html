@@ -502,7 +502,7 @@
           <div class="col">
             <div class="icons">
               <i class="far fa-building"></i>
-              <mat-form-field class="example-full-width">
+              <mat-form-field class="moreLargemat">
                 <mat-label>MATERIAL O SERVICIOS</mat-label>
                 <mat-select
                   [formControl]="MaterialesCtrl"
@@ -519,7 +519,7 @@
                   <mat-option
                     *ngFor="let mat of filteredMaterial | async"
                     [value]="mat"
-                    >{{ mat.Nombre }}</mat-option
+                    >{{mat.IdMaterial}} - {{ mat.Nombre }}</mat-option
                   >
                 </mat-select>
               </mat-form-field>
@@ -930,7 +930,7 @@
           <tbody>
             <tr *ngFor="let item of uploader.queue">
               <td>
-                <strong>{{ item?.file?.name }}</strong>
+                <strong>{{ item?.file?.name }}-{{item?.file?.path}}</strong>
               </td>
               <td *ngIf="uploader.options.isHTML5" nowrap>
                 {{ item?.file?.size / 1024 / 1024 | number: ".2" }} MB
