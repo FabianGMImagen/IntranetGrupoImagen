@@ -81,20 +81,14 @@ export default class UploadFilesController {
                                     .input('Ruta', sql.VarChar, RutaCotizacion)
                                     .execute('InsertRutaCotizacion')
                 }).then(resultt => {
-<<<<<<< HEAD
                   console.log("-.-.-.SE INSERTO URLFILE-.-.-");
                   console.log(resultt);
-=======
->>>>>>> c14ca5182787c780fc792f37ab7b96e5c9ee2764
                   res.status(200).json(resultt);
                   sql.close();
                   res.end();
                 }).catch(err => {
-<<<<<<< HEAD
                   console.log("-.-.-.ERROR AL GUARDAR URL FILE-.-.-");
                   console.log(err);
-=======
->>>>>>> c14ca5182787c780fc792f37ab7b96e5c9ee2764
                   if(err) console.log(err);
                   sql.close();
                   res.end();
