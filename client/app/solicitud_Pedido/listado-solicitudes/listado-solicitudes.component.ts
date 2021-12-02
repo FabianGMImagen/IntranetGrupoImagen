@@ -6306,7 +6306,14 @@ export class ListadoSolicitudesComponent implements OnInit {
       format = format.replace(/[´´]+/g, " ");
       format = format.replace(/[``]+/g, " ");
       format = format.replace(/[¨]+/g, " ");
-
+      format = format.replace(/['"]+/g, " ");
+      format = format.replace(/[´´]+/g, " ");
+      format = format.replace(/[``]+/g, " ");
+      format = format.replace(/[¨]+/g, " ");
+      format = format.replace(/[|]+/g, " ");
+      format = format.replace(/[~]+/g, " ");
+      format = format.replace(/[#]+/g, " ");
+      format = format.replace(/(\r\n|\n|\r)/gm, "")
       //console.log(str)
       var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
         to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
@@ -6323,17 +6330,10 @@ export class ListadoSolicitudesComponent implements OnInit {
         if (mapping.hasOwnProperty(format.charAt(i))) ret.push(mapping[c]);
         else ret.push(c);
       }
-      //console.log(ret.join( '' ).toString());
 
       var cadena = ret.join("").toString();
-      format = cadena.replace(/['"]+/g, " ");
-      format = format.replace(/[´´]+/g, " ");
-      format = format.replace(/[``]+/g, " ");
-      format = format.replace(/[¨]+/g, " ");
-      format = format.replace(/[|]+/g, " ");
-      format = format.replace(/[~]+/g, " ");
-      format = format.replace(/[#]+/g, " ");
-      return format;
+      
+      return cadena;
     }
   }
 

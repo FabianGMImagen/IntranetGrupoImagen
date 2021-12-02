@@ -59,10 +59,9 @@ import { GrupoCompra } from "../../shared/models/grupocompra.model";
 import { UnidadMedida } from "../../shared/models/umedida.model";
 import { Necesidad } from "../../shared/models/necesidad.model";
 import { Activo } from "../../shared/models/activo.model";
-import { DialogAdvertenciaUpdateSolpedidoComponent } from "client/app/dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component";
-import { DialogUploadEspesificacionComponent } from "client/app/dialogs/dialog-upload-espesificacion/dialog-upload-espesificacion.component";
-import { LoadingComponent } from '../../shared/loading/loading.component'
 
+import { LoadingComponent } from '../../shared/loading/loading.component'
+import { DialogAdvertenciaUpdateSolpedidoComponent } from "client/app/dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component";
 
 
 
@@ -527,9 +526,9 @@ export class AccountComponent implements OnInit {
     this.isviewChilds = false;
     this.iseditproduct = false;
     this.toast.setMessage("item editing cancelled.", "warning");
-    this.getAllSolicitudforUser();
-    this.dataSource = new MatTableDataSource<Detallesol>();
-    this.dataChilds = new MatTableDataSource<Childs>();
+    // this.getAllSolicitudforUser();
+    // this.dataSource = new MatTableDataSource<Detallesol>();
+    // this.dataChilds = new MatTableDataSource<Childs>();
 
   }
 
@@ -542,6 +541,8 @@ export class AccountComponent implements OnInit {
     this.iseditproduct = false;
     this.toast.setMessage("Los datos fueron actualizados correctamente y la solicitud cambios a un estatus S. P. NUEVA PETICION.", "success");
     this.getAllSolicitudforUser();
+    this.dataSource = new MatTableDataSource<Detallesol>();
+    this.dataChilds = new MatTableDataSource<Childs>();
   }
 
   VieEditProductos(products) {
@@ -3698,20 +3699,6 @@ export class AccountComponent implements OnInit {
       }
     });
   }
-
-  openDialogReUploadEspesifiaction(typeUpdate: number) {
-    const dialogRef = this.dialog.open(DialogUploadEspesificacionComponent, {
-      width: "450px",
-      data:typeUpdate
-    });
-    dialogRef.afterClosed().subscribe(async (result) => {
-      console.log("The dialog was closed");
-      console.log(result);
-      console.log(typeUpdate)
-      
-    });
-  }
-
 
   // GeneraPDF(datapdf: SolicitudesCompraRegistradas) {
   //   console.log(

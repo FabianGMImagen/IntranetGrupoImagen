@@ -5,6 +5,12 @@
 /tmp
 /out-tsc
 /datos
+*package.json
+*proxy.conf.json
+*package-lock.json
+.env
+#datos archivos de excel o csv
+datos/
 # dependencies
 /node_modules
 
@@ -45,8 +51,4 @@ Thumbs.db
 /FETCH_HEAD
 
 
-package.json
-proxy.conf.json
-package-lock.json
-#datos archivos de excel o csv
-datos/
+
