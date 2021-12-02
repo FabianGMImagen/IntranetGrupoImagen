@@ -775,16 +775,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
       } else {
         this.SelectedCompras = undefined;
         this.toast.setMessage(
-          "Por favor selecciona un Estatus a bsucar",
+          "Por favor selecciona un Estatus a bucar",
           "warning"
         );
       }
     } else if (this.auth.currentUser.IdRole == 7) {
       if (this.SelectedCompras != undefined) {
-        this.getAllSolicitudesRegistradasporUsrCompras(
-          this.Direccion,
-          this.SelectedCompras
-        );
+        this.getAllSolicitudesRegistradasporUsrComprador(this.Direccion, this.SelectedCompras, this.auth.currentUser.IdUsuario);
       } else {
         this.SelectedCompras = undefined;
         this.toast.setMessage(
