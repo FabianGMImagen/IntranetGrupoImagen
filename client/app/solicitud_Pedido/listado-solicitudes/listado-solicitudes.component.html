@@ -519,7 +519,7 @@
                   <mat-option
                     *ngFor="let mat of filteredMaterial | async"
                     [value]="mat"
-                    >{{ mat.Nombre }}</mat-option
+                    >{{mat.IdMaterial}} - {{ mat.Nombre }}</mat-option
                   >
                 </mat-select>
               </mat-form-field>

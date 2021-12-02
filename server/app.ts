@@ -75,8 +75,7 @@ console.log(process.env.SECRET_SAP);
 //nota para otros casos con mandar authorization y la contraseña en ASCCI es mas que suficiente.
 //LINK DE CALIDAD PARA QIM (CALIDAD)       -->http://smxcrqim.grupoempresarialangeles.com.mx:8025/sap/bc/srt/wsdl/flv_10002A10MAD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
 //LINK DE PRODUCCION PARA PIM (PRODUCCION) -->http://smxcrpim.grupoempresarialangeles.com.mx:8035/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
-app.use('/sap', proxy({ target: 'http://smxcrqim.grupoempresarialangeles.com.mx:8025',
-
+app.use('/sap', proxy({ target: 'http://smxcrpim.grupoempresarialangeles.com.mx:8035',
                         changeOrigin: true, 
                         logLevel: 'debug',
                         headers:{
