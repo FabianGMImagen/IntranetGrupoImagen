@@ -86,8 +86,8 @@ export class SolicitudCompraService {
     //http://smxcrqim.grupoempresarialangeles.com.mx:8025/sap/bc/srt/wsdl/flv_10002A10MAD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
     //var url ='/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_bukrs/200/zws_bukrs/zws_bukrs?sap-client=200';
     //var url = '/sap/bc/srt/wsdl/flv_10002A10M1D1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/300/zws_sap_in/zws_sap_in?sap-client=300';
-    //var url = '/sap/bc/srt/wsdl/flv_10002A10MAD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320'; //QIM CALIDAD
-    var url = '/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320';
+    var url = '/sap/bc/srt/wsdl/flv_10002A10MAD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320'; //QIM CALIDAD
+    //var url = '/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320';
     
     //Parametros para enviar servicio, se manda vacios para que nos regrese todas las empresas
     const parametros = {
@@ -100,6 +100,7 @@ export class SolicitudCompraService {
 
       //client.setEndpoint("/sap/bc/srt/rfc/sap/zws_bukrs/200/zws_bukrs/zws_bukrs");
       //client.setEndpoint("/sap/bc/srt/rfc/sap/zws_sap_in/300/zws_sap_in/zws_sap_in");
+      //                   
       client.setEndpoint("/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in");
       (<any>client).ZGET_COMPANIES(parametros).subscribe((res: ISoapMethodResponse) => {
 

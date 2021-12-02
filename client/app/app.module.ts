@@ -84,6 +84,7 @@ import { DialogDeleteDirComponent } from './dialogs/dialog-delete-dir/dialog-del
 import { AdminSolicitudesComponent } from './admin_Page/admin-solicitudes/admin-solicitudes.component';
 import { SolconsumointEditComponent } from './admin_Page/solconsumoint-edit/solconsumoint-edit.component';
 import { DialogAdvertenciaUpdateSolpedidoComponent } from './dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component';
+import { DialogUploadEspesificacionComponent } from './dialogs/dialog-upload-espesificacion/dialog-upload-espesificacion.component';
 
 
 export function tokenGetter() {
@@ -124,6 +125,7 @@ export function tokenGetter() {
     AdminSolicitudesComponent,
     SolconsumointEditComponent,
     DialogAdvertenciaUpdateSolpedidoComponent,
+    DialogUploadEspesificacionComponent,
   ],
   entryComponents:[
     DialogInfoComponent,
@@ -153,6 +155,7 @@ export function tokenGetter() {
     NgxSoapModule,
     NgIdleKeepaliveModule.forRoot(),
     NgxUpperCaseDirectiveModule,
+    NgbModule,
     //AngularSignaturePadModule.forRoot()
   ],
   providers: [

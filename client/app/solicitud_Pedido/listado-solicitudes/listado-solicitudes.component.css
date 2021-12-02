@@ -53,11 +53,17 @@
 .moreLarge{
     width: 400px !important;
 }
+
 .moreLargecmayor{
     min-width: 500px !important;
     width: auto !important;
-    max-width: 650px !important;
 }
+
+.moreLargemat{
+    min-width: 480px !important;
+    width: auto !important;
+}
+
 .justifi{
     padding-top: 15px;
 }
