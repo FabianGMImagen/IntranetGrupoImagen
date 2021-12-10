@@ -1010,7 +1010,8 @@
 
       <!-- [disabled]="!uploader.getNotUploadedItems().length" -->
       <div class="progressbar" *ngIf="progressbar">
-        <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar>
+        <!-- <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar> -->
+        <app-loading></app-loading>
       </div>
     </div>
     <br>

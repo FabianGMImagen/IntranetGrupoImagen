@@ -115,3 +115,8 @@ tr.example-element-row:not(.example-expanded-row):active {
   padding: 9px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.sectbutton{
+  padding: 5px;
+  text-align: center;
+}

@@ -152,7 +152,7 @@
                     </mat-label>
                   </div>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col" *ngIf="isEditing">
                     <button class="btn btn-sm btn-primary" (click)="enableEditing(element)">
                       <i class="fa fa-pencil"></i>
@@ -171,8 +171,8 @@
                       GENERAR ARCHIVO EXCEL
                     </button>
                   </div>
-                </div>
-                <br>
+                </div> -->
+                <!-- <br> -->
                 <mat-divider></mat-divider>
                 <mat-divider></mat-divider>
                 <!-- <div *ngIf="element.Statname == 'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP'">
@@ -197,9 +197,7 @@
                       <!-- <img [src]="SignatureImage" *ngIf="SignatureImage"> -->
                 <!--</div> -->
                 <div class="row">
-                  <div class="col" *ngIf="
-                      element.Statname !=
-                      'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP'">
+                  <div class="col" *ngIf="element.Statname !='S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP'">
                     <div *ngIf="element.Statname != 'S. P. RECHAZADA POR COMPRAS'">
                       <div *ngIf="is_persona_coprador">
                         <div style="max-width: 380px; padding: 5px">
@@ -252,7 +250,26 @@
                 </div>
                 
               </div>
-
+              <div class="example-element-description">
+                    <div class="col sectbutton">
+                      <button class="btn btn-info btn-sm" (click)="historyforSolicitud(element)">
+                        <i class="fa fa-history"></i>
+                        HISTORIAL DE CAMBIOS
+                      </button>
+                    </div>
+                    <div class="col sectbutton" *ngIf="isEditing">
+                      <button class="btn btn-sm btn-primary" (click)="enableEditing(element)">
+                        <i class="fa fa-pencil"></i>
+                        DETALLES SOLICITUD
+                      </button>
+                    </div>
+                    <div class="col sectbutton" *ngIf="isEditing" style="font-size: 13px">
+                      <a [href]="element.RutaCotizacion" target="_blank">
+                        <i class="fa fa-file-text" aria-hidden="true"></i>
+                        ESPECIFICACIONES
+                      </a>
+                    </div>
+              </div>
               <br />
             </div>
           </td>

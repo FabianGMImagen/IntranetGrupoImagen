@@ -1815,6 +1815,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
     }
   }
 
+  historyforSolicitud(element:SolicitudesCompraRegistradas){
+    console.log(element);
+  }
+
   // async verPDF(ruta: any) {
   //   console.log(ruta.RutaCotizacion);
   //   //window.open(ruta, null);

@@ -45,6 +45,7 @@ import { NgxSoapService, Client, ISoapMethodResponse, WSSecurity, security } fro
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { Categorias } from '../shared/models/categorias.model';
 import { CategoriasForUser } from '../shared/models/listcategoriesforuser.model';
+import { delay } from 'rxjs/operators';
 
 
 
@@ -58,6 +59,7 @@ export class SolicitudCompraService {
   SolPed: SolicitudPedidoSAP = new SolicitudPedidoSAP();
   ListItemsSAP: SolicitudPedidoSAP;
   DataInsertSAP: DataSAP = new DataSAP();
+  show:boolean = false;
 
   constructor(private http: HttpClient,
     private soap: NgxSoapService,
@@ -1745,6 +1747,7 @@ export class SolicitudCompraService {
 
   //Trae tipo de Solciitud dependiendo de el rool de el
   InsertSolicitudPedido1(Data: Solicitud): Observable<Solicitud> {
+    this.show = true;
     return this.http.post<Solicitud>('/api/newsolicitud1', Data);
   }
 
