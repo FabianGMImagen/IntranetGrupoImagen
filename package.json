@@ -14,7 +14,7 @@
     "build": "ng build --prod",
     "start": "node dist/server/app.js",
     "predev": "tsc -p server",
-    "dev": "concurrently  \"ng serve --host 10.29.148.40 --port 4200 --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\" ",
+    "dev": "concurrently  \"ng serve --host solicitud.adgimm.com.mx --port 4200 --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\" ",
     "fab": "concurrently \"ng serve --host solicitud.adgimm.com.mx --proxy-config proxy.conf.json --open\" \"tsc -w -p server\" \"nodemon dist/server/app.js\"",
     "prod": "concurrently  \"ng build --aot --prod && tsc -p server && node dist/server/app.js\" \"--proxy-config proxy.conf.json\"",
     "test": "ng test",

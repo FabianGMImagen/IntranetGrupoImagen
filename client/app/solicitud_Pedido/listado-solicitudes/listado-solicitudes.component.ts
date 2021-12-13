@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { SolicitudCompraService } from "../../services/solicitudcompra.service";
 import { AuthServices } from "../../services/auth.service";

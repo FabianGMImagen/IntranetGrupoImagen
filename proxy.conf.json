@@ -1,6 +1,6 @@
 {
   "/api": { 
-    "target":"http://10.29.148.40:3000", 
+    "target":"http://solicitud.adgimm.com.mx:3000", 
     "secure": false
   }
   

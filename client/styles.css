@@ -6,35 +6,27 @@ body {
 }
 
 .container{
-  max-width: 1850px;
-  padding-right: 10px !important;
-  padding-left: 10px !important;
+  max-width: 1850px ;
+  padding-right: 3px !important;
+  padding-left: 3px !important;
   margin-right: none !important;
   margin-left: none !important;
 }
 
-@media (max-width: 1460px){
-  .container{
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-    max-width:1550px;
-  }
-
-}
 
 
-
-.input-group {
-  
-}
+/* .input-group {
+  margin-bottom: 5px;
+} */
 
 .my-panel .mat-dialog-container {
   overflow: hidden;
   border-radius: 5px;
-  
+  /* padding: 5px; */
   background-color: #8577B6;
   font-display: white;
 }
+
 .bg-primary{
   background-color: #143654 !important;
 }
