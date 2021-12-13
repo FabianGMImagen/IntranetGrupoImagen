@@ -54,7 +54,7 @@ export default class UploadFilesController {
            console.log("fin de los varoles de los archuvos-------------------------");
 
            var uploadfile = multer({storage: storage}).single(' ');
-           try {
+          try {
             uploadfile(req, res, function (err) {
               //console.log("File = " + req.file.originalname + " - " + path.extname(req.file.originalname) );
               if (err) {
@@ -94,11 +94,11 @@ export default class UploadFilesController {
                   res.end();
                 }); 
               //return res.send({success: true})
-          });
-       } catch (error) {
-         console.log("Error en la carga del archivo en UploadFilesController");
-         console.log(error)
-       }
+            });
+          } catch (error) {
+            console.log("Error en la carga del archivo en UploadFilesController");
+            console.log(error)
+          }
     }
 
     createFileComrpas = (req, res) => {

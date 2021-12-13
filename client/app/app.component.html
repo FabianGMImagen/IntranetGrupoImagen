@@ -29,11 +29,11 @@
               </a>
           </li>
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a routerLink="/RegistrarSolicitudCompras" class="nav-link" routerlinkActivate="active" *ngIf="auth.loggedIn && auth.isSolicitanteCI">
               <i class="fa fa-list"></i> SOL. CONSUMO INT.
             </a>
-          </li>
+          </li> -->
 
           <li class="nav-item">
             <a routerLink="/solicitudesRegistradas" class="nav-link" routerLinkActive="active" 
@@ -43,12 +43,12 @@
             </a>
           </li>
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a routerLink="/solicituderegistradasconsumoint" class="nav-link" routerLinkActive="active" 
             *ngIf="auth.loggedIn && auth.isJefeAreaConsumoInt || auth.isDirectorConsumoInt || auth.isAlmacenistaConsumoInt ">
               <i class="fa fa-list"></i> SOL. CONSUMO INT. REGISTRADAS 
             </a>
-          </li>
+          </li> -->
 
           <li class="nav-item">
             <a routerLink="/login" class="nav-link" routerLinkActive="active" *ngIf="!auth.loggedIn" (click)="reset()">
@@ -112,7 +112,9 @@
 
       </div>
     </nav>
-  
+    <div  *ngIf="solComp.show">
+      <app-loading></app-loading>
+    </div>
     <router-outlet></router-outlet>
   
   </div>

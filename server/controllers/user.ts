@@ -40,8 +40,8 @@ export default class UserCtrl extends BaseCtrl {
       return pool.request().query(Query)
     }).then(result =>{
             console.log( "----------Registros Recuperados----------"+ result.rowsAffected );
-            console.log(req.body.password);
-            console.log(result.recordset);
+            // console.log(req.body.password);
+            // console.log(result.recordset);
             if(result.rowsAffected == 0 || result.rowsAffected > 1){
               return res.status(403).json({message:'Existe un error de correo duplicado, por favor contacta a Mesa de Control o Sistemas.'});
               

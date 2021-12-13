@@ -33,7 +33,7 @@ import { AdminSolicitudesComponent } from './admin_Page/admin-solicitudes/admin-
 const routes: Routes = [
   
   { path: '', component: AboutComponent },
-  { path: 'register', component: RegisterComponent, canActivate:[AuthGuardLogin, AuthGuardAdmin] },
+  { path: 'register', component: RegisterComponent, canActivate:[AuthGuardLogin, AuthGuardAdmin]},
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: LogoutComponent, canActivate:[AuthGuardLogin] },
   { path: 'account', component: AccountComponent, canActivate: [AuthGuardLogin] },
@@ -41,7 +41,7 @@ const routes: Routes = [
   { path: 'notfound', component: NotFoundComponent},
   { path: 'solicitud', component: AdminSolicitudesComponent, canActivate:[AuthGuardLogin] },
   { path: 'solicituderegistradasconsumoint', component: SolicitudesComponent, canActivate:[AuthGuardLogin] },  
-  { path: 'listadoSolicitudes', component: ListadoSolicitudesComponent, canActivate:[AuthGuardLogin]},
+  { path: 'listadoSolicitudes', component: ListadoSolicitudesComponent, canActivate:[AuthGuardLogin], data:{preload: true}},
   { path: 'solicitudesRegistradas', component: SolicitudesRegistradasComponent, canActivate:[AuthGuardLogin]},
   { path: 'RegistrarSolicitudCompras', component: SolicitudConsumo_Interno, canActivate:[AuthGuardLogin] },
   { path: 'dirauth',component: DirauthComponent, canActivate:[AuthGuardLogin, AuthGuardAdmin]},

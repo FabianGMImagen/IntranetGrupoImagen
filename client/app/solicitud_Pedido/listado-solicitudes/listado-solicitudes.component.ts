@@ -1,3 +1,4 @@
+
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { SolicitudCompraService } from "../../services/solicitudcompra.service";
 import { AuthServices } from "../../services/auth.service";
@@ -400,6 +401,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     //console.log(this.uploader);
     //opciones cuando el archivo este completo y se suba
     this.uploader.onAfterAddingFile = (file) => {
+      console.log(file);
       //console.log("***************Se dejo el archivo*************************");
       //console.log(file);
       file.withCredentials = false;
@@ -470,51 +472,6 @@ export class ListadoSolicitudesComponent implements OnInit {
     var fechayhora = year + "-" + mont + "-" + day + " " + FechaConHora;
     //console.log(fechayhora);
     this.date = fechayhora;
-
-    // var dayreal = this.Date.value.substring(8, 10);
-    // //var mont = date.toLocaleDateString().substring(3,4);
-    // var montR = '0'+mont;
-    // var montreal = this.Date.value.substring(5,7);
-    // console.log("mont -->"+montR);
-    //console.log("montreal --->"+montreal);
-
-    // console.log(day);
-    // console.log(dayreal);
-
-    // if(montR == montreal){
-    //    console.log("los meses son iguales");
-    // }else{
-    //    console.log("los mese no coinciden");
-    //    var mesmenor = montreal-1;
-    //    console.log("mes menor menos uno    "+ mesmenor);
-    //       if(day == dayreal){
-    //         console.log("las fechas son iguales");
-    //         var fecha = this.Date.value.substring(0, 10);
-    //         var fechayhora = fecha+" "+FechaConHora;
-    //         console.log(fechayhora);
-    //         this.date = fechayhora;
-    //       }else{
-    //         console.log("las fechas no son iguales");
-    //         var fecha = this.Date.value.substring(0,8);
-    //         var diamenor = dayreal-1;
-    //         var fechayhora = fecha + diamenor +" "+FechaConHora;
-    //         console.log(fechayhora);
-    //         this.date=fechayhora;
-    //       }
-    // }
-
-    //console.log(this.Date.value.substring(0, 10));
-    //console.log(FechaConHora);
-    // var Horas = time.getHours();
-    // var Minutos = time.getMinutes();
-    // var Segundos = time.getSeconds();
-    // var HoraExacta = Horas+":"+Minutos+":"+Segundos+" ";
-    //console.log("Esta es la fecha---->" + FechaSelect);
-    //var fechayhora = fecha+" "+FechaConHora;
-    // var mydatetime = new Date(fechayhora);
-    // this.date= fechayhora;
-    // console.log(this.date + " ***** ") ;
-    //console.log("Pm o AM--->" + time.toTimeString());
   }
 
   getAllEmpre() {
@@ -1496,20 +1453,20 @@ export class ListadoSolicitudesComponent implements OnInit {
       var Id = this.DataInsert.Productos.length;
       this.Producto.IdPrduct = Id + 1;
     }
-    console.log("Cantidad   " + this.Producto.Cantidad);
-    console.log("Price    " + this.Producto.Precio)
-    console.log("Cenro de Costos  " + this.Producto.CentroCosto);
-    console.log("Orden de Invercion  " + this.SelectedOInvercion);
-    console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
-    console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
-    console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
-    console.log("Numero de Activo   " + this.Producto.NumActivo);
-    console.log("Numero de Necesidad   " + this.Producto.NumNeces);
-    console.log("Uso de Producto  " + this.Producto.UsoProd);
-    console.log("Especificaciones   " + this.Producto.Espf.length);
-    console.log("Material   " + this.Producto.Material);
-    console.log("Almacen  " + this.Producto.Almacen);
-    console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
+    // console.log("Cantidad ----> " + this.DataInsert.Cantidad)
+    // console.log("Precio ----> " + this.DataInsert.Precio)
+    // console.log("Cenro de Costos  " + this.Producto.CentroCosto);
+    // console.log("Orden de Invercion  " + this.SelectedOInvercion);
+    // console.log("Cuenta de Mayor   " + this.Producto.CuentaMayor);
+    // console.log("Grupo de COmpra  " + this.Producto.GrupCompra);
+    // console.log("Unidad de Medida  " + this.Producto.UnidadMedida);
+    // console.log("Numero de Activo   " + this.Producto.NumActivo);
+    // console.log("Numero de Necesidad   " + this.Producto.NumNeces);
+    // console.log("Uso de Producto  " + this.Producto.UsoProd);
+    // console.log("Especificaciones   " + this.Producto.Espf.length);
+    // console.log("Material   " + this.Producto.Material);
+    // console.log("Almacen  " + this.Producto.Almacen);
+    // console.log("Orden Estadistica   " + this.Producto.IdOrdenEstadistica);
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 1) {
       if (
         this.Producto.Cantidad != 0 &&
@@ -1754,9 +1711,8 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
       if (
-        this.Producto.Cantidad == 0 &&
-        this.Producto.Precio == 0 &&
-
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -2018,9 +1974,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES")
       if (
-        this.Producto.Cantidad == 0 &&
-        this.Producto.Precio == 0 &&
-
+        this.Producto.Cantidad != 0 &&
+        this.Producto.Precio != 1 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -2364,8 +2319,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.ChildsProduct.NameCuentaMayorChild);
     this.ChildsProduct.TextoServicio = this.RemoveCaracteresEpeciales(
       this.ChildsProduct.TextoServicio
-    ); 
-    //quitamos caracteres especiales con la exprecion regular
+    ); //quitamos caracteres especiales con la exprecion regular
 
     console.log(this.DataInsert.Imputacion.IdTipoSolicitud);
     if (this.ChildsProduct.TextoServicio.length <= 40) {
@@ -2533,9 +2487,9 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log("Cuenta de mayor-->" + this.DataInsert.Cuentamayor);
     // console.log("Categorias --->" + this.DataInsert.Categoria)
     //console.log("Producto-->" + this.DataInsert.Productos);
-    this.buscaIdAutorizador(this.DataInsert.Area);
+    //this.buscaIdAutorizador(this.DataInsert.Area);
     this.uploader.progress = 0;
-    this.progressbar = true;
+    this.solicitudComp.show = true;
     //console.log(this.uploader.queue[0]._file.name);
     //console.log(this.uploader.queue.length);
     if (
@@ -2579,7 +2533,7 @@ export class ListadoSolicitudesComponent implements OnInit {
           "warning"
         );
       }
-      this.progressbar = false;
+      this.solicitudComp.show = false;
     } else {
       //this.uploader._fileSizeFilter;
       //this.uploader._fileTypeFilter;
@@ -2638,6 +2592,7 @@ export class ListadoSolicitudesComponent implements OnInit {
               //primero Validamos si tenemos alguna exclucion de autorizacion
               var Role;
               var status;
+              this.solicitudComp.show = true;
               this.solicitudComp
                 .checkdirauthexeption(this.DataInsert.Area.IdDireccion)
                 .subscribe(
@@ -2688,6 +2643,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 )
                                 .subscribe(
                                   (data) => {
+                                    setTimeout(() =>{
+                                      this.solicitudComp.show = false;
+                                    },3000)
                                     this.UsrAuthEmail = data;
                                     console.log(
                                       "------------------------------"
@@ -2750,7 +2708,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -2763,11 +2721,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -2782,13 +2740,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -2797,10 +2755,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -2911,13 +2869,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (err) => {
                                           this.ngOnInit();
                                           console.log(err);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -2927,7 +2885,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         err
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -2938,7 +2896,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 "Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ",
                                 "danger"
                               );
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       }
@@ -3044,7 +3002,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         this.ngOnInit();
                                       },
                                       (err) => {
@@ -3052,7 +3010,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         //location.reload();
                                         this.ngOnInit();
                                         console.log(err);
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -3062,7 +3020,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       err
                                   );
-                                  this.progressbar = false;
+                                  this.solicitudComp.show = false;
                                 }
                               );
                           },
@@ -3070,7 +3028,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                             this.isEnviadoSolPed = false;
                             console.log(error);
                             this.toast.setMessage(error.message, "danger");
-                            this.progressbar = false;
+                            this.solicitudComp.show = false;
                           }
                         );
                     }
@@ -3080,7 +3038,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                       "error al recuperar la informacion de las Exxcepcions" +
                         err
                     );
-                    this.progressbar = false;
+                    this.solicitudComp.show = false;
                   }
                 );
             } else {
@@ -3089,7 +3047,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                 "Los Campos Habilitados son requeridos Favor de Revisar la Informacion ",
                 "danger"
               );
-              this.progressbar = false;
+              this.solicitudComp.show = false;
             }
           }
 
@@ -3234,7 +3192,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Gerete de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -3247,11 +3205,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -3266,13 +3224,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -3281,10 +3239,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -3384,13 +3342,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (err) => {
                                           this.ngOnInit();
                                           console.log(err);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -3400,7 +3358,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         err
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -3411,7 +3369,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 "Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ",
                                 "danger"
                               );
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       }
@@ -3511,13 +3469,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a aotorizador de Area",
                                           "success"
                                         );
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         this.ngOnInit();
                                       },
                                       (err) => {
                                         this.ngOnInit();
                                         console.log(err);
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -3527,7 +3485,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       err
                                   );
-                                  this.progressbar = false;
+                                  this.solicitudComp.show = false;
                                 }
                               );
                           },
@@ -3535,7 +3493,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                             this.isEnviadoSolPed = false;
                             console.log(error);
                             this.toast.setMessage(error.message, "danger");
-                            this.progressbar = false;
+                            this.solicitudComp.show = false;
                           }
                         );
                     }
@@ -3545,7 +3503,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                       "error al recuperar la informacion de las Exxcepcions" +
                         err
                     );
-                    this.progressbar = false;
+                    this.solicitudComp.show = false;
                   }
                 );
               // this.DataInsert.TipoSolicitud = 2;
@@ -3821,7 +3779,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -3834,11 +3792,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -3853,13 +3811,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -3868,10 +3826,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -3965,7 +3923,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -3978,11 +3936,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -3997,13 +3955,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -4012,10 +3970,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       }
@@ -4109,7 +4067,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         this.ngOnInit();
                                       },
                                       (error) => {
@@ -4122,11 +4080,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "danger"
                                           );
                                           this.auth.logout();
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                         }
                                         this.ngOnInit();
                                         console.log(error);
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -4141,13 +4099,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "danger"
                                     );
                                     this.auth.logout();
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
-                                  this.progressbar = false;
+                                  this.solicitudComp.show = false;
                                 }
                               );
                           },
@@ -4156,10 +4114,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                             if (error.status == 403 || error.status == 404) {
                               this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                             this.toast.setMessage(error.message, "danger");
-                            this.progressbar = false;
+                            this.solicitudComp.show = false;
                           }
                         );
                     }
@@ -4168,13 +4126,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                     if (error.status == 403 || error.status == 404) {
                       this.toast.setMessage(error.message, "danger");
                       this.auth.logout();
-                      this.progressbar = false;
+                      this.solicitudComp.show = false;
                     }
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
                         error
                     );
-                    this.progressbar = false;
+                    this.solicitudComp.show = false;
                   }
                 );
             } else {
@@ -4182,7 +4140,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                 "Existe un problema, favor de Validar Informacion ",
                 "danger"
               );
-              this.progressbar = false;
+              this.solicitudComp.show = false;
             }
           }
 
@@ -4201,7 +4159,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("  OEstadisitica   " + this.SelectedOrEstChild);
             this.SelectedCostos = undefined;
             this.SelectedCMayor = undefined;
-            this.DataInsert.Productos.map(element =>{ 
+            this.DataInsert.Productos.forEach((element) => {
               console.log(element.ChildsProducts.length);
               if (element.ChildsProducts.length === 0 || element.ChildsProducts.length === undefined || element.ChildsProducts.length === null) {
                 console.log("dentro del if que dice que tenemos cero hijos");
@@ -4338,7 +4296,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -4351,11 +4309,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -4370,13 +4328,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -4385,10 +4343,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -4488,7 +4446,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -4501,11 +4459,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -4520,13 +4478,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -4535,10 +4493,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       }
@@ -4636,7 +4594,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         this.ngOnInit();
                                       },
                                       (error) => {
@@ -4649,11 +4607,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "danger"
                                           );
                                           this.auth.logout();
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                         }
                                         this.ngOnInit();
                                         console.log(error);
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -4668,13 +4626,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "danger"
                                     );
                                     this.auth.logout();
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
-                                  this.progressbar = false;
+                                  this.solicitudComp.show = false;
                                 }
                               );
                           },
@@ -4683,10 +4641,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                             if (error.status == 403 || error.status == 404) {
                               this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                             this.toast.setMessage(error.message, "danger");
-                            this.progressbar = false;
+                            this.solicitudComp.show = false;
                           }
                         );
                     }
@@ -4695,21 +4653,21 @@ export class ListadoSolicitudesComponent implements OnInit {
                     if (error.status == 403 || error.status == 404) {
                       this.toast.setMessage(error.message, "danger");
                       this.auth.logout();
-                      this.progressbar = false;
+                      this.solicitudComp.show = false;
                     }
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
                         error
                     );
-                    this.progressbar = false;
+                    this.solicitudComp.show = false;
                   }
                 );
             } else {
               this.toast.setMessage(
-                "Una Solicitud de Tipo Servicio debe contener un Sub Producto por Partida, favor de validar C/U de las Partidas",
+                "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
                 "danger"
               );
-              this.progressbar = false;
+              this.solicitudComp.show = false;
             }
           }
 
@@ -4842,7 +4800,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -4855,11 +4813,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -4874,14 +4832,14 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     this.toast.setMessage(
                                       "Error al recuperar la informacion del usuario aotorizador por Direccion y al Enviar el mail",
                                       "danger"
                                     );
                                     console.log(error);
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -4890,10 +4848,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       } else if (data[0].IdRole == 3) {
@@ -4990,7 +4948,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -5003,11 +4961,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -5022,13 +4980,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -5037,10 +4995,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       }
@@ -5132,7 +5090,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         this.ngOnInit();
                                       },
                                       (error) => {
@@ -5145,11 +5103,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "danger"
                                           );
                                           this.auth.logout();
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                         }
                                         this.ngOnInit();
                                         console.log(error);
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -5164,13 +5122,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "danger"
                                     );
                                     this.auth.logout();
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
-                                  this.progressbar = false;
+                                  this.solicitudComp.show = false;
                                 }
                               );
                           },
@@ -5179,10 +5137,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                             if (error.status == 403 || error.status == 404) {
                               this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                             this.toast.setMessage(error.message, "danger");
-                            this.progressbar = false;
+                            this.solicitudComp.show = false;
                           }
                         );
                     }
@@ -5192,7 +5150,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                         err
                     );
-                    this.progressbar = false;
+                    this.solicitudComp.show = false;
                   }
                 );
             } else {
@@ -5200,7 +5158,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                 "Existe un problema, favor de Validar Informacion ",
                 "danger"
               );
-              this.progressbar = false;
+              this.solicitudComp.show = false;
             }
           }
 
@@ -5342,7 +5300,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -5355,11 +5313,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -5374,13 +5332,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -5486,7 +5444,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -5499,11 +5457,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -5518,13 +5476,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -5533,10 +5491,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       }
@@ -5630,7 +5588,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         this.ngOnInit();
                                       },
                                       (error) => {
@@ -5643,10 +5601,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "danger"
                                           );
                                           this.auth.logout();
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                         }
                                         console.log(error);
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
                                     );
@@ -5661,14 +5619,14 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       "danger"
                                     );
                                     this.auth.logout();
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                       error
                                   );
                                   this.ngOnInit();
-                                  this.progressbar = false;
+                                  this.solicitudComp.show = false;
                                 }
                               );
                           },
@@ -5677,13 +5635,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                             if (error.status == 403 || error.status == 404) {
                               this.toast.setMessage(error.message, "danger");
                               this.auth.logout();
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                             this.toast.setMessage(
                               "Ocurrio un Problema al Guardar tu Solicitud. Intenta de nuevo por favor ",
                               "danger"
                             );
-                            this.progressbar = false;
+                            this.solicitudComp.show = false;
                           }
                         );
                     }
@@ -5692,13 +5650,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                     if (error.status == 403 || error.status == 404) {
                       this.toast.setMessage(error.message, "danger");
                       this.auth.logout();
-                      this.progressbar = false;
+                      this.solicitudComp.show = false;
                     }
                     console.log(
                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                         error
                     );
-                    this.progressbar = false;
+                    this.solicitudComp.show = false;
                   }
                 );
 
@@ -5835,7 +5793,7 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("OR  H " + this.SelectedOrdenEstaHijo);
             console.log("CM  H " + this.SelectedCMayorHijo);
             console.log("CC  H " + this.SelectCentroCostosHijo);
-            this.DataInsert.Productos.map(element => {
+            this.DataInsert.Productos.forEach((element) => {
               console.log(element.ChildsProducts.length);
               if (element.ChildsProducts.length === 0 ||element.ChildsProducts.length === undefined ||element.ChildsProducts.length === null
               ) {
@@ -5963,7 +5921,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -5977,7 +5935,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             );
                                             this.auth.logout();
                                           }
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                           console.log(error);
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -6103,7 +6061,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                             "Se realizo el envio del Email a Dir de Area",
                                             "success"
                                           );
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           this.ngOnInit();
                                         },
                                         (error) => {
@@ -6116,11 +6074,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                               "danger"
                                             );
                                             this.auth.logout();
-                                            this.progressbar = false;
+                                            this.solicitudComp.show = false;
                                           }
                                           this.ngOnInit();
                                           console.log(error);
-                                          this.progressbar = false;
+                                          this.solicitudComp.show = false;
                                           //this.toast.setMessage('Error en el envio de el Correo','success');
                                         }
                                       );
@@ -6135,13 +6093,13 @@ export class ListadoSolicitudesComponent implements OnInit {
                                         "danger"
                                       );
                                       this.auth.logout();
-                                      this.progressbar = false;
+                                      this.solicitudComp.show = false;
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
                                         error
                                     );
-                                    this.progressbar = false;
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
@@ -6150,10 +6108,10 @@ export class ListadoSolicitudesComponent implements OnInit {
                               if (error.status == 403 || error.status == 404) {
                                 this.toast.setMessage(error.message, "danger");
                                 this.auth.logout();
-                                this.progressbar = false;
+                                this.solicitudComp.show = false;
                               }
                               this.toast.setMessage(error.message, "danger");
-                              this.progressbar = false;
+                              this.solicitudComp.show = false;
                             }
                           );
                       }
@@ -6245,7 +6203,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           "Se realizo el envio del Email a Dir de Area",
                                           "success"
                                         );
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         this.ngOnInit();
                                       },
                                       (error) => {
@@ -6260,7 +6218,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           this.auth.logout();
                                         }
                                         this.ngOnInit();
-                                        this.progressbar = false;
+                                        this.solicitudComp.show = false;
                                         console.log(error);
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
                                       }
@@ -6309,18 +6267,18 @@ export class ListadoSolicitudesComponent implements OnInit {
             } else {
               console.log("intento faillido");
               this.toast.setMessage(
-                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un  Sub Producto por Partida , Por Favor verifica la informacion por C/U de las Partidas. ",
+                "Una Solicitud de tipo Servicios con Produccion debe contener almenos un Sub Producto, Por Favor verifica la informacion ",
                 "danger"
               );
-              this.progressbar = false;
+              this.solicitudComp.show = false;
             }
           }
         } else {
           this.toast.setMessage(
-            "Una Solicitud de Tipo Servicio debe contener un Producto, favor de validar informacion",
+            "Una Solicitud de Tipo Servicio debe contener un Sub Producto, favor de validar informacion",
             "warning"
           );
-          this.progressbar = false;
+          this.solicitudComp.show = false;
         }
       } else {
         if (this.uploader.queue.length > 1) {
@@ -6328,13 +6286,13 @@ export class ListadoSolicitudesComponent implements OnInit {
             "La solicitud de pedido solo debe contener un archivo de precotizacion.",
             "warning"
           );
-          this.progressbar = false;
+          this.solicitudComp.show = false;
         } else if (this.uploader.queue.length == 0) {
           this.toast.setMessage(
             "Se debe adjuntar una precotizacion para crear una nueva Solicitud de Pedido.",
             "warning"
           );
-          this.progressbar = false;
+          this.solicitudComp.show = false;
         }
       }
     }
@@ -6354,7 +6312,14 @@ export class ListadoSolicitudesComponent implements OnInit {
       format = format.replace(/[´´]+/g, " ");
       format = format.replace(/[``]+/g, " ");
       format = format.replace(/[¨]+/g, " ");
-
+      format = format.replace(/['"]+/g, " ");
+      format = format.replace(/[´´]+/g, " ");
+      format = format.replace(/[``]+/g, " ");
+      format = format.replace(/[¨]+/g, " ");
+      format = format.replace(/[|]+/g, " ");
+      format = format.replace(/[~]+/g, " ");
+      format = format.replace(/[#]+/g, " ");
+      format = format.replace(/(\r\n|\n|\r)/gm, "");
       //console.log(str)
       var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç",
         to = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuunncc",
@@ -6371,17 +6336,10 @@ export class ListadoSolicitudesComponent implements OnInit {
         if (mapping.hasOwnProperty(format.charAt(i))) ret.push(mapping[c]);
         else ret.push(c);
       }
-      //console.log(ret.join( '' ).toString());
 
       var cadena = ret.join("").toString();
-      format = cadena.replace(/['"]+/g, " ");
-      format = format.replace(/[´´]+/g, " ");
-      format = format.replace(/[``]+/g, " ");
-      format = format.replace(/[¨]+/g, " ");
-      format = format.replace(/[|]+/g, " ");
-      format = format.replace(/[~]+/g, " ");
-      format = format.replace(/[#]+/g, " ");
-      return format;
+      
+      return cadena;
     }
   }
 

@@ -288,6 +288,11 @@ export class AccountComponent implements OnInit {
   newStatus: number = undefined;
   isload: boolean = false;
   openedDataSol:boolean=false;
+
+  //variables para detectar el cambio en en que pagina del grid estamos y conservar la posicion
+  pageIndex:number;
+  pageSize:number;
+  
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -381,14 +386,18 @@ export class AccountComponent implements OnInit {
         }
       },
       () => {
-        //console.log("entrando al lugar donde se hace la paginacion--------------------");
-        //console.log(this.ListSolCompReg);
+        console.log("entrando al lugar donde se hace la paginacion--------------------");
         this.cdr.detectChanges();
-        //console.log(this.DataSource.paginator);
         this.DataSource.paginator = this.paginator;
         this.DataSource.sort = this.sort;
       }
     );
+  }
+
+  getServerData(event?:PageEvent){
+    console.log(event);
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
   }
 
   getcssclas() {
@@ -526,7 +535,15 @@ export class AccountComponent implements OnInit {
     this.isviewChilds = false;
     this.iseditproduct = false;
     this.toast.setMessage("item editing cancelled.", "warning");
-    // this.getAllSolicitudforUser();
+    this.cdr.detectChanges();
+    console.log("la que trae el paginator --> " + this.paginator.pageIndex);
+    console.log("la que traemos nosotros en la deteccion de los cambios" + this.pageIndex)
+    //this.paginator.
+    this.DataSource.paginator = this.paginator;
+    this.DataSource.paginator.pageIndex = this.pageIndex;
+    this.DataSource.paginator.pageSize = this.pageSize;
+    this.DataSource.sort = this.sort;
+    // this.dataSource = this.DataSource.paginator;
     // this.dataSource = new MatTableDataSource<Detallesol>();
     // this.dataChilds = new MatTableDataSource<Childs>();
 

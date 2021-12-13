@@ -4,6 +4,8 @@ import { Idle, DEFAULT_INTERRUPTSOURCES} from '@ng-idle/core';
 import { Keepalive} from '@ng-idle/keepalive';
 import * as moment from 'moment';
 
+
+import { SolicitudCompraService } from './services/solicitudcompra.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -16,8 +18,9 @@ export class AppComponent implements AfterViewChecked {
 
   constructor(public auth: AuthServices,
               private changeDetector: ChangeDetectorRef,
-              private idle: Idle, private keepalive: Keepalive) { 
-              
+              private idle: Idle, private keepalive: Keepalive,
+              public solComp:SolicitudCompraService) { 
+                
               // establece un tiempo de espera inactivo de 5 minutos, para propósitos de prueba.
               idle.setIdle(5);
               // Establece un tiempo de espera de 5 horas. Después de 5 horas y 5 minutos segundos de inactividad, el usuario se considerará agotado

@@ -1106,34 +1106,34 @@ export default class SolicitudCompraCTR {
 
             //se tendria que insertar los Productos por un foreach 
             req.body.Productos.forEach(function (prod, indice, array) {
-              console.log("indice -->" + indice +
-                " hay estos son los valores:" +
-                'IdSolicitud' + result.output.output_IdSol +
-                "  Cantidad-->" + prod.Cantidad +
-                "  Precio-->" + prod.Precio +
-                "  Almacen-->" + prod.Almacen +
-                "  AlmacenName---->" + prod.AlmacenName +
-                //"  Centro-->"+ prod.Centro +
-                "  Material-->" + prod.Material +
-                "  MaterialName-->" + prod.MaterialName +
-                "  Centro de Costo-->" + prod.CentroCosto +
-                "  Centro CostoName-->" + prod.CentroCostoName +
-                "  Cuenta de Mayor-->" + prod.CuentaMayor +
-                "  Cuenta de MayorName" + prod.CuentaMayorName +
-                "  GrupoCompra  " + prod.GrupCompra +
-                "  NameGrupoCompra" + prod.NameGrupoCompra +
-                "  Unidadmedida" + prod.UnidadMedida +
-                "  NameUnidadMedida" + prod.NameUnidadMedida +
-                "  OrdenEstadistica" + prod.IdOrdenEstadistica +
-                "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
-                "  NumActivo" + prod.NumActivo +
-                "  NameActivo" + prod.NameActivo +
-                "  NumNeces  " + prod.NumNeces +
-                "  NameNeces  " + prod.NameNeces +
-                "  NombreSolPed  " + prod.NombreSolPed +
-                "  AcronimoSolPed  " + prod.AcronimoSolPed +
-                "  Espf" + prod.Espf +
-                "  UsoProd-->" + prod.UsoProd);
+              // console.log("indice -->" + indice +
+              //   " hay estos son los valores:" +
+              //   'IdSolicitud' + result.output.output_IdSol +
+              //   "  Cantidad-->" + prod.Cantidad +
+              //   "  Precio-->" + prod.Precio +
+              //   "  Almacen-->" + prod.Almacen +
+              //   "  AlmacenName---->" + prod.AlmacenName +
+              //   //"  Centro-->"+ prod.Centro +
+              //   "  Material-->" + prod.Material +
+              //   "  MaterialName-->" + prod.MaterialName +
+              //   "  Centro de Costo-->" + prod.CentroCosto +
+              //   "  Centro CostoName-->" + prod.CentroCostoName +
+              //   "  Cuenta de Mayor-->" + prod.CuentaMayor +
+              //   "  Cuenta de MayorName" + prod.CuentaMayorName +
+              //   "  GrupoCompra  " + prod.GrupCompra +
+              //   "  NameGrupoCompra" + prod.NameGrupoCompra +
+              //   "  Unidadmedida" + prod.UnidadMedida +
+              //   "  NameUnidadMedida" + prod.NameUnidadMedida +
+              //   "  OrdenEstadistica" + prod.IdOrdenEstadistica +
+              //   "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
+              //   "  NumActivo" + prod.NumActivo +
+              //   "  NameActivo" + prod.NameActivo +
+              //   "  NumNeces  " + prod.NumNeces +
+              //   "  NameNeces  " + prod.NameNeces +
+              //   "  NombreSolPed  " + prod.NombreSolPed +
+              //   "  AcronimoSolPed  " + prod.AcronimoSolPed +
+              //   "  Espf" + prod.Espf +
+              //   "  UsoProd-->" + prod.UsoProd);
 
               var sql = require("mssql");
               var env = process.env.NODE_ENV || 'SERWEB';
@@ -1288,34 +1288,34 @@ export default class SolicitudCompraCTR {
             console.log("------------------------------------------------------------");
             //se tendria que insertar los Productos por un foreach 
             req.body.Productos.forEach(function (prod, indice, array) {
-              console.log("indice -->" + indice +
-                " hay estos son los valores:" +
-                " Id de la solicitud Recuperado-->" + result.output.output_IdSol +
-                "  Cantidad-->" + prod.Cantidad +
-                "  Precio-->" + prod.Precio +
-                "  Almacen-->" + prod.Almacen +
-                "  AlmacenName---->" + prod.AlmacenName +
-                //"  Centro-->"+ prod.Centro +
-                "  Material-->" + prod.Material +
-                "  MaterialName-->" + prod.MaterialName +
-                "  Centro de Costo-->" + prod.CentroCosto +
-                "  Centro CostoName-->" + prod.CentroCostoName +
-                "  Cuenta de Mayor-->" + prod.CuentaMayor +
-                "  Cuenta de MayorName" + prod.CuentaMayorName +
-                "  GrupoCompra  " + prod.GrupCompra +
-                "  NameGrupoCompra" + prod.NameGrupoCompra +
-                "  Unidadmedida" + prod.UnidadMedida +
-                "  NameUnidadMedida" + prod.NameUnidadMedida +
-                "  OrdenEstadistica" + prod.IdOrdenEstadistica +
-                "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
-                "  NumActivo" + prod.NumActivo +
-                "  NameActivo" + prod.NameActivo +
-                "  NumNeces  " + prod.NumNeces +
-                "  NameNeces  " + prod.NameNeces +
-                "  NombreSolPed  " + prod.NombreSolPed +
-                "  AcronimoSolPed  " + prod.AcronimoSolPed +
-                "  Espf" + prod.Espf +
-                "  UsoProd-->" + prod.UsoProd);
+              // console.log("indice -->" + indice +
+              //   " hay estos son los valores:" +
+              //   " Id de la solicitud Recuperado-->" + result.output.output_IdSol +
+              //   "  Cantidad-->" + prod.Cantidad +
+              //   "  Precio-->" + prod.Precio +
+              //   "  Almacen-->" + prod.Almacen +
+              //   "  AlmacenName---->" + prod.AlmacenName +
+              //   //"  Centro-->"+ prod.Centro +
+              //   "  Material-->" + prod.Material +
+              //   "  MaterialName-->" + prod.MaterialName +
+              //   "  Centro de Costo-->" + prod.CentroCosto +
+              //   "  Centro CostoName-->" + prod.CentroCostoName +
+              //   "  Cuenta de Mayor-->" + prod.CuentaMayor +
+              //   "  Cuenta de MayorName" + prod.CuentaMayorName +
+              //   "  GrupoCompra  " + prod.GrupCompra +
+              //   "  NameGrupoCompra" + prod.NameGrupoCompra +
+              //   "  Unidadmedida" + prod.UnidadMedida +
+              //   "  NameUnidadMedida" + prod.NameUnidadMedida +
+              //   "  OrdenEstadistica" + prod.IdOrdenEstadistica +
+              //   "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
+              //   "  NumActivo" + prod.NumActivo +
+              //   "  NameActivo" + prod.NameActivo +
+              //   "  NumNeces  " + prod.NumNeces +
+              //   "  NameNeces  " + prod.NameNeces +
+              //   "  NombreSolPed  " + prod.NombreSolPed +
+              //   "  AcronimoSolPed  " + prod.AcronimoSolPed +
+              //   "  Espf" + prod.Espf +
+              //   "  UsoProd-->" + prod.UsoProd);
 
               var sql = require("mssql");
               var env = process.env.NODE_ENV || 'SERWEB';
@@ -1506,34 +1506,34 @@ export default class SolicitudCompraCTR {
 
             //se tendria que insertar los Productos por un foreach 
             req.body.Productos.forEach(function (prod, indice, array) {
-              console.log("indice -->" + indice +
-                " hay estos son los valores:" +
-                'IdSolicitud' + result.output.output_IdSol +
-                "  Cantidad-->" + prod.Cantidad +
-                "  Precio-->" + prod.Precio +
-                "  Almacen-->" + prod.Almacen +
-                "  AlmacenName---->" + prod.AlmacenName +
-                //"  Centro-->"+ prod.Centro +
-                "  Material-->" + prod.Material +
-                "  MaterialName-->" + prod.MaterialName +
-                "  Centro de Costo-->" + prod.CentroCosto +
-                "  Centro CostoName-->" + prod.CentroCostoName +
-                "  Cuenta de Mayor-->" + prod.CuentaMayor +
-                "  Cuenta de MayorName" + prod.CuentaMayorName +
-                "  GrupoCompra  " + prod.GrupCompra +
-                "  NameGrupoCompra" + prod.NameGrupoCompra +
-                "  Unidadmedida" + prod.UnidadMedida +
-                "  NameUnidadMedida" + prod.NameUnidadMedida +
-                "  OrdenEstadistica" + prod.IdOrdenEstadistica +
-                "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
-                "  NumActivo" + prod.NumActivo +
-                "  NameActivo" + prod.NameActivo +
-                "  NumNeces  " + prod.NumNeces +
-                "  NameNeces  " + prod.NameNeces +
-                "  NombreSolPed  " + prod.NombreSolPed +
-                "  AcronimoSolPed  " + prod.AcronimoSolPed +
-                "  Espf" + prod.Espf +
-                "  UsoProd-->" + prod.UsoProd);
+              // console.log("indice -->" + indice +
+              //   " hay estos son los valores:" +
+              //   'IdSolicitud' + result.output.output_IdSol +
+              //   "  Cantidad-->" + prod.Cantidad +
+              //   "  Precio-->" + prod.Precio +
+              //   "  Almacen-->" + prod.Almacen +
+              //   "  AlmacenName---->" + prod.AlmacenName +
+              //   //"  Centro-->"+ prod.Centro +
+              //   "  Material-->" + prod.Material +
+              //   "  MaterialName-->" + prod.MaterialName +
+              //   "  Centro de Costo-->" + prod.CentroCosto +
+              //   "  Centro CostoName-->" + prod.CentroCostoName +
+              //   "  Cuenta de Mayor-->" + prod.CuentaMayor +
+              //   "  Cuenta de MayorName" + prod.CuentaMayorName +
+              //   "  GrupoCompra  " + prod.GrupCompra +
+              //   "  NameGrupoCompra" + prod.NameGrupoCompra +
+              //   "  Unidadmedida" + prod.UnidadMedida +
+              //   "  NameUnidadMedida" + prod.NameUnidadMedida +
+              //   "  OrdenEstadistica" + prod.IdOrdenEstadistica +
+              //   "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
+              //   "  NumActivo" + prod.NumActivo +
+              //   "  NameActivo" + prod.NameActivo +
+              //   "  NumNeces  " + prod.NumNeces +
+              //   "  NameNeces  " + prod.NameNeces +
+              //   "  NombreSolPed  " + prod.NombreSolPed +
+              //   "  AcronimoSolPed  " + prod.AcronimoSolPed +
+              //   "  Espf" + prod.Espf +
+              //   "  UsoProd-->" + prod.UsoProd);
 
               var sql = require("mssql");
               var env = process.env.NODE_ENV || 'SERWEB';
@@ -1687,34 +1687,34 @@ export default class SolicitudCompraCTR {
             console.log(result);
             //se tendria que insertar los Productos por un foreach 
             req.body.Productos.forEach(function (prod, indice, array) {
-              console.log("indice -->" + indice +
-                " hay estos son los valores:" +
-                'IdSolicitud' + result.output.output_IdSol +
-                "  Cantidad-->" + prod.Cantidad +
-                "  Precio-->" + prod.Precio +
-                "  Almacen-->" + prod.Almacen +
-                "  AlmacenName---->" + prod.AlmacenName +
-                //"  Centro-->"+ prod.Centro +
-                "  Material-->" + prod.Material +
-                "  MaterialName-->" + prod.MaterialName +
-                "  Centro de Costo-->" + prod.CentroCosto +
-                "  Centro CostoName-->" + prod.CentroCostoName +
-                "  Cuenta de Mayor-->" + prod.CuentaMayor +
-                "  Cuenta de MayorName" + prod.CuentaMayorName +
-                "  GrupoCompra  " + prod.GrupCompra +
-                "  NameGrupoCompra" + prod.NameGrupoCompra +
-                "  Unidadmedida" + prod.UnidadMedida +
-                "  NameUnidadMedida" + prod.NameUnidadMedida +
-                "  OrdenEstadistica" + prod.IdOrdenEstadistica +
-                "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
-                "  NumActivo" + prod.NumActivo +
-                "  NameActivo" + prod.NameActivo +
-                "  NumNeces  " + prod.NumNeces +
-                "  NameNeces  " + prod.NameNeces +
-                "  NombreSolPed  " + prod.NombreSolPed +
-                "  AcronimoSolPed  " + prod.AcronimoSolPed +
-                "  Espf" + prod.Espf +
-                "  UsoProd-->" + prod.UsoProd);
+              // console.log("indice -->" + indice +
+              //   " hay estos son los valores:" +
+              //   'IdSolicitud' + result.output.output_IdSol +
+              //   "  Cantidad-->" + prod.Cantidad +
+              //   "  Precio-->" + prod.Precio +
+              //   "  Almacen-->" + prod.Almacen +
+              //   "  AlmacenName---->" + prod.AlmacenName +
+              //   //"  Centro-->"+ prod.Centro +
+              //   "  Material-->" + prod.Material +
+              //   "  MaterialName-->" + prod.MaterialName +
+              //   "  Centro de Costo-->" + prod.CentroCosto +
+              //   "  Centro CostoName-->" + prod.CentroCostoName +
+              //   "  Cuenta de Mayor-->" + prod.CuentaMayor +
+              //   "  Cuenta de MayorName" + prod.CuentaMayorName +
+              //   "  GrupoCompra  " + prod.GrupCompra +
+              //   "  NameGrupoCompra" + prod.NameGrupoCompra +
+              //   "  Unidadmedida" + prod.UnidadMedida +
+              //   "  NameUnidadMedida" + prod.NameUnidadMedida +
+              //   "  OrdenEstadistica" + prod.IdOrdenEstadistica +
+              //   "  NameOrdenEstadistica" + prod.OrdenEstadisticaName +
+              //   "  NumActivo" + prod.NumActivo +
+              //   "  NameActivo" + prod.NameActivo +
+              //   "  NumNeces  " + prod.NumNeces +
+              //   "  NameNeces  " + prod.NameNeces +
+              //   "  NombreSolPed  " + prod.NombreSolPed +
+              //   "  AcronimoSolPed  " + prod.AcronimoSolPed +
+              //   "  Espf" + prod.Espf +
+              //   "  UsoProd-->" + prod.UsoProd);
 
               var sql = require("mssql");
               var env = process.env.NODE_ENV || 'SERWEB';
@@ -2428,6 +2428,7 @@ export default class SolicitudCompraCTR {
 
 
   UpdateStatusdeSolicitud = (req, res) => {
+    console.log("");
     console.log(req.body.Idstatus);
     console.log(req.body.IdSolicitud);
     console.log(req.body.Justifi_rechazo);
@@ -2437,27 +2438,27 @@ export default class SolicitudCompraCTR {
     if(req.body.Idstatus == 8){
       let title = 'S. P. REVISADA POR COMPRAS';
       let descript = '';
-      this.InsertLog( req.params.IdSolicitud, title, descript); 
+      this.InsertLog( req.body.IdSolicitud, title, descript); 
     }else if(req.body.Idstatus == 9){
       let title = 'S. P. RECHAZADA POR COMPRAS';
       let descript = req.body.Justifi_rechazo;
-      const islog =  this.InsertLog( req.params.IdSolicitud, title, descript); 
+      const islog =  this.InsertLog( req.body.IdSolicitud, title, descript); 
     }else if(req.body.Idstatus == 10){
       let title = 'S. P. CARGADA EN ARCHIVO Y ENVIADA A SAP';
       let descript = 'CAMBIO DE ESTATUS AUTOMATICAMENTE';
-      const islog =  this.InsertLog( req.params.IdSolicitud, title, descript); 
+      const islog =  this.InsertLog( req.body.IdSolicitud, title, descript); 
     }else if(req.body.Idstatus == 11){
       let title = 'S. P. CANCELADA';
       let descript = req.body.Justifi_rechazo;
-      const islog =  this.InsertLog( req.params.IdSolicitud, title, descript); 
+      const islog =  this.InsertLog( req.body.IdSolicitud, title, descript); 
     }else if(req.body.Idstatus == 12 ){
       let title = 'CONTRATO MARCO';
       let descript = 'CAMBIO DE ESTATUS';
-      const islog =  this.InsertLog( req.params.IdSolicitud, title, descript); 
+      const islog =  this.InsertLog( req.body.IdSolicitud, title, descript); 
     }else if(req.body.Idstatus == 13){
       let title = 'INTERCAMBIOS';
-      let descript = 'CAMBIO DDE INTERCAMBIOS';
-      const islog =  this.InsertLog( req.params.IdSolicitud, title, descript); 
+      let descript = 'CAMBIO DE INTERCAMBIOS';
+      const islog =  this.InsertLog( req.body.IdSolicitud, title, descript); 
     }
     
     new sql.ConnectionPool(config).connect().then(pool => {
@@ -2547,9 +2548,9 @@ export default class SolicitudCompraCTR {
     let statusAutoriza: number;
     let statusRechaza: number;
     let TitleName: string;
+    TitleName = "SOLICITUD DE PEDIDO NUEVA";
     if (req.params.IdStatus == 1) {
       Nombre = "S. P. NUEVA PETICION";
-      TitleName = "SOLICITUD DE PEDIDO NUEVA";
     }
 
     if (req.params.sendnewStatusAutoriza != 0) {
@@ -4496,6 +4497,29 @@ export default class SolicitudCompraCTR {
   callback = (req, res) => {
     console.log("-------dentro del metodo callback de la hellosign----");
     //console.log(res);
+  }
+
+  HistorySolPed = (req, res)=>{
+    console.log(req.body.IdSolicitud);
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../controllers/connections/servers')[env];
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input("IdSolicitudPedido", sql.Int, req.body.IdSolicitud)
+        .execute("HistorySolPedido")
+    }).then(result => {
+      console.log("HistorySolPedido")
+      console.log(result);
+      sql.close();
+      res.status(201).json(result.recordset);
+      res.end();
+    }).catch(err => {
+      if (err) console.log(err);
+      sql.close();
+      res.status(201)
+      res.end();
+    });
   }
 
 

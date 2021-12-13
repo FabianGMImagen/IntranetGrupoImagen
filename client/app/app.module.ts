@@ -49,7 +49,7 @@ import { SolicitudService } from './services/solicitud.service';
 import { SolicitudRegService } from './services/solicitudreg.service';
 import { SolicitudConsumo_Interno } from './solicitud_ConsumoInt/solicitud-consumo_Interno/solicitud-consumo_Interno.component';
 
-import { MatDialogModule } from "@angular/material";
+import { MatDialogModule, MatPaginatorIntl } from "@angular/material";
 
 import { SolicitudCompraService } from './services/solicitudcompra.service';
 import { SolicitudConsumoService } from './services/solicitudconsumo.service';
@@ -85,6 +85,8 @@ import { AdminSolicitudesComponent } from './admin_Page/admin-solicitudes/admin-
 import { SolconsumointEditComponent } from './admin_Page/solconsumoint-edit/solconsumoint-edit.component';
 import { DialogAdvertenciaUpdateSolpedidoComponent } from './dialogs/dialog-advertencia-update-solpedido/dialog-advertencia-update-solpedido.component';
 import { DialogUploadEspesificacionComponent } from './dialogs/dialog-upload-espesificacion/dialog-upload-espesificacion.component';
+import { CustomPaginator } from './custom-paginator';
+import { DialogHistorySolpedidoComponent } from './dialogs/dialog-history-solpedido/dialog-history-solpedido.component';
 
 
 export function tokenGetter() {
@@ -126,6 +128,7 @@ export function tokenGetter() {
     SolconsumointEditComponent,
     DialogAdvertenciaUpdateSolpedidoComponent,
     DialogUploadEspesificacionComponent,
+    DialogHistorySolpedidoComponent,
   ],
   entryComponents:[
     DialogInfoComponent,
@@ -172,6 +175,10 @@ export function tokenGetter() {
       provide: HTTP_INTERCEPTORS,
       useClass: SAPInterceptor,
       multi: true
+    },
+    {
+      provide: MatPaginatorIntl,
+      useClass: CustomPaginator
     }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
