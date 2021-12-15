@@ -45,7 +45,7 @@ tr.example-element-row:not(.example-expanded-row):active {
   padding: 8px;
   font-weight: lighter;
   margin: 8px 0;
-  height: 140px;
+  height: auto;
   width: 380px;
 }
 
@@ -105,7 +105,6 @@ tr.example-element-row:not(.example-expanded-row):active {
   color: #00BF23;
   font-size: large;
 }
-
 
 .iconchecpresupuesto{
   font-size: 20px;
