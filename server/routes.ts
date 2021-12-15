@@ -245,7 +245,7 @@ export default function setRoutes(app) {
   //Envio de correo para Administrador Solicitante
   router.route('/emailadmin/:IdSolicitud/:IdStatus/:IdArea/:Solicitante/:IdRol/:NombreAutorizador/:EmailAutorizador').get(auth, solicitudCompraCTR.SendEmailAdmin);
   //Actualizar Status desde el correo enviado anteriormente
-  router.route('/upstatus/:IdSolicitud/:Solicitante/:IdStatus').get(auth ,solicitudCompraCTR.UpStatus);
+  router.route('/upstatus/:IdSolicitud/:Solicitante/:IdStatus').get(solicitudCompraCTR.UpStatus);
 
   router.route('/historysolped').post(auth, solicitudCompraCTR.HistorySolPed);
   
