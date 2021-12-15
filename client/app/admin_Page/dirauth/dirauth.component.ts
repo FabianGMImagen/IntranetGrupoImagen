@@ -5,6 +5,7 @@ import {AuthServices} from '../../services/auth.service';
 import { Area } from '../../shared/models/areas.model';
 import { DirAuth } from '../../shared/models/dirauth.model';
 import { DirAuthService } from '../../services/dirauth.service';
+import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
 import { Solicitud } from '../../shared/models/solicitud.model';
 import { Role } from '../../shared/models/roles.model';
 
@@ -14,6 +15,7 @@ import { Role } from '../../shared/models/roles.model';
   styleUrls: ['./dirauth.component.css']
 })
 export class DirauthComponent implements OnInit {
+  
   isLoading = true;
   ListAreas:Area[];
   SelectArea: Area | undefined;
@@ -23,6 +25,7 @@ export class DirauthComponent implements OnInit {
   ListDirAuth:DirAuth[];
 
   constructor(
+    private solicitudComp: SolicitudCompraService,
     public dirauthserv:DirAuthService,
     public toast: ToastComponent,
     private auth: AuthServices

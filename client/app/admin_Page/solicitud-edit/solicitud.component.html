@@ -1,3 +1,79 @@
+<<<<<<< HEAD
+<app-toast [message]="toast.message"></app-toast>
+<app-loading *ngIf="solicitudComp.show"></app-loading>
+<div class="mat-app-background basic-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Edición Solicitud de Pedido</mat-card-title>
+      <mat-card-subtitle>Editar el Status de una Solicitud de Pedido</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="mat-app-background basic-container">
+        <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filtro de Solicitudes de Pedido." />
+        </mat-form-field>
+
+        <div class="mat-elevation-z8">
+          <!--TABLA DINAMICA -->
+          <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="mat-elevation-z8">
+            <ng-container matColumnDef="{{ column }}" *ngFor="let column of columnsToDisplay">
+              <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+              <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="expandedDetail">
+              <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                <div class="example-element-detail" [@detailExpand]="
+                    element == expandedElement ? 'expanded' : 'collapsed'
+                  ">
+                  <div class="example-element-description">
+                    <div>
+                      <a>Status Actual de la Solicitud de Pedido: </a>
+                      <span class="example-element-description-attribution">
+                        {{ element.Statname }}
+                      </span>
+                      <br />
+                      <div class="row">
+                        <div class="col">
+                          <div class="icons">
+                            <mat-form-field>
+                              <mat-label>Status Solicitud</mat-label>
+                              <mat-select [(ngModel)]="this.SelectedStatus" name="status"
+                                (selectionChange)="SelectStatus()">
+                                <!-- <mat-option>
+                                                        <ngx-mat-select-search [formControl]="GCompraFilterCtrl"></ngx-mat-select-search>
+                                                    </mat-option> -->
+                                <mat-option *ngFor="let status of ListStatus" [value]="status">{{ status.Nombre }}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button class="btn btn-success ml-1 btn-sm" (click)="ChangeStatus(element)">
+                        <i class="fa fa-floppy-o"></i> Save Status
+                      </button>
+                    </div>
+                  </div>
+                  <br />
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplay" class="example-element-row"
+              [class.example-expanded-row]="expandedElement === element" (click)="expandedElement = element"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="10" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+=======
 <app-toast [message]="toast.message"></app-toast>
 
 <div class="mat-app-background basic-container">
@@ -72,3 +148,4 @@
     </mat-card-content>
   </mat-card>
 </div>
+>>>>>>> d8146a1e03ced290c439e2d6cd31fd800c6e27bd
