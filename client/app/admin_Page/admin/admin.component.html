@@ -1,3 +1,300 @@
+<<<<<<< HEAD
+<app-loading *ngIf="solicitudComp.show"></app-loading>
+
+<app-toast [message]="toast.message"></app-toast>
+
+<mat-tab-group *ngIf="!isLoading">
+  
+  <mat-tab label="Usuarios">
+    <div *ngIf="isViewListUsr">
+      <div class="card">
+          <h4 class="card-header">Usuarios registrados ({{users.length}})</h4>
+          
+          <div class="card-body">
+            <div class="flex">
+              <h5 class="">Busqueda por Direccion:</h5>
+              <mat-form-field class="moveDirections">
+                <mat-label>Direccion</mat-label>
+                <mat-select  [(ngModel)]="this.selectedfilterDireccion" name="Dirfilt" (selectionChange)="SelectedFilterDireccion()">
+                  <mat-option *ngFor="let Dirfilt of ListAllDireccions" [value]="Dirfilt">{{Dirfilt.Nombre}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <div *ngIf="this.selectedfilterDireccion">
+                <button mat-mini-fab color="warn" aria-label="deletefilt" *ngIf="this.selectedfilterDireccion" (click)="deleteFilterUsers()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+            
+            <table class="table table-bordered">
+              <thead class="thead-light">
+                <tr>
+                    <th scope="col">Nombre Completo</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role Sol.</th>
+                  <th scope="col">Role Sol.Consum.</th>
+                  <th scope="col">Teléfono</th>
+                  <th scope="col">Ext</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody *ngIf="users.length === 0">
+                <tr>
+                  <td colspan="4">There are no registered users.</td>
+                </tr>  
+              </tbody>
+              <tbody>
+                <tr *ngFor="let user of users">
+                  <td>{{user.NombreCompleto}}</td>
+                  <td>{{user.LoginName}}</td>
+                  <td>{{user.Email}}</td>
+                  <td>{{user.NombreRol}}</td>
+                  <td>{{user.RoleConsumo}}</td>
+                  <td>{{user.Telefono}}</td>
+                  <td>{{user.Extension}}</td>
+                  <td>
+                    <button class="btn btn-sm btn-warning" (click)="UpdateUser(user)" [disabled]="auth.currentUser.IdUsuario === user._idIdUsuario">
+                      <i class="fa fa-wrench"></i> Update
+                    </button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteUser(user)" [disabled]="auth.currentUser.IdUsuario === user._idIdUsuario">
+                      <i class="fa fa-trash"></i> Delete
+                    </button>
+                  </td>
+                </tr>  
+              </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+    <div *ngIf="isEditingUsr">
+      <div class="card">
+          <div class="card-header">
+              <h4 class="card-title">Actualiza Infromacion de :   {{NameUser}}</h4>
+          </div>
+            <div class="card-body">
+              <div class="row">
+                  <div class="col">
+                      <mat-card>Datos Generales</mat-card>
+                      <form [formGroup]="updateUsrDataGeneral" (ngSubmit)="UpdateUsrData()">
+    
+                          <div class="input-group" [ngClass]="setClassUsername()">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                              </div>
+                              <input class="form-control" type="text" name="Name" formControlName="Name" placeholder="Nombre Completo" autofocus>
+                          </div>
+                    
+                          <div class="input-group" [ngClass]="setClassUsername()">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fa fa-user"></i></span>
+                            </div>
+                            <input class="form-control" type="text" name="username" formControlName="username" placeholder="Username">
+                          </div>
+    
+                          <div class="input-group" [ngClass]="setClassEmail()">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                            </div>
+                            <input class="form-control" type="email" name="email" formControlName="email" placeholder="Email">
+                          </div>
+    
+                          <div class="input-group" [ngClass]="setClassPassword()">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fa fa-key"></i></span>
+                            </div>
+                            <input class="form-control" type="password" name="password" formControlName="password" placeholder="Password">
+                          </div>
+    
+                          <div class="input-group" >
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                              </div>
+                              <input class="form-control" type="number" name="tel" formControlName="tel" placeholder="Telefono">
+                          </div>
+    
+                          <div class="input-group" >
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-phone-volume"></i></span>
+                              </div>
+                              <input class="form-control" type="number" name="ext" formControlName="ext" placeholder="Extencion">
+                          </div>
+    
+                          <div class="input-group" >
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="far fa-address-card"></i></span>
+                              </div>
+                              <input class="form-control" type="text" name="puesto" formControlName="puesto" placeholder="Puesto" >
+                          </div>
+    
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="far fa-address-card"></i></span>
+                            </div>
+                            <select class="custom-select" name="role" formControlName="rolesolped">
+                              <option value="0" disabled hidden selected>Role</option>
+                              <option [value]="role.IdRole" *ngFor="let role of ListRoles">{{role.Nombre}}</option>
+                            </select>
+                          </div>
+    
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="far fa-address-card"></i></span>
+                            </div>
+                            <select class="custom-select" name="role" formControlName="rolesolconsumo" placeholder="Puesto">
+                              <option value="0" disabled hidden selected >Role Solicitud Consumo Interno</option>
+                              <option [value]="rolec.IdRoleConsumoInterno" *ngFor="let rolec of ListRolesConsumo">{{rolec.Nombre}}</option>
+                            </select>
+                          </div>
+    
+                          <button class="btn btn-primary" type="submit" ><i class="fa fa-pencil"></i> Actualizar Usuario</button>
+                        </form>
+                  </div>
+                  <div class="col">
+                      <!-- <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text" id="basic-addon1">Actualiza de Rol</span>
+                            </div>
+                          <input type="text" class="form-control" aria-describedby="basic-addon1" placeholder="Nombre Solicitante" [(ngModel)]="this.UserEdit.NombreCompleto">
+                        </div> -->
+                  </div>
+                  <div class="col directions">
+                      <div class="icons">
+                          <i class="fas fa-book"></i>
+                          <mat-form-field class="selectmore">
+                                  <mat-label>Direccion Asociadas</mat-label>
+                                  <mat-select  [(ngModel)]="this.SelectDirAsoc" name="dir" (selectionChange)="SelectedDirAsoc()">
+                                    <mat-option *ngFor="let dir of ListDirecciones" [value]="dir">{{dir.Nombre}}</mat-option>
+                                  </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="icons">
+                            <i class="fas fa-book-open"></i>
+                            <mat-form-field class="selectmore">
+                                    <mat-label>Direccion</mat-label>
+                                    <mat-select  [(ngModel)]="this.SelectedDir" name="Dir" (selectionChange)="SelectedDireccion()">
+                                      <mat-option *ngFor="let Dir of ListAllDireccions" [value]="Dir">{{Dir.Nombre}}</mat-option>
+                                    </mat-select>
+                              </mat-form-field>
+                          </div>  
+    
+                        <div class="col">
+                            <button class="btn btn-warning" (click)="AddDirForUser()" [disabled] = "isAddDir">
+                                <i class="fa fa-times-circle-o"></i> Agrega Direccion
+                            </button>
+                            <button class="btn btn-danger" (click)="DeleteDirForUser()" [disabled] = "isDeleteDir">
+                                <i class="fa fa-times-circle-o"></i> Elimina Direccion
+                            </button>
+                        </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col"></div>
+                  <div class="col"></div>
+                  <div class="col"></div>
+                </div>
+              <div class="row">
+                <div class="col"></div>
+                <div class="col"></div>
+                <div class="col">
+                    
+                    <button class="btn btn-info" (click)="CancelEdit()" >
+                        <i class="fa fa-times-circle-o"></i> Salir de la Edicion
+                    </button>
+                </div>
+              </div>
+            </div>
+      </div>
+    </div>  
+  </mat-tab>
+
+  <mat-tab label="Direcciones"> 
+    <div *ngIf="isViewListDir">
+
+      <div class="text-right " style="padding: 10px; ">
+        <button mat-raised-button class="newdir" (click)="addNewDir()">
+          <span class="material-icons">add</span>
+          New Dir. o Sub-Dir
+        </button>
+      </div>
+      
+      <div class="card">
+        <h4 class="card-header">Direcciones registradas ({{this.direcciones.length}}) </h4>
+        <div class="card-body">
+          <table class="table table-bordered">
+            <thead class="thead-light">
+              <tr>
+                  <th scope="col">Nombre Direccion</th>
+                  <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="this.direcciones === 0">
+              <tr>
+                <td colspan="4">There are no registered users.</td>
+              </tr>  
+            </tbody>
+            <tbody>
+              <tr *ngFor="let dir of direcciones">
+                <td>{{dir.Nombre}}</td>
+                <td>
+                  <button class="btn btn-sm btn-warning" (click)="UpdateDir(dir)">
+                    <i class="fa fa-wrench"></i> Update
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteDir(dir)" >
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>  
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isEditingDir">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Actualizar Direccion</mat-card-title>
+          <mat-card-subtitle>Modificación de Nombre de Direccion <strong>{{NameDirView.Nombre}}</strong></mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field class="example-full-width " style="width: 350px;">
+            <mat-label>Editar el Nombre de la Direccion  </mat-label>
+            <input matInput #message maxlength="100" [(ngModel)]="newName" placeholder="Cambia el nombre de la dirección..">
+            <mat-hint align="start"><strong>Edita el nombre de la sub o dirección.</strong> </mat-hint>
+            <mat-hint align="end">{{message.value.length}} / 100</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button (click)="SaveEditing()">Guardar Cambios</button>
+          <button mat-button (click)="CancelEditing()">Cancelar</button>
+        </mat-card-actions>
+      </mat-card>
+    </div> 
+    <div *ngIf="isCreateDir">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Nueva Direccion</mat-card-title>
+          <mat-card-subtitle>Creacion de una Nueva Direccion o Sub-Direccion</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field class="example-full-width" style="width: 350px;">
+              <mat-label>Nombre de la Direccion o Sub-Direccion</mat-label>
+              <input matInput placeholder="Ejem. Direccion de T.I." [(ngModel)]="namedir">
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-flat-button  color="primary" (click)="NewDir()">Guardar</button>
+          <button mat-flat-button color="warn" (click)="CancelNewDir()">Regresar</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Categorías"> <app-admin-categoria></app-admin-categoria> </mat-tab>
+</mat-tab-group>
+=======
 <app-loading [condition]="isLoading"></app-loading>
 
 <app-toast [message]="toast.message"></app-toast>
@@ -293,3 +590,4 @@
 
   <mat-tab label="Categorías"> <app-admin-categoria></app-admin-categoria> </mat-tab>
 </mat-tab-group>
+>>>>>>> d8146a1e03ced290c439e2d6cd31fd800c6e27bd
