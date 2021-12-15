@@ -1,5 +1,5 @@
 <app-toast [message]="toast.message"></app-toast>
-<app-loading [condition]="isLoading"></app-loading>
+<app-loading *ngIf="solicitudComp.show"></app-loading>
 
 <mat-card>
     <mat-card-header>

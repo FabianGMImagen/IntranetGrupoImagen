@@ -1,4 +1,4 @@
-<app-loading [condition]="isLoading"></app-loading>
+<app-loading *ngIf="solicitudComp.show"></app-loading>
 
 <app-toast [message]="toast.message"></app-toast>
 

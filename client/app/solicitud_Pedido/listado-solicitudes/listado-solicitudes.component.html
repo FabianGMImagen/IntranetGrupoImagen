@@ -1,4 +1,5 @@
 <app-toast [message]="toast.message"></app-toast>
+<app-loading *ngIf="solicitudComp.show"></app-loading>
 <div class="TOP">
   <mat-grid-list cols="3" rowHeight="100px">
     <mat-grid-tile>
@@ -1009,10 +1010,9 @@
                 </button> -->
 
       <!-- [disabled]="!uploader.getNotUploadedItems().length" -->
-      <div class="progressbar" *ngIf="progressbar">
-        <!-- <mat-progress-bar mode="indeterminate" color="warn"></mat-progress-bar> -->
+      <!-- <div class="progressbar" *ngIf="progressbar">
         <app-loading></app-loading>
-      </div>
+      </div> -->
     </div>
     <br>
 
