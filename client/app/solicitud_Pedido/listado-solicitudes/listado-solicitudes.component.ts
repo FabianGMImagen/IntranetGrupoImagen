@@ -173,7 +173,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   protected _onDestroy = new Subject<void>();
 
   constructor(
-    private solicitudComp: SolicitudCompraService,
+    public solicitudComp: SolicitudCompraService,
     private _formBuilder: FormBuilder,
     public toast: ToastComponent,
     private auth: AuthServices,
