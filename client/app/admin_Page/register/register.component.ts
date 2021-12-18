@@ -3,12 +3,17 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UserService } from '../../services/user.service';
+import { AuthServices } from '../../services/auth.service';
+import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
+
 import { ToastComponent } from '../../shared/toast/toast.component';
+
 
 import { Role } from '../../shared/models/roles.model';
 import { Direccion } from '../../shared/models/directions.model';
 import { RoleSolConsumo } from '../../shared/models/rolesol_consumo.mode';
-import { AuthServices } from '../../services/auth.service';
+
+
 
 @Component({
   selector: 'app-register',
@@ -68,7 +73,8 @@ export class RegisterComponent implements OnInit {
   ListDireccions:Direccion[];
   ListRolesConsumo:RoleSolConsumo[];
   hide = true;
-  constructor(private formBuilder: FormBuilder,
+  constructor(public solicitudComp: SolicitudCompraService, 
+              private formBuilder: FormBuilder,
               private router: Router,
               public toast: ToastComponent,
               private userService: UserService,

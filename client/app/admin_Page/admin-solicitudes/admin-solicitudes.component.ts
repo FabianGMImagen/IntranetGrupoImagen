@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
 
 @Component({
   selector: 'app-admin-solicitudes',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminSolicitudesComponent implements OnInit {
 
-  constructor() { }
+  constructor(public solicitudComp: SolicitudCompraService,) { }
 
   ngOnInit(): void {
   }

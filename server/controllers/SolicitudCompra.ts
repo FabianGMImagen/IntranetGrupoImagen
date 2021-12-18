@@ -3178,14 +3178,17 @@ export default class SolicitudCompraCTR {
                 .execute('UpdateStatusfromEmail')
             }).then(async result => {
               //console.log("este es el resultado de el Update de la SolPed");
-              console.log(result.recordset);
-              NombreAutorizador = resultexept.recordset[0].NombreCompleto;
-              EmailAutorizador = resultexept.recordset[0].Email;
+              console.log(resultexept.recordsets[3][0].Email);
+              console.log(resultexept.recordsets[3][0].NombreCompleto);
+              console.log(resultexept.recordset[0].NombreCompleto);
+              console.log(resultexept.recordset[0].Email);
               StatusSolicitud = resultexept.recordsets[1][0].IdStatusSolicitud;
               NombreCompletoSolicitante = resultexept.recordsets[4][0].NombreCompleto;
               EmailSolicitante = resultexept.recordsets[4][0].Email;
 
               if (req.params.IdStatus == 2) {
+                NombreAutorizador = resultexept.recordset[0].NombreCompleto;
+                EmailAutorizador = resultexept.recordset[0].Email;
                 Nombre = 'S. P. AUTORIZADO POR GERENTE';
                 TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
                 EnvioStatusAutoriza = 4;
@@ -3193,11 +3196,13 @@ export default class SolicitudCompraCTR {
               } else {
                 Nombre = 'S. P. RECHAZADA POR GERENTE';
                 TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
+                NombreAutorizador = resultexept.recordsets[3][0].NombreCompleto;
+                EmailAutorizador = resultexept.recordsets[3][0].Email;
                 EnvioStatusAutoriza = 4;
                 EnvioStatusRechaza = 5;
               }
 
-
+                console.log(resultexept);
                 console.log("----IdStatus solicitud----");
                 console.log(resultexept.recordsets[1][0]);
                 console.log("------------------------------");
@@ -3642,19 +3647,22 @@ export default class SolicitudCompraCTR {
               .execute('UpdateStatusfromEmail')
           }).then( async result => {
             console.log("este es el resultado de el Update de la SolPed");
-            NombreAutorizador = resultauth.recordset[0].NombreCompleto;
-            EmailAutorizador = resultauth.recordset[0].Email;
+            
             StatusSolicitud = resultauth.recordsets[1][0].IdStatusSolicitud;
             NombreCompletoSolicitante = resultauth.recordsets[4][0].NombreCompleto;
             EmailSolicitante = resultauth.recordsets[4][0].Email;
             IdNewestatus = req.params.IdStatus;
             
             if (req.params.IdStatus == 4) {
+              NombreAutorizador = resultauth.recordset[0].NombreCompleto;
+              EmailAutorizador = resultauth.recordset[0].Email;
               Nombre = 'S. P. AUTORIZADO POR DIRECCION';
               TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
               EnvioStatusAutoriza = 6;
               EnvioStatusRechaza = 7;
             } else {
+              NombreAutorizador = resultauth.recordsets[3][0].NombreCompleto;
+              EmailAutorizador = resultauth.recordsets[3][0].Email;
               Nombre = 'S. P. RECHAZADA POR DIRECCION';
               TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
               EnvioStatusAutoriza = 6;
@@ -3665,7 +3673,7 @@ export default class SolicitudCompraCTR {
             console.log(StatusSolicitud);
             console.log("------------------------------");
             // console.log("----Role a Excluir----");
-            // console.log(resultexept.recordsets[2][0]);
+            //console.log(resultexept.recordsets[2][0]);
             // console.log("------------------------------");
             console.log("----------StatusSolicitud ---------");
             console.log(StatusSolicitud);
@@ -3944,16 +3952,19 @@ export default class SolicitudCompraCTR {
               //.output('output_parameter', sql.VarChar(50))//se ocupara para cuando hay un valor de retorno en el storeprocedure
               .execute('UpdateStatusfromEmail')
           }).then( async result => {
-            NombreAutorizador = resultauth.recordset[0].NombreCompleto;
-            EmailAutorizador = resultauth.recordset[0].Email;
+            
             StatusSolicitud = resultauth.recordsets[1][0].IdStatusSolicitud;
             NombreCompletoSolicitante = resultauth.recordsets[4][0].NombreCompleto;
             EmailSolicitante = resultauth.recordsets[4][0].Email;
             IdNewestatus = req.params.IdStatus;
             if (req.params.IdStatus == 6) {
+              NombreAutorizador = resultauth.recordset[0].NombreCompleto;
+            EmailAutorizador = resultauth.recordset[0].Email;
               Nombre = 'S. P. PRESUPUESTO AUTORIZADO';
               TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
             } else {
+              NombreAutorizador = resultauth.recordsets[3][0].NombreCompleto;
+              EmailAutorizador = resultauth.recordsets[3][0].Email;
               Nombre = 'S. P. PRESUPUESTO RECHAZADO';
               TitleName = "SOLICITUD DE PEDIDO PENDIENTE";
             }
@@ -4219,7 +4230,7 @@ export default class SolicitudCompraCTR {
                   bcc: 'marco.garcia@gimm.com.mx',
                   subject: Subjetc,
                   html:'<div style="text-align: center;">'+
-                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;"> <p style="text-decoration: underline;">' + NameStatus + '</p>, REALIZADO POR : <p style="text-decoration: underline;">' + NameAutorizador + '</p> </h1>' +
+                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;">' + NameStatus + ', REALIZADO POR : ' + NameAutorizador + '</h1>' +
                           '<h3 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : <p style="text-decoration: underline;">' + IdSolicitud + '</p><h3>' +
                           '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;">FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</p>' +
 
@@ -4245,8 +4256,8 @@ export default class SolicitudCompraCTR {
                   bcc: 'marco.garcia@gimm.com.mx',
                   subject: Subjetc,
                   html: '<div style="text-align: center;">'+
-                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;">TIENES UNA SOLICITUD DE PEDIDO PENDIENTE POR REVISAR DE : <p style="text-decoration: underline;">' + NameSolicitante + '</p> </h1>'+ 
-                          '<h2 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : <p style="text-decoration: underline;">' + IdSolicitud + '</p></h2>'+ 
+                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;">TIENES UNA SOLICITUD DE PEDIDO PENDIENTE POR REVISAR DE : ' + NameSolicitante + '</h1>'+ 
+                          '<h2 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : ' + IdSolicitud + '</h2>'+ 
                           '<h3 style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;">FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</h3>' +
                           '<a style="color: #c8c8c8; text-decoration: underline;" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
                           '<br>' +
@@ -4271,9 +4282,9 @@ export default class SolicitudCompraCTR {
                   bcc: 'marco.garcia@gimm.com.mx',
                   subject: Subjetc,
                   html: '<div style="text-align: center; display: block;">'+
-                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase; ">REALIZASTE CAMBIO DE ESTATUS A : <p style="text-decoration: underline;">'+ NameStatus +'</p></h1>'+
-                          '<h2 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 60px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;" > PARA LA SOLICITUD CON ID : '+ '<p style="text-decoration: underline;">'+ IdSolicitud +'</p></h2>' + 
-                          '<h3 style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> SOLICITANTE : <p style="text-decoration: underline;">' + NameSolicitante + '</p></h3>' +
+                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase; ">REALIZASTE CAMBIO DE ESTATUS A : '+ NameStatus +'</h1>'+
+                          '<h2 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 60px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;" > PARA LA SOLICITUD CON ID : '+ IdSolicitud +'</h2>' + 
+                          '<h3 style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> SOLICITANTE :' + NameSolicitante + '</h3>' +
                           '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> FAVOR DE ENTRAR A INTRANET PARA SU REVISION MAS DETALLADA</p>' +
                           '<a style="color: #007bff; text-decoration: underline;" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
                           '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> POR FAVOR NO RESPONDER ESTE MENSAJE, ES UN MENSAJE AUTOMATICO</p>'+

@@ -10,6 +10,7 @@ import * as jsPDF from 'jspdf';
 import { SolicitudRegService } from '../../services/solicitudreg.service';
 import { ToastComponent } from '../../shared/toast/toast.component';
 import { AuthServices } from 'client/app/services/auth.service';
+import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
 
 @Component({
   selector: 'app-solicitud',
@@ -36,7 +37,8 @@ export class SolicitudComponent implements OnInit {
   SelectedStatus:StatusSolicitud;
 
 
-  constructor(private solicitudService: SolicitudRegService, 
+  constructor(public solicitudComp: SolicitudCompraService,
+              public solicitudService: SolicitudRegService, 
               public toast: ToastComponent, 
               private auth: AuthServices) { }
 
