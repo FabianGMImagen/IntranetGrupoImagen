@@ -84,7 +84,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
 
   constructor(
     private solicitudService: SolicitudRegService,
-    public solicitudComp: SolicitudCompraService,
+    public  solicitudComp: SolicitudCompraService,
     public toast: ToastComponent,
     public auth: AuthServices,
     public dialog: MatDialog,

@@ -99,7 +99,8 @@ export class AdminComponent implements OnInit {
               public solicitudComp: SolicitudCompraService,
               public toast: ToastComponent,
               private userService: UserService,
-              public dialog: MatDialog) { }
+              public dialog: MatDialog,
+              public solicitudComp: SolicitudCompraService,) { }
 
   ngOnInit() {
     this.getUsers();

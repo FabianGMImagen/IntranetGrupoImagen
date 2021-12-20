@@ -1747,7 +1747,6 @@ export class SolicitudCompraService {
 
   //Trae tipo de Solciitud dependiendo de el rool de el
   InsertSolicitudPedido1(Data: Solicitud): Observable<Solicitud> {
-    this.show = true;
     return this.http.post<Solicitud>('/api/newsolicitud1', Data);
   }
 

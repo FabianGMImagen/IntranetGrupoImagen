@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ToastComponent } from '../../shared/toast/toast.component';
 
 import {AuthServices} from '../../services/auth.service';
-import { Area } from '../../shared/models/areas.model';
-import { DirAuth } from '../../shared/models/dirauth.model';
 import { DirAuthService } from '../../services/dirauth.service';
 import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
+
+import { Area } from '../../shared/models/areas.model';
+import { DirAuth } from '../../shared/models/dirauth.model';
 import { Solicitud } from '../../shared/models/solicitud.model';
 import { Role } from '../../shared/models/roles.model';
 

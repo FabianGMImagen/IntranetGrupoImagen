@@ -37,8 +37,8 @@ export class SolicitudComponent implements OnInit {
   SelectedStatus:StatusSolicitud;
 
 
-  constructor(private solicitudService: SolicitudRegService, 
-              public solicitudComp: SolicitudCompraService,
+  constructor(public solicitudComp: SolicitudCompraService,
+              public solicitudService: SolicitudRegService, 
               public toast: ToastComponent, 
               private auth: AuthServices) { }
 

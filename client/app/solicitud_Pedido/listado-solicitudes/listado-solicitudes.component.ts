@@ -1710,9 +1710,23 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
+      console.log(this.Producto.Cantidad ,
+        this.Producto.Precio,
+        this.Producto.CentroCosto ,
+        this.SelectedOInvercion ,
+        this.Producto.CuentaMayor ,
+        this.Producto.Material ,
+        this.Producto.Almacen ,
+        this.Producto.GrupCompra ,
+        this.Producto.UnidadMedida ,
+        this.Producto.NumActivo ,
+        
+        this.Producto.UsoProd.length ,
+        this.Producto.Espf.length );
+        console.log("Numero de necesidad-->"  +this.Producto.NumNeces );
       if (
-        this.Producto.Cantidad != 0 &&
-        this.Producto.Precio != 1 &&
+        this.Producto.Cantidad == 0 &&
+        this.Producto.Precio == 0 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
@@ -1974,8 +1988,8 @@ export class ListadoSolicitudesComponent implements OnInit {
       // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
       console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES")
       if (
-        this.Producto.Cantidad != 0 &&
-        this.Producto.Precio != 1 &&
+        this.Producto.Cantidad == 0 &&
+        this.Producto.Precio == 0 &&
         this.Producto.CentroCosto == undefined &&
         this.SelectedOInvercion == undefined &&
         this.Producto.CuentaMayor == undefined &&
