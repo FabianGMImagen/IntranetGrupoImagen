@@ -74,9 +74,10 @@ console.log(process.env.SECRET_SAP);
 //se envia doble autorizacion en la seccion de authorization y en normalizeName (si alguno de estos 2 es null o no existe no anlazara con con grupoempresarial)
 //nota para otros casos con mandar authorization y la contraseña en ASCCI es mas que suficiente.
 //LINK DE CALIDAD PARA QIM (CALIDAD)       -->http://smxcrqim.grupoempresarialangeles.com.mx:8025/sap/bc/srt/wsdl/flv_10002A10MAD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
-//LINK DE PRODUCCION PARA PIM (PRODUCCION) -->http://smxcrpim.grupoempresarialangeles.com.mx:8034/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
-//const URL = 'http://smxcrpim.grupoempresarialangeles.com.mx:8034';
-const URL = 'http://smxcrqim.grupoempresarialangeles.com.mx:8025';
+
+//LINK DE PRODUCCION PARA PIM (PRODUCCION) -->http://smxcrpim.grupoempresarialangeles.com.mx:8035/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
+//const URL = 'http://smxcrpim.grupoempresarialangeles.com.mx:8035';
+const URL = 'http://smxcrpim.grupoempresarialangeles.com.mx:8034';
 app.use('/sap', proxy({ target: URL,
                         changeOrigin: true, 
                         logLevel: 'debug',
