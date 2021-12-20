@@ -11,6 +11,7 @@ import { Role } from '../../shared/models/roles.model';
 import { RoleSolConsumo } from '../../shared/models/rolesol_consumo.mode';
 import { DialogDeleteUserComponent } from 'client/app/dialogs/dialog-delete-user/dialog-delete-user.component';
 import { DialogDeleteDirComponent } from 'client/app/dialogs/dialog-delete-dir/dialog-delete-dir.component';
+import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
 //import { ConsoleReporter } from 'jasmine';
 
 
@@ -93,7 +94,9 @@ export class AdminComponent implements OnInit {
     Validators.required
   ]);
 
-  constructor(private formBuilder: FormBuilder,public auth: AuthServices,
+  constructor(private formBuilder: FormBuilder,
+              public auth: AuthServices,
+              public solicitudComp: SolicitudCompraService,
               public toast: ToastComponent,
               private userService: UserService,
               public dialog: MatDialog) { }

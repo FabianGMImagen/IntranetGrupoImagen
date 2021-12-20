@@ -4219,7 +4219,7 @@ export default class SolicitudCompraCTR {
                   bcc: 'marco.garcia@gimm.com.mx',
                   subject: Subjetc,
                   html:'<div style="text-align: center;">'+
-                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;"> <p style="text-decoration: underline;">' + NameStatus + '</p>, REALIZADO POR : <p style="text-decoration: underline;">' + NameAutorizador + '</p> </h1>' +
+                          '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;"> ' + NameStatus + ', REALIZADO POR : <p>' + NameAutorizador + '</p></h1>' +
                           '<h3 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : <p style="text-decoration: underline;">' + IdSolicitud + '</p><h3>' +
                           '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;">FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</p>' +
 

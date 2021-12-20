@@ -25,7 +25,7 @@ export class DirauthComponent implements OnInit {
   ListDirAuth:DirAuth[];
 
   constructor(
-    private solicitudComp: SolicitudCompraService,
+    public solicitudComp: SolicitudCompraService,
     public dirauthserv:DirAuthService,
     public toast: ToastComponent,
     private auth: AuthServices

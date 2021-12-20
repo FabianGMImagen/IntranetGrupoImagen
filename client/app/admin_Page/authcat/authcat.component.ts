@@ -25,7 +25,7 @@ export class AuthcatComponent implements OnInit {
   constructor(
     private auth: AuthServices,
     public toast: ToastComponent,
-    private solicitudComp: SolicitudCompraService,) { }
+    public solicitudComp: SolicitudCompraService,) { }
 
   ngOnInit(): void {
     this.GetAllUserCompradores();

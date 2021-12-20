@@ -29,7 +29,7 @@ export class AdminCategoriaComponent implements OnInit {
   constructor(
     public toast: ToastComponent,
     private auth: AuthServices,
-    private solicitudComp: SolicitudCompraService,
+    public solicitudComp: SolicitudCompraService,
     public dialog: MatDialog
     ) { }
 

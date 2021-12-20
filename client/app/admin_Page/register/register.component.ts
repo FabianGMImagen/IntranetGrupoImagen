@@ -9,6 +9,7 @@ import { Role } from '../../shared/models/roles.model';
 import { Direccion } from '../../shared/models/directions.model';
 import { RoleSolConsumo } from '../../shared/models/rolesol_consumo.mode';
 import { AuthServices } from '../../services/auth.service';
+import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
 
 @Component({
   selector: 'app-register',
@@ -72,7 +73,8 @@ export class RegisterComponent implements OnInit {
               private router: Router,
               public toast: ToastComponent,
               private userService: UserService,
-              private auth: AuthServices
+              private auth: AuthServices,
+              public solicitudComp: SolicitudCompraService,
               ) { }
       Token:string;
 

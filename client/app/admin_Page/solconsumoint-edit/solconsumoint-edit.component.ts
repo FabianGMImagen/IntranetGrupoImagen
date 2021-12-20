@@ -11,6 +11,7 @@ import { ToastComponent } from 'client/app/shared/toast/toast.component';
 //models
 import { StatusConsumoInterno } from 'client/app/shared/models/status_sol_consumo.model';
 import { SolicitudesConsumoIntRegistradasAdmin } from 'client/app/shared/models/sol_consumoint_registradasAdmin.model';
+import { SolicitudCompraService } from 'client/app/services/solicitudcompra.service';
 
 
 
@@ -37,7 +38,8 @@ export class SolconsumointEditComponent implements OnInit {
   ListStatusSolConsumoInt:StatusConsumoInterno[];
   SelectedStatus:StatusConsumoInterno;
 
-  constructor(public solconsumservice:SolicitudConsumoService,
+  constructor(public solconsumservice:SolicitudConsumoService, 
+    public solicitudComp: SolicitudCompraService,
     public toast: ToastComponent, 
     private auth: AuthServices) { }
 
