@@ -94,7 +94,9 @@ export class AdminComponent implements OnInit {
     Validators.required
   ]);
 
-  constructor(private formBuilder: FormBuilder,public auth: AuthServices,
+  constructor(private formBuilder: FormBuilder,
+              public auth: AuthServices,
+              public solicitudComp: SolicitudCompraService,
               public toast: ToastComponent,
               private userService: UserService,
               public dialog: MatDialog,

@@ -38,7 +38,7 @@ export class SolconsumointEditComponent implements OnInit {
   ListStatusSolConsumoInt:StatusConsumoInterno[];
   SelectedStatus:StatusConsumoInterno;
 
-  constructor(public solconsumservice:SolicitudConsumoService,
+  constructor(public solconsumservice:SolicitudConsumoService, 
     public solicitudComp: SolicitudCompraService,
     public toast: ToastComponent, 
     private auth: AuthServices) { }
