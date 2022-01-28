@@ -882,6 +882,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
 
   validaStatus(data2: SolicitudesCompraRegistradas) {
     console.log(this.SelectedStatus.IdStatusSolicitud)
+    this.solicitudComp.show = true;
     if (this.auth.isJefeArea) {
       console.log("Es generente de Direccion");
       if (
@@ -929,9 +930,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 this.UserAuth = res;
                                 console.log(this.UserAuth[0].Email);
 
-                                this.isrechazada = false;
-                                this.motivo_Rechazo = '';
-                                this.SelectedStatus = undefined;
+                                
                                 //Parte donde se envia El correo para los Diferentes autorizadores
                                 this.solicitudComp.SendEmailGerenteFianzas(
                                     data2.ID,
@@ -946,20 +945,39 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                     (res) => {
                                       this.toast.setMessage("Error en el envio de el Correo","warning");
                                       console.log("dento de el metodo para enviar el correo" +res);
+                                      this.isrechazada = false;
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
+                                      this.solicitudComp.show = false;
                                     },
                                     (error) => {
                                       console.log("Error al enviar el correo " + error);
                                       this.toast.setMessage( "Envio de Email Correcto","success");
+                                      this.isrechazada = false;
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
+                                      this.solicitudComp.show = false;
                                     }
                                   );
                               },
                               (err) => {
+                                if (err.status == 403 || err.status == 404) {
+                                  this.toast.setMessage(err.message, "danger");
+                                  this.auth.logout();
+                                  this.solicitudComp.show = false;
+                                }
                                 console.log("error al recuperar la informacion del Autorizador" + err);
                               }
                             );
                         },
-                        (error) =>
+                        (error) => {
                           console.log("error al actualizar el status" + error)
+                          if (error.status == 403 || error.status == 404) {
+                            this.toast.setMessage(error.message, "danger");
+                            this.auth.logout();
+                            this.solicitudComp.show = false;
+                          }
+                        }
                       );
                   }
                   }else if(data[0].IdRole == 3){
@@ -985,9 +1003,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                 console.log(res);
                                 this.UserAuth = res;
                                 console.log(this.UserAuth[0].Email);
-                                this.isrechazada = false;
-                                this.motivo_Rechazo = '';
-                                this.SelectedStatus = undefined;
+                                
                                 //Parte donde se envia El correo para los Diferentes autorizadores
                                 this.solicitudComp.SendEmailGerenteFianzas(
                                     data2.ID,
@@ -1000,23 +1016,41 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                   )
                                   .subscribe(
                                     (res) => {
-                                      
                                       this.toast.setMessage("Error en el envio de el Correo","warning");
                                       console.log("dento de el metodo para enviar el correo" +res);
+                                      this.isrechazada = false;
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
+                                      this.solicitudComp.show = false;
                                     },
                                     (error) => {
                                       console.log("Error al enviar el correo " + error);
                                       this.toast.setMessage( "Envio de Email Correcto","success");
+                                      this.isrechazada = false;
+                                      this.motivo_Rechazo = '';
+                                      this.SelectedStatus = undefined;
+                                      this.solicitudComp.show = false;
                                     }
                                   );
                               },
                               (err) => {
+                                if (err.status == 403 || err.status == 404) {
+                                  this.toast.setMessage(err.message, "danger");
+                                  this.auth.logout();
+                                  this.solicitudComp.show = false;
+                                }
                                 console.log("error al recuperar la informacion del Autorizador" + err);
                               }
                             );
                         },
-                        (error) =>
+                        (error) =>{
+                          if (error.status == 403 || error.status == 404) {
+                            this.toast.setMessage(error.message, "danger");
+                            this.auth.logout();
+                            this.solicitudComp.show = false;
+                          }
                           console.log("error al actualizar el status" + error)
+                        }
                       );
                   
                 } else {
@@ -1042,9 +1076,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
                               //console.log(res);
                               this.UserAuth = res;
                               //console.log(this.UserAuth[0].Email);
-                              this.isrechazada = false;
-                              this.motivo_Rechazo = '';
-                              this.SelectedStatus = undefined;
                               //Parte donde se envia El correo para los Diferentes autorizadore
                               this.solicitudComp
                                 .SendEmailDirectorArea(
@@ -1063,24 +1094,29 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                       "Error en el envio de el Correo",
                                       "warning"
                                     );
-                                    
-                                    // console.log(
-                                    //   "dento de el metodo para enviar el correo" +
-                                    //     res
-                                    // );
+                                    this.isrechazada = false;
+                                    this.motivo_Rechazo = '';
+                                    this.SelectedStatus = undefined;
+                                    this.solicitudComp.show = false;
                                   },
                                   (error) => {
-                                    // this.isrechazada = false;
-                                    // this.motivo_Rechazo = '';
-                                    // this.SelectedStatus = undefined;
+                                    this.isrechazada = false;
+                                    this.motivo_Rechazo = '';
+                                    this.SelectedStatus = undefined;
                                     this.toast.setMessage(
                                       "Envio de Email Correcto",
                                       "success"
-                                    );
+                                      );
+                                    this.solicitudComp.show = false;
                                   }
                                 );
                             },
                             (err) => {
+                              if (err.status == 403 || err.status == 404) {
+                                this.toast.setMessage(err.message, "danger");
+                                this.auth.logout();
+                                this.solicitudComp.show = false;
+                              }
                               console.log(
                                 "error al recuperar la informacion del Autorizador" +
                                   err
@@ -1088,8 +1124,14 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             }
                           );
                       },
-                      (error) =>
+                      (error) =>{
                         console.log("error al actualizar el status" + error)
+                        if (error.status == 403 || error.status == 404) {
+                          this.toast.setMessage(error.message, "danger");
+                          this.auth.logout();
+                          this.solicitudComp.show = false;
+                        }
+                      }
                     );
                 }
               } else {
@@ -1123,12 +1165,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             //console.log(res);
                             this.UserAuth = res;
                             //onsole.log(this.UserAuth[0].Email);
-                            this.isrechazada = false;
-                            this.motivo_Rechazo = '';
-                            this.SelectedStatus = undefined;
+                            
                             //Parte donde se envia El correo para los Diferentes autorizadores
                             //mandamos el id y el nombre del usuario que entra autorizar para validar si tiene permisos
-
+                            console.log(this.SelectedStatus);
                             this.solicitudComp
                               .SendEmailDirectorArea(
                                 data2.ID,
@@ -1146,6 +1186,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                     "Error en el envio de el Correo",
                                     "warning"
                                   );
+                                  this.isrechazada = false;
+                                  this.motivo_Rechazo = '';
+                                  this.SelectedStatus = undefined;
+                                  this.solicitudComp.show = false;
                                 },
                                 (error) => {
                                   console.log(
@@ -1158,19 +1202,31 @@ export class SolicitudesRegistradasComponent implements OnInit {
                                     "Envio de Email Correcto",
                                     "success"
                                   );
+                                  this.isrechazada = false;
+                                  this.motivo_Rechazo = '';
+                                  this.SelectedStatus = undefined;
+                                  this.solicitudComp.show = false;
                                 }
                               );
                           },
                           (err) => {
+                            if (err.status == 403 || err.status == 404) {
+                              this.toast.setMessage(err.message, "danger");
+                              this.auth.logout();
+                              this.solicitudComp.show = false;
+                            }
                             console.log(
                               "error al recuperar la informacion del Autorizador" +
                                 err
                             );
+                            this.solicitudComp.show = false;
                           }
                         );
                     },
-                    (error) =>
-                      console.log("error al actualizar el status" + error)
+                    (error) =>{
+                      console.log("error al actualizar el status" + error);
+                      this.solicitudComp.show = false;
+                    }
                   );
               }
             },
@@ -1183,6 +1239,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                 "Ocurrio un error, por favor intenta mas tarde",
                 "warning"
               );
+              this.solicitudComp.show = false;
             }
           );
       
@@ -1191,6 +1248,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
           "No tienes permisos para cambiar a este Status",
           "warning"
         );
+        this.solicitudComp.show = false;
       }
     } 
 
@@ -1246,9 +1304,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
                         //   "El mail por usuario Autrorizador --->" +
                         //     this.UserAuth[0].Email
                         // );
-                        this.isrechazada = false;
-                        this.motivo_Rechazo = '';
-                        this.SelectedStatus = undefined;
                         this.solicitudComp.SendEmailGerenteFianzas(
                             data2.ID,
                             this.SelectedStatus.IdStatusSolicitud,
@@ -1259,27 +1314,48 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             this.UserAuth[0].Email)
                           .subscribe(
                             (res) => {
-                              
+                              this.isrechazada = false;
+                              this.motivo_Rechazo = '';
+                              this.SelectedStatus = undefined;
                               this.toast.setMessage("Error en el envio de el Correo","warning");
                               console.log("dento de el metodo para enviar el correo" + res);
+                              this.solicitudComp.show = false;
                             },
                             (error) => {
+                              this.isrechazada = false;
+                              this.motivo_Rechazo = '';
+                              this.SelectedStatus = undefined;
                               console.log("Error al enviar el correo " + error);
                               this.toast.setMessage(
                                 "Envio de Email Correcto",
                                 "success"
                               );
+                              this.solicitudComp.show = false;
                             }
                           );
                       },
                       (err) => {
+                        if (err.status == 403 || err.status == 404) {
+                          this.toast.setMessage(err.message, "danger");
+                          this.auth.logout();
+                          this.solicitudComp.show = false;
+                        }
                         console.log(
                           "error al recuperar la informacion del Autorizador" + err
                         );
+                        this.solicitudComp.show = false;
                       }
                     );
                 },
-                (error) => console.log("error al actualizar en status" + error)
+                (error) =>{ 
+                            if (error.status == 403 || error.status == 404) {
+                              this.toast.setMessage(error.message, "danger");
+                              this.auth.logout();
+                              this.solicitudComp.show = false;
+                            }
+                            console.log("error al actualizar en status" + error)
+                            this.solicitudComp.show = false;
+                          }
               );
           }
           //console.log("es otro estatus o no esta indefinido la variable de rechazo")
@@ -1320,9 +1396,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
                       //   "El mail por usuario Autrorizador --->" +
                       //     this.UserAuth[0].Email
                       // );
-                      this.isrechazada = false;
-                      this.motivo_Rechazo = '';
-                      this.SelectedStatus = undefined;
                       this.solicitudComp.SendEmailGerenteFianzas(
                           data2.ID,
                           this.SelectedStatus.IdStatusSolicitud,
@@ -1333,30 +1406,48 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           this.UserAuth[0].Email)
                         .subscribe(
                           (res) => {
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
                             this.toast.setMessage("Error en el envio de el Correo","warning");
                             console.log("dento de el metodo para enviar el correo" + res);
+                            this.solicitudComp.show = false;
                           },
                           (error) => {
-                            if (error.status == 403 || error.status == 404) {
-                              this.toast.setMessage(error.message, "danger");
-                              this.auth.logout();
-                            }
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
                             console.log("Error al enviar el correo " + error);
                             this.toast.setMessage(
                               "Envio de Email Correcto",
                               "success"
                             );
+                            this.solicitudComp.show = false;
                           }
                         );
                     },
                     (err) => {
+                      if (err.status == 403 || err.status == 404) {
+                        this.toast.setMessage(err.message, "danger");
+                        this.auth.logout();
+                        this.solicitudComp.show = false;
+                      }
                       console.log(
                         "error al recuperar la informacion del Autorizador" + err
                       );
+                      this.solicitudComp.show = false;
                     }
                   );
               },
-              (error) => console.log("error al actualizar en status" + error)
+              (error) => {
+                if (error.status == 403 || error.status == 404) {
+                  this.toast.setMessage(error.message, "danger");
+                  this.auth.logout();
+                  this.solicitudComp.show = false;
+                }
+                console.log("error al actualizar en status" + error)
+                this.solicitudComp.show = false;
+              }
             );
         }
       } else {
@@ -1364,6 +1455,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
           "No tienes permisos para cambiar a este Status",
           "warning"
         );
+        this.solicitudComp.show = false;
       }
     } 
 
@@ -1407,9 +1499,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
                       (res) => {
                         //console.log(res);
                         this.UserAuth = res;
-                        this.isrechazada = false;
-                        this.motivo_Rechazo = '';
-                        this.SelectedStatus = undefined;
                         //console.log(this.UserAuth[0]);
                         //Pedimos el usuario creador de la solicitude de pedido para notificarle que ya se envio a SAP la SOLPED
                         // console.log(this.auth.currentUser.Email);
@@ -1429,23 +1518,25 @@ export class SolicitudesRegistradasComponent implements OnInit {
                           )
                           .subscribe(
                             (res) => {
-                              
-                              this.toast.setMessage(
-                                "Error en el envio de el Correo",
-                                "warning"
-                              );
-                              
+                              this.isrechazada = false;
+                                this.motivo_Rechazo = '';
+                                this.SelectedStatus = undefined;
+                                this.toast.setMessage(
+                                  "Error en el envio de el Correo",
+                                  "warning"
+                                );
+                              this.solicitudComp.show = false;
                             },
                             (error) => {
-                              if (error.status == 403 || error.status == 404) {
-                                this.toast.setMessage(error.message, "danger");
-                                this.auth.logout();
-                              }
+                              this.isrechazada = false;
+                              this.motivo_Rechazo = '';
+                              this.SelectedStatus = undefined;
                               console.log("Error al enviar el correo " + error);
                               this.toast.setMessage(
                                 "Envio de Email Correcto",
                                 "success"
                               );
+                              this.solicitudComp.show = false;
                             }
                           );
                       },
@@ -1453,11 +1544,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                         if (error.status == 403 || error.status == 404) {
                           this.toast.setMessage(error.message, "danger");
                           this.auth.logout();
+                          this.solicitudComp.show = false;
                         }
                         console.log(
                           "error al recuperar la informacion del Autorizador" +
                             error
                         );
+                        this.solicitudComp.show = false;
                       }
                     );
                 },
@@ -1465,8 +1558,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   if (error.status == 403 || error.status == 404) {
                     this.toast.setMessage(error.message, "danger");
                     this.auth.logout();
+                    this.solicitudComp.show = false;
                   }
                   console.log("error al actualizar como Administrador" + error);
+                  this.solicitudComp.show = false;
                 },
                 () => {}
               );
@@ -1491,6 +1586,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                 if (error.status == 403 || error.status == 404) {
                   this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
+                  this.solicitudComp.show = false;
                 }
                 console.log("error al recuperar la info " + error);
               };
@@ -1517,9 +1613,6 @@ export class SolicitudesRegistradasComponent implements OnInit {
                     (res) => {
                       //console.log(res);
                       this.UserAuth = res;
-                      this.isrechazada = false;
-                      this.motivo_Rechazo = '';
-                      this.SelectedStatus = undefined;
                       //console.log(this.UserAuth[0]);
                       //Pedimos el usuario creador de la solicitude de pedido para notificarle que ya se envio a SAP la SOLPED
                       //console.log(this.auth.currentUser.Email);
@@ -1546,17 +1639,23 @@ export class SolicitudesRegistradasComponent implements OnInit {
                             console.log(
                               "dento de el metodo para enviar el correo" + res
                             );
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
+                            this.solicitudComp.show = false;
+                            
                           },
                           (error) => {
-                            if (error.status == 403 || error.status == 404) {
-                              this.toast.setMessage(error.message, "danger");
-                              this.auth.logout();
-                            }
+                            
+                            this.isrechazada = false;
+                            this.motivo_Rechazo = '';
+                            this.SelectedStatus = undefined;
                             console.log("Error al enviar el correo " + error);
                             this.toast.setMessage(
                               "Envio de Email Correcto",
                               "success"
                             );
+                            this.solicitudComp.show = false;
                           }
                         );
                     },
@@ -1564,11 +1663,13 @@ export class SolicitudesRegistradasComponent implements OnInit {
                       if (error.status == 403 || error.status == 404) {
                         this.toast.setMessage(error.message, "danger");
                         this.auth.logout();
+                        this.solicitudComp.show = false;
                       }
                       console.log(
                         "error al recuperar la informacion del Autorizador" +
                           error
                       );
+                      this.solicitudComp.show = false;
                     }
                   );
               },
@@ -1576,8 +1677,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
                 if (error.status == 403 || error.status == 404) {
                   this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
+                  this.solicitudComp.show = false;
                 }
                 console.log("error al actualizar como Administrador" + error);
+                this.solicitudComp.show = false;
               },
               () => {}
             );
@@ -1587,6 +1690,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
           "No tienes permisos para cambiar a este Status",
           "warning"
         );
+        this.solicitudComp.show = false;
       }
     } 
 
@@ -1621,6 +1725,7 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   this.isrechazada = false;
                   this.motivo_Rechazo = '';
                   this.SelectedStatus = undefined;
+                  this.solicitudComp.show = false;
                   // this.getDireccionesforUser(this.auth.currentUser.IdUsuario);
                   // this.getStatusCompras(this.auth.currentUser.IdRole, 1);
                   
@@ -1634,8 +1739,10 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   if (error.status == 403 || error.status == 404) {
                     this.toast.setMessage(error.message, "danger");
                     this.auth.logout();
+                    this.solicitudComp.show = false;
                   }
                   console.log(error);
+                  this.solicitudComp.show = false;
                 }
               );
           }
@@ -1663,16 +1770,19 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   "Actualizacion de estatus correcta",
                   "success"
                 );
+                this.solicitudComp.show = false;
               },
               (error) => {
                 if (error.status == 403 || error.status == 404) {
                   this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
+                  this.solicitudComp.show = false;
                 }
                 this.isrechazada = false;
                 this.motivo_Rechazo = '';
                 this.SelectedStatus = undefined;
                 console.log(error);
+                this.solicitudComp.show = false;
               }
             );
         }
@@ -1717,16 +1827,19 @@ export class SolicitudesRegistradasComponent implements OnInit {
                     "Actualizacion de estatus correcta",
                     "success"
                   );
+                  this.solicitudComp.show = false;
                 },
                 (error) => {
                   if (error.status == 403 || error.status == 404) {
                     this.toast.setMessage(error.message, "danger");
                     this.auth.logout();
+                    this.solicitudComp.show = false;
                   }
                   this.isrechazada = false;
                   this.motivo_Rechazo = '';
                   this.SelectedStatus = undefined;
                   console.log(error);
+                  this.solicitudComp.show = false;
                 }
               );
           }
@@ -1756,16 +1869,19 @@ export class SolicitudesRegistradasComponent implements OnInit {
                   "Actualizacion de estatus correcta",
                   "success"
                 );
+                this.solicitudComp.show = false;
               },
               (error) => {
                 if (error.status == 403 || error.status == 404) {
                   this.toast.setMessage(error.message, "danger");
                   this.auth.logout();
+                  this.solicitudComp.show = false;
                 }
                 this.isrechazada = false;
                 this.motivo_Rechazo = '';
                 this.SelectedStatus = undefined;
                 console.log(error);
+                this.solicitudComp.show = false;
               }
             );
         }

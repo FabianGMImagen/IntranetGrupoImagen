@@ -1,5 +1,7 @@
+import { Injectable } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material';
 
+@Injectable()
 export class CustomPaginator extends MatPaginatorIntl {
     constructor() {
       super();

@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { SolicitudCompraService } from "../../services/solicitudcompra.service";
 import { AuthServices } from "../../services/auth.service";
@@ -28,7 +27,7 @@ import { User } from "../../shared/models/user.model";
 import { OrdenInterna } from "../../shared/models/ordeninterna.model";
 import { UnidadMedida } from "../../shared/models/umedida.model";
 import { Moneda } from "../../shared/models/moneda.model";
-import { Categorias } from "client/app/shared/models/categorias.model";
+import { Categorias } from "../../shared/models/categorias.model";
 //importamos el modelo con el que se empalmara el json de la consulta de el webservice
 
 import { MensajesSolPed } from "../../shared/models/mensajessolped.model";
@@ -82,9 +81,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   /** control for the MatSelect filter keyword */
   public EmpreFilterCtrl: FormControl = new FormControl();
   /** list of banks filtered by search keyword */
-  public filteredEmpresa: ReplaySubject<Empresa[]> = new ReplaySubject<
-    Empresa[]
-  >(1);
+  public filteredEmpresa: ReplaySubject<Empresa[]>;
   //fin filtrado empresa
 
   //variabkles para hacer filtrado de Sucursal
@@ -94,18 +91,14 @@ export class ListadoSolicitudesComponent implements OnInit {
   /** control for the MatSelect filter keyword */
   public SucursalFilterCtrl: FormControl = new FormControl();
   /** list of banks filtered by search keyword */
-  public filteredSucursal: ReplaySubject<SucursalPlaza[]> = new ReplaySubject<
-    SucursalPlaza[]
-  >(1);
+  public filteredSucursal: ReplaySubject<SucursalPlaza[]>;
   //fin de las variables
 
   //variables para Hacer Bsuqeudas en Select de Centro de Costos
   protected ListCCostos: CentroCostos[];
   public CCostosCrtl: FormControl = new FormControl();
   public CCosotosFilterCtrl: FormControl = new FormControl();
-  public filteredCCostos: ReplaySubject<CentroCostos[]> = new ReplaySubject<
-    CentroCostos[]
-  >(1);
+  public filteredCCostos: ReplaySubject<CentroCostos[]>;
   //public filterCCostosName: ReplaySubject<CentroCostos[]> = new ReplaySubject<CentroCostos[]>(1);
   //fin de variables
 
@@ -113,61 +106,49 @@ export class ListadoSolicitudesComponent implements OnInit {
   protected ListAlmacen: Almacen[];
   public AlmacenCrtl: FormControl = new FormControl();
   public AlmacenFilterCtrl: FormControl = new FormControl();
-  public filteredAlmacen: ReplaySubject<Almacen[]> = new ReplaySubject<
-    Almacen[]
-  >(1);
+  public filteredAlmacen: ReplaySubject<Almacen[]>;
   //fin de variables
 
   //variable spara hacer busqueda de Material o Servicio
   protected ListMateriales: Materiales[];
   public MaterialesCtrl: FormControl = new FormControl();
   public MaterialesFilterCtrl: FormControl = new FormControl();
-  public filteredMaterial: ReplaySubject<Materiales[]> = new ReplaySubject<
-    Materiales[]
-  >(1);
+  public filteredMaterial: ReplaySubject<Materiales[]>;
   //fin de variables material o servicio
 
   //variables para hacer busqueda en select de la Cuenta de Mayor
   protected ListCmayor: CuentaMayor[];
   public CMayorCtrl: FormControl = new FormControl();
   public CMayorFilterCtrl: FormControl = new FormControl();
-  public filteredCMayor: ReplaySubject<CuentaMayor[]> = new ReplaySubject<
-    CuentaMayor[]
-  >(1);
+  public filteredCMayor: ReplaySubject<CuentaMayor[]>;
   //fin de las variables
 
   //varibales para hacer busquedas en Grupo de COmpras
   protected ListGrupoCompra: GrupoCompra[];
   public GCompraCtrl: FormControl = new FormControl();
   public GCompraFilterCtrl: FormControl = new FormControl();
-  public filteredGCompra: ReplaySubject<GrupoCompra[]> = new ReplaySubject<
-    GrupoCompra[]
-  >(1);
+  public filteredGCompra: ReplaySubject<GrupoCompra[]>;
   //fin de varibales
 
   //variables para hacer busqueda en select de unidadesde medida
   protected ListUnidadMedida: UnidadMedida[];
   public UnidadMedidaCtrl: FormControl = new FormControl();
   public UnidadMedidaFilterCtrl: FormControl = new FormControl();
-  public filteredUnidadMedida: ReplaySubject<UnidadMedida[]> =
-    new ReplaySubject<UnidadMedida[]>(1);
+  public filteredUnidadMedida: ReplaySubject<UnidadMedida[]>;
   //fin de variables
 
   //variables para hacer busquedas en Numero de Activo
   protected ListActivo: Activo[];
   public ActivoCrtl: FormControl = new FormControl();
   public ActivoFilterCtrl: FormControl = new FormControl();
-  public filteredActivo: ReplaySubject<Activo[]> = new ReplaySubject<Activo[]>(
-    1
-  );
+  public filteredActivo: ReplaySubject<Activo[]>;
   //fin de variables
 
   //variables para hacer busquedas en Orden Estadistica
   protected ListOrdEstadistica: OrdenInterna[];
   public OrdenEstadisticaCrtl: FormControl = new FormControl();
   public OrdenEstadisticaFilterCtrl: FormControl = new FormControl();
-  public filteredOrdenEstadistica: ReplaySubject<OrdenInterna[]> =
-    new ReplaySubject<OrdenInterna[]>(1);
+  public filteredOrdenEstadistica: ReplaySubject<OrdenInterna[]>;
   //fin de las variables
 
   protected _onDestroy = new Subject<void>();
@@ -182,11 +163,11 @@ export class ListadoSolicitudesComponent implements OnInit {
     private snackbar: MatSnackBar,
     private paginator: MatPaginatorIntl,
     public dialog: MatDialog
-  ) {}
+  ) { }
 
   numberToLetters: any;
   isLoading: boolean = false;
-  DataInsert: Solicitud | undefined;
+  DataInsert: Solicitud;
 
   //Datos de Plantilla de Sol Pedido
   //pruebas con modelo para pasar informacion desde webservice
@@ -196,7 +177,7 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   //ListEmpresa:Empresa[];
   //ListFilteredEmpresa:ReplaySubject<Empresa[]>;
-  SelectEmpresa: Empresa;
+  //SelectEmpresa: Empresa;
   SelectedCostos: CentroCostos;
   SelectedPlaza: SucursalPlaza;
   SelectedCMayor: CuentaMayor;
@@ -225,13 +206,21 @@ export class ListadoSolicitudesComponent implements OnInit {
   UMedida: UnidadMedida = new UnidadMedida();
 
   fecha: string;
+  isfecha: boolean = true;
   Date = new FormControl(new Date().toISOString());
   date: String;
   usr = new FormControl("", [Validators.required]);
   puesto = new FormControl("", [Validators.required]);
   email = new FormControl("", [Validators.required, Validators.email]);
-  tel = new FormControl("", [Validators.required, Validators.pattern('^[0-9]*$')]);
-  ext = new FormControl("", [Validators.required, Validators.maxLength(4), Validators.pattern('^[0-9]*$')]);
+  tel = new FormControl("", [
+    Validators.required,
+    Validators.pattern("^[0-9]*$"),
+  ]);
+  ext = new FormControl("", [
+    Validators.required,
+    Validators.maxLength(4),
+    Validators.pattern("^[0-9]*$"),
+  ]);
   area = new FormControl("", [Validators.required]);
   nombreProduccion = new FormControl();
   //tipo = new FormControl('',[Validators.required])
@@ -300,7 +289,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   IdSoliforFile: Solicitud;
   progressbar: boolean = false;
   /*------------------------------------variables de hijos-------------------------------------*/
-  countChilds:number = 0;
+  countChilds: number = 0;
   AddDataProduct: boolean = false;
   Childs: ProductoHijos[] = [];
   ChildsProduct: ProductoHijos = new ProductoHijos();
@@ -320,6 +309,18 @@ export class ListadoSolicitudesComponent implements OnInit {
   /*-------------------------------fin de variables de hijos----------------------------*/
 
   ngOnInit() {
+    this.DataInsert = new Solicitud();
+    this.uploader = new FileUploader({ url: URL, itemAlias: "-" });
+    this.filteredEmpresa = new ReplaySubject<Empresa[]>(2);
+    this.filteredSucursal = new ReplaySubject<SucursalPlaza[]>(1);
+    this.filteredCCostos = new ReplaySubject<CentroCostos[]>(1);
+    this.filteredAlmacen = new ReplaySubject<Almacen[]>(1);
+    this.filteredMaterial = new ReplaySubject<Materiales[]>(1);
+    this.filteredCMayor = new ReplaySubject<CuentaMayor[]>(1);
+    this.filteredGCompra = new ReplaySubject<GrupoCompra[]>(1);
+    this.filteredUnidadMedida  = new ReplaySubject<UnidadMedida[]>(1);
+    this.filteredActivo = new ReplaySubject<Activo[]>(1);
+    this.filteredOrdenEstadistica = new ReplaySubject<OrdenInterna[]>(1);
     //console.log("entrando a validar la conyraseña para SAP ");
     this.PassSOAPSAP();
     //console.log(encodeURI("http://solicitud.adgimm.com.mx:3000/public/63 GRUPOIMAGEN- Cursos Microsoft SQ Y C#.pdf"));
@@ -335,7 +336,6 @@ export class ListadoSolicitudesComponent implements OnInit {
 
     this.numberToLetters = require("number-2-letters");
     this.numberToLetters.defaults.lang = "es";
-    this.DataInsert = new Solicitud();
 
     //this.ConectingWebServiceTMP();
     this.getAllEmpre();
@@ -395,35 +395,31 @@ export class ListadoSolicitudesComponent implements OnInit {
       //TextBreve: this.TextBreve
     });
 
-    this.uploader = new FileUploader({ url: URL, itemAlias: " " });
+    
 
-    this.uploader.progress = 0;
-    //console.log(this.uploader);
-    //opciones cuando el archivo este completo y se suba
-    this.uploader.onAfterAddingFile = (file) => {
-      console.log(file);
-      //console.log("***************Se dejo el archivo*************************");
-      //console.log(file);
-      file.withCredentials = false;
-    };
+    
 
-    this.uploader.onCompleteItem = (
-      item: any,
-      response: any,
-      status: any,
-      headers: any
-    ) => {
-      //console.log(headers);
-      //console.log(item);
-      //console.log(status);
-      // console.log("ImageUpload:uploaded:", item, status, response);
-      // console.log("este es el item enviado-->" + item);
-      // console.log("este es el status-->" + status);
-      // console.log("este es el response-->" + response);
-      this.uploader.cancelAll();
-      this.uploader.clearQueue();
-      // alert('File uploaded successfully');
-    };
+    // this.uploader.onCompleteItem = (
+    //   item: any,
+    //   response: any,
+    //   status: any,
+    //   headers: any
+    // ) => {
+    //   //console.log(headers);
+    //   //console.log(item);
+    //   //console.log(status);
+    //   // console.log("ImageUpload:uploaded:", item, status, response);
+    //   // console.log("este es el item enviado-->" + item);
+    //   // console.log("este es el status-->" + status);
+    //   // console.log("este es el response-->" + response);
+    //   //this.uploader.cancelAll();
+    //   this.uploader.clearQueue();
+    //   // alert('File uploaded successfully');
+    // };
+
+
+    
+    
   }
 
   ngOnDestroy() {
@@ -433,6 +429,26 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   uploadfile() {
     this.uploader.uploadAll();
+    this.uploader.onCompleteItem = (
+      item: any,
+      response: any,
+      status: any,
+      headers: any
+    ) => {
+      console.log("ImageUpload:uploaded:" + item+ 'Estatus: ' +status);
+      this.uploader.cancelAll();
+      this.uploader.clearQueue();
+      this.toast.setMessage('Precotizacion: '+response.originalname + 'Enviada status:'+status,'success');
+    };
+    this.uploader.progress = 0;
+    //console.log(this.uploader);
+    //opciones cuando el archivo este completo y se suba
+    this.uploader.onAfterAddingFile = (file) => {
+      console.log(file);
+      console.log("***************Se dejo el archivo*************************");
+      console.log(file);
+      file.withCredentials = false;
+    };
   }
 
   //Metodo para recuperar Web Service desde un Servicio de Angular
@@ -480,7 +496,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     //set initial selection
     this.EmpresaCtrl.setValue(this.ListEmpresa[0]);
 
-    // cargar la lista Empresas inicial
+    // cargar la lista Empresas inicial en el buffer
     this.filteredEmpresa.next(this.ListEmpresa);
 
     // escuche los cambios en el valor del campo de búsqueda
@@ -522,12 +538,10 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   selectedEmpresa() {
     this.selectedFecha();
-    // console.log(this.DataInsert.Empresa.Bukrs);
-    // console.log(this.DataInsert.Empresa.Butxt);
-    // console.log("entrando al metodo filtro");
+    this.DataInsert.Empresa = this.EmpresaCtrl.value;
     this.DataInsert.Imputacion = undefined;
     this.DataInsert.Cantidad = 0;
-    this.price ='0';
+    this.price = "0";
     this.DataInsert.Almacen = undefined;
     this.DataInsert.Materiales = undefined;
     this.DataInsert.CentroCostos = undefined;
@@ -611,9 +625,10 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log("dentro de el metodo que selecciona");
     // console.log(this.DataInsert.Plaza.IdPlaza);
     // console.log(this.DataInsert.Plaza.Nombre);
+    this.DataInsert.Plaza = this.SucursalCtrl.value;
     this.DataInsert.Imputacion = undefined;
     this.DataInsert.Cantidad = 0;
-    this.price ='0';
+    this.price = "0";
     this.DataInsert.Almacen = undefined;
     this.DataInsert.Materiales = undefined;
     this.DataInsert.CentroCostos = undefined;
@@ -628,6 +643,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     this.DataInsert.OrdenInterna = undefined;
     this.getAllCentroCosto(this.DataInsert.Empresa, this.DataInsert.Plaza);
     this.getAllAlmacen(this.DataInsert.Plaza);
+    console.log(this.DataInsert);
   }
 
   getAllCentroCosto(idEmpresa: Empresa, idPlaza: SucursalPlaza) {
@@ -677,23 +693,23 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   SelectedCentroCostos() {
     //pasamos los datos seleccionado a el objeto Producto
-    var IdCCosto: any = this.DataInsert.CentroCostos.IdCentroCosto;
-    var CCosto: any = this.DataInsert.CentroCostos.Nombre;
+    //console.log(this.DataInsert);
+    this.DataInsert.CentroCostos = this.CCostosCrtl.value;
+    this.Producto.CentroCosto = this.CCostosCrtl.value.IdCentroCosto;
+    this.Producto.CentroCostoName = this.CCostosCrtl.value.Nombre;
     this.SelectedCostos = this.DataInsert.CentroCostos;
-    this.Producto.CentroCosto = IdCCosto;
-    this.Producto.CentroCostoName = CCosto;
     // console.log(this.DataInsert.CentroCostos);
     // console.log(this.DataInsert.CentroCostos.Nombre);
     //console.log(this.CentroCostos.value);
   }
 
   getAllCuentasMayor(idEmpresa: Empresa, SolPedAcronimo: string) {
-    console.log(this.DataInsert.Imputacion.Acronimo)
-    console.log(SolPedAcronimo)
+    console.log(this.DataInsert.Imputacion.Acronimo);
+    console.log(SolPedAcronimo);
     if (this.DataInsert.Imputacion != undefined) {
       // console.log("Este es el Tipo de Silicitud-------> " + SolPedAcronimo);
       if (this.DataInsert.Imputacion.IdTipoSolicitud == 2) {
-        console.log("tipo de solicitud 2")
+        console.log("tipo de solicitud 2");
         this.ListCmayor = this.solicitudComp.getCuentaMayor(
           idEmpresa,
           this.DataInsert.Imputacion.Acronimo
@@ -706,8 +722,8 @@ export class ListadoSolicitudesComponent implements OnInit {
             this.filterCmayor();
           });
       } else {
-        console.log("otro tipo de solicitud que no es 2")
-        this.ListCmayor = this.solicitudComp.getCuentaMayor(idEmpresa, ' ');
+        console.log("otro tipo de solicitud que no es 2");
+        this.ListCmayor = this.solicitudComp.getCuentaMayor(idEmpresa, " ");
         this.CMayorCtrl.setValue(this.ListCmayor[0]);
         this.filteredCMayor.next(this.ListCmayor);
         this.CMayorFilterCtrl.valueChanges
@@ -747,11 +763,10 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   selectionCMayor() {
-    var IdCMayor: any = this.DataInsert.Cuentamayor.IdCuentaMayor;
-    var CMayorName: any = this.DataInsert.Cuentamayor.Nombre;
+    this.DataInsert.Cuentamayor = this.CMayorCtrl.value;
+    this.Producto.CuentaMayor = this.CMayorCtrl.value.IdCuentaMayor;
+    this.Producto.CuentaMayorName = this.CMayorCtrl.value.Nombre;
     this.SelectedCMayor = this.DataInsert.Cuentamayor;
-    this.Producto.CuentaMayor = IdCMayor;
-    this.Producto.CuentaMayorName = CMayorName;
     // console.log(this.DataInsert.Cuentamayor.IdCuentaMayor);
     // console.log(this.DataInsert.Cuentamayor.Nombre);
   }
@@ -793,11 +808,9 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   SelectActivo() {
-    //console.log("datos en NGMODEL ACTIVO---->" + this.DataInsert.NActivo.IdActivo+ "-------" + this.DataInsert.NActivo.Nombre);
-    var idactivo: any = this.DataInsert.NActivo.IdActivo;
-    var activoname: any = this.DataInsert.NActivo.Nombre;
-    this.Producto.NumActivo = idactivo;
-    this.Producto.NameActivo = activoname;
+    this.DataInsert.NActivo = this.ActivoCrtl.value;
+    this.Producto.NumActivo = this.ActivoCrtl.value.IdActivo;
+    this.Producto.NameActivo = this.ActivoCrtl.value.Nombre;
   }
 
   getOrdenInterna(idEmpresa: Empresa, SolPed: Imputacion) {
@@ -855,7 +868,7 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.DataInsert.Imputacion.Acronimo);
     // console.log(this.DataInsert.Productos.length);
     this.DataInsert.Cantidad = 0;
-    this.price ='0';
+    this.price = "0";
     this.DataInsert.Almacen = undefined;
     this.DataInsert.Materiales = undefined;
     this.DataInsert.CentroCostos = undefined;
@@ -1140,17 +1153,9 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   selectedAlmacen() {
-    //console.log("Este es el id de el almacen con FormControl----->" + this.Almacen.value);
-    // console.log(
-    //   "NgModel--->" +
-    //     this.DataInsert.Almacen.IdAlmacen +
-    //     "------" +
-    //     this.DataInsert.Almacen.IdAlmacen
-    // );
-    var idAlmacen: any = this.DataInsert.Almacen.IdAlmacen;
-    var namealmacen: any = this.DataInsert.Almacen.Nombre;
-    this.Producto.Almacen = idAlmacen;
-    this.Producto.AlmacenName = namealmacen;
+    this.DataInsert.Almacen = this.AlmacenCrtl.value;
+    this.Producto.Almacen = this.AlmacenCrtl.value.IdAlmacen;
+    this.Producto.AlmacenName = this.AlmacenCrtl.value.Nombre;
 
     this.getAllMateriales(this.DataInsert.Plaza, this.DataInsert.Almacen);
   }
@@ -1196,14 +1201,13 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   SelectMat() {
     //console.log("pasamos la info de un NGmodel a el FORM -->" + this.DataInsert.Materiales.IdMaterial + "-------" + this.DataInsert.Materiales.Nombre);
-    var idMaterial: any = this.DataInsert.Materiales.IdMaterial;
-    var MaterialName: any = this.DataInsert.Materiales.Nombre;
+    this.DataInsert.Materiales = this.MaterialesCtrl.value;
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 5) {
       this.DataInsert.UsoBien = this.DataInsert.Materiales.Nombre;
       this.AplicaUsobien = true;
     }
-    this.Producto.Material = idMaterial;
-    this.Producto.MaterialName = MaterialName;
+    this.Producto.Material = this.MaterialesCtrl.value.IdMaterial;
+    this.Producto.MaterialName = this.MaterialesCtrl.value.Nombre;
     this.getunidadMedida(this.DataInsert.Materiales.IdMaterial);
   }
 
@@ -1245,11 +1249,9 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   SelectGrupoCompra() {
-    //console.log("Datos desde el NGMODEL se pasan a un FORMULARIO---->" + this.DataInsert.GCompra.IdGrupoCompra + "   " + this.DataInsert.GCompra.Nombre);
-    var idgrupoCompra: any = this.DataInsert.GCompra.IdGrupoCompra;
-    var grupocompraname: any = this.DataInsert.GCompra.Nombre;
-    this.Producto.GrupCompra = idgrupoCompra;
-    this.Producto.NameGrupoCompra = grupocompraname;
+    this.DataInsert.GCompra = this.GCompraCtrl.value;
+    this.Producto.GrupCompra = this.GCompraCtrl.value.IdGrupoCompra;
+    this.Producto.NameGrupoCompra = this.GCompraCtrl.value.Nombre;
   }
 
   GetAllOrdenEstadistica(Empre: Empresa, SolPed: Imputacion) {
@@ -1288,21 +1290,12 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   SelectedOrdenestadistica() {
-    //console.log("Esta es la orden Estadisitica que se selecciono------> " + this.DataInsert.OrdenEstadistica.NombreOrder);
-    // console.log(
-    //   "Esta es la orden Estadisticaaaaaa------->>" +
-    //     this.SelectOrdenEstadisitica.NombreOrder
-    // );
-    //pasamos los resultados a la variable del DataInsett para que este lleno cuando se valide
-    this.DataInsert.OrdenEstadistica = this.SelectOrdenEstadisitica;
+    this.DataInsert.OrdenEstadistica = this.OrdenEstadisticaCrtl.value;
 
-    //se tiene que agregar la ordenEstadistica seleccionada a la opcion por ITEM de los Productos
     this.Producto.IdOrdenEstadistica =
-      this.SelectOrdenEstadisitica.IdOrdenInterna;
+      this.OrdenEstadisticaCrtl.value.IdOrdenInterna;
     this.Producto.OrdenEstadisticaName =
-      this.SelectOrdenEstadisitica.NombreOrder;
-    // console.log("ya en lista de producto" + this.Producto.OrdenEstadisticaName);
-    // console.log("ya en lista de producto" + this.Producto.IdOrdenEstadistica);
+      this.OrdenEstadisticaCrtl.value.NombreOrder;
   }
 
   getAllMoendas() {
@@ -1357,11 +1350,10 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   SelectunidadMedida() {
     //console.log("datos en un NGMODEL---> " + this.DataInsert.UMedida.IdUnidadMedida +"   " + this.DataInsert.UMedida.NombreUnidadMedida);
-
-    var idumedida: any = this.DataInsert.UMedida.IdUnidadMedida;
-    var umedidaname: any = this.DataInsert.UMedida.NombreUnidadMedida;
-    this.Producto.UnidadMedida = idumedida;
-    this.Producto.NameUnidadMedida = umedidaname;
+    this.DataInsert.UMedida = this.UnidadMedidaCtrl.value;
+    this.Producto.UnidadMedida = this.UnidadMedidaCtrl.value.IdUnidadMedida;
+    this.Producto.NameUnidadMedida =
+      this.UnidadMedidaCtrl.value.NombreUnidadMedida;
   }
 
   getAllNecesidad() {
@@ -1415,7 +1407,10 @@ export class ListadoSolicitudesComponent implements OnInit {
     var usobien: string = this.DataInsert.UsoBien;
     this.Producto.UsoProd = await this.RemoveCaracteresEpeciales(usobien);
     this.Producto.Espf = await this.RemoveCaracteresEpeciales(espesificaciones);
-    if (this.DataInsert.Imputacion.IdTipoSolicitud == 4 || this.DataInsert.Imputacion.IdTipoSolicitud == 7) {
+    if (
+      this.DataInsert.Imputacion.IdTipoSolicitud == 4 ||
+      this.DataInsert.Imputacion.IdTipoSolicitud == 7
+    ) {
       this.Producto.Cantidad = 0;
       this.Producto.Precio = 0;
       this.Producto.PriceView = "0";
@@ -1440,14 +1435,19 @@ export class ListadoSolicitudesComponent implements OnInit {
       this.Producto.UsoProd = usobien;
     }
 
-    if(this.DataInsert.Imputacion.IdTipoSolicitud != 2){
+    if (this.DataInsert.Imputacion.IdTipoSolicitud != 2) {
       this.getAllCuentasMayor(this.DataInsert.Empresa, " ");
-    }else{
-      this.getAllCuentasMayor(this.DataInsert.Empresa,this.DataInsert.Imputacion.Acronimo);
+    } else {
+      this.getAllCuentasMayor(
+        this.DataInsert.Empresa,
+        this.DataInsert.Imputacion.Acronimo
+      );
     }
 
-
-    if ( this.DataInsert.Productos.length == 0 || this.DataInsert.Productos.length == null) {
+    if (
+      this.DataInsert.Productos.length == 0 ||
+      this.DataInsert.Productos.length == null
+    ) {
       this.Producto.IdPrduct = 1;
     } else {
       var Id = this.DataInsert.Productos.length;
@@ -1479,7 +1479,8 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.NumActivo != undefined &&
         this.Producto.NumNeces != undefined &&
         this.Producto.UsoProd.length != 0 &&
-        this.Producto.Espf.length != 0) {
+        this.Producto.Espf.length != 0
+      ) {
         this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
           this.Producto.UsoProd
         );
@@ -1546,7 +1547,10 @@ export class ListadoSolicitudesComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
       }
-      this.getAllCuentasMayor(this.DataInsert.Empresa,this.DataInsert.Imputacion.Acronimo);
+      this.getAllCuentasMayor(
+        this.DataInsert.Empresa,
+        this.DataInsert.Imputacion.Acronimo
+      );
       if (
         this.Producto.Cantidad != 0 &&
         this.Producto.Precio != 1 &&
@@ -1560,7 +1564,9 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UsoProd.length != 0 &&
         this.Producto.Espf.length != 0
       ) {
-        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
+          this.Producto.UsoProd
+        );
         this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
@@ -1613,8 +1619,8 @@ export class ListadoSolicitudesComponent implements OnInit {
           "danger"
         );
       }
-    } 
-  
+    }
+
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 3) {
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
@@ -1689,7 +1695,7 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.DataInsert.Espf = "";
       } else {
         this.DataInsert.Cantidad = 0;
-        this.price ='0';
+        this.price = "0";
         this.DataInsert.Almacen = undefined;
         this.DataInsert.Materiales = undefined;
         this.DataInsert.CentroCostos = undefined;
@@ -1710,20 +1716,22 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
-      console.log(this.Producto.Cantidad ,
+      console.log(
+        this.Producto.Cantidad,
         this.Producto.Precio,
-        this.Producto.CentroCosto ,
-        this.SelectedOInvercion ,
-        this.Producto.CuentaMayor ,
-        this.Producto.Material ,
-        this.Producto.Almacen ,
-        this.Producto.GrupCompra ,
-        this.Producto.UnidadMedida ,
-        this.Producto.NumActivo ,
-        
-        this.Producto.UsoProd.length ,
-        this.Producto.Espf.length );
-        console.log("Numero de necesidad-->"  +this.Producto.NumNeces );
+        this.Producto.CentroCosto,
+        this.SelectedOInvercion,
+        this.Producto.CuentaMayor,
+        this.Producto.Material,
+        this.Producto.Almacen,
+        this.Producto.GrupCompra,
+        this.Producto.UnidadMedida,
+        this.Producto.NumActivo,
+
+        this.Producto.UsoProd.length,
+        this.Producto.Espf.length
+      );
+      console.log("Numero de necesidad-->" + this.Producto.NumNeces);
       if (
         this.Producto.Cantidad == 0 &&
         this.Producto.Precio == 0 &&
@@ -1881,17 +1889,17 @@ export class ListadoSolicitudesComponent implements OnInit {
     }
 
     if (this.DataInsert.Imputacion.IdTipoSolicitud == 6) {
-      //  console.log(this.Producto.CentroCosto);
-      //  console.log(this.SelectedOInvercion);
-      //  console.log(this.Producto.CuentaMayor);
-      //  console.log(this.Producto.Material);
-      //  console.log(this.Producto.Almacen);
-      //  console.log(this.Producto.GrupCompra);
-      //  console.log(this.Producto.UnidadMedida);
-      //  console.log(this.Producto.IdOrdenEstadistica);
-      //  console.log(this.Producto.NumActivo);
-      //  console.log(this.Producto.NumNeces);
-      //  console.log(this.Producto.UsoProd );
+      console.log(this.Producto.CentroCosto);
+      console.log(this.SelectedOInvercion);
+      console.log(this.Producto.CuentaMayor);
+      console.log(this.Producto.Material);
+      console.log(this.Producto.Almacen);
+      console.log(this.Producto.GrupCompra);
+      console.log(this.Producto.UnidadMedida);
+      console.log(this.Producto.IdOrdenEstadistica);
+      console.log(this.Producto.NumActivo);
+      console.log(this.Producto.NumNeces);
+      console.log(this.Producto.UsoProd);
 
       if (precio >= 30000) {
         const dialogRef = this.dialog.open(DialogInfoComponent);
@@ -1932,7 +1940,7 @@ export class ListadoSolicitudesComponent implements OnInit {
         //creamos un nuevo producto y vaciamos los campos de la interfaz.
         this.Producto = new Producto();
         this.DataInsert.Cantidad = 0;
-        this.DataInsert.Precio = 1;
+        this.DataInsert.Precio = 0;
         this.price = " ";
         if (this.DataInsert.Almacen != undefined) {
           this.getAllAlmacen(this.DataInsert.Plaza);
@@ -1963,6 +1971,7 @@ export class ListadoSolicitudesComponent implements OnInit {
           this.DataInsert.Empresa,
           this.DataInsert.Imputacion
         );
+        this.getAllCentroCosto(this.DataInsert.Empresa, this.DataInsert.Plaza);
         this.DataInsert.UsoBien = "";
         this.DataInsert.Espf = "";
       } else {
@@ -1986,7 +1995,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       // console.log(this.Producto.NumNeces);
       // this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
       // this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
-      console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES")
+      console.log("Tipo de imputacion SERVICIOS CON PTODUCCIONES");
       if (
         this.Producto.Cantidad == 0 &&
         this.Producto.Precio == 0 &&
@@ -2003,7 +2012,9 @@ export class ListadoSolicitudesComponent implements OnInit {
         this.Producto.UsoProd.length != 0 &&
         this.Producto.Espf.length != 0
       ) {
-        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(this.Producto.UsoProd);
+        this.Producto.UsoProd = this.RemoveCaracteresEpeciales(
+          this.Producto.UsoProd
+        );
         this.Producto.Espf = this.RemoveCaracteresEpeciales(this.Producto.Espf);
         //realizamos el push de el objeto de Producot en array de Productos
         this.DataInsert.Productos.push(this.Producto);
@@ -2188,7 +2199,7 @@ export class ListadoSolicitudesComponent implements OnInit {
   //fin de los metoso para poder agregar o eliminar materiales o servicios
 
   buscaIdAutorizador(idarea: Area) {
-    if(idarea != undefined){
+    if (idarea != undefined) {
       this.solicitudComp.getIdAutorizador(idarea.IdDireccion).subscribe(
         (data) => {
           //console.log(data);
@@ -2203,8 +2214,11 @@ export class ListadoSolicitudesComponent implements OnInit {
           console.log("error al recuperar usuario autorizador" + error);
         }
       );
-    }else{
-      this.toast.setMessage("Por favor valida los datos de Usuario, si continual el problema contactar a sistemas.", "danger");
+    } else {
+      this.toast.setMessage(
+        "Por favor valida los datos de Usuario, si continual el problema contactar a sistemas.",
+        "danger"
+      );
     }
   }
 
@@ -2267,18 +2281,15 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   /*datos de los Items Hijos */
   SelectedOrdenEstadisiticaChilds() {
-    // console.log("dentro de Orden estadistica para Hijo");
-    // console.log(this.SelectedOrEstChild.IdOrdenInterna);
-    // console.log(this.SelectedOrEstChild.NombreOrder);
-    /*Se pasan los datos seleeccionados a una varibale para validacion en VIsta*/
-    this.SelectedOrdenEstaHijo = this.SelectedOrEstChild;
+    this.SelectedOrdenEstaHijo = this.OrdenEstadisticaCrtl.value;
     /*Se crea variable en Modelo Principal y se iguala al valor seleccionado para su validacion del lado del server */
-    this.DataInsert.SelectedOEstadisiticaChild = this.SelectedOrEstChild;
+    this.DataInsert.SelectedOEstadisiticaChild =
+      this.OrdenEstadisticaCrtl.value;
     /*Se pasan los datos a arreglo de Informacion para Mostrarse en la Vista (Lista de Detalle de Items) */
     this.ChildsProduct.IdOrdenEstadisticaChild =
-      this.SelectedOrEstChild.IdOrdenInterna;
+      this.OrdenEstadisticaCrtl.value.IdOrdenInterna;
     this.ChildsProduct.NameOrdenEstadisticaChild =
-      this.SelectedOrEstChild.NombreOrder;
+      this.OrdenEstadisticaCrtl.value.NombreOrder;
   }
 
   SelectdCentrodeCostoChild() {
@@ -2286,13 +2297,13 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.SelectedCostosChild.IdCentroCosto);
     // console.log(this.SelectedCostosChild.Nombre);
     /*Se pasan los datos seleeccionados a una varibale para validacion en VIsta*/
-    this.SelectCentroCostosHijo = this.SelectedCostosChild;
+    this.SelectCentroCostosHijo = this.CCostosCrtl.value;
     /*Se crea variable en Modelo Principal y se iguala al valor seleccionado para su validacion del lado del server */
-    this.DataInsert.SelectedCentroCosotosChild = this.SelectedCostosChild;
+    this.DataInsert.SelectedCentroCosotosChild = this.CCostosCrtl.value;
     /*Se pasan los datos a arreglo de Informacion para Mostrarse en la Vista (Lista de Detalle de Items) */
     this.ChildsProduct.IdCentroCostoChild =
-      this.SelectedCostosChild.IdCentroCosto;
-    this.ChildsProduct.CentroCostoNameChild = this.SelectedCostosChild.Nombre;
+      this.CCostosCrtl.value.IdCentroCosto;
+    this.ChildsProduct.CentroCostoNameChild = this.CCostosCrtl.value.Nombre;
   }
 
   SelectedCuentaMayorChild() {
@@ -2300,12 +2311,12 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.SelectedCMayorChild.IdCuentaMayor);
     // console.log(this.SelectedCMayorChild.Nombre);
     /*Se pasan los datos seleeccionados a una varibale para validacion en VIsta*/
-    this.SelectedCMayorHijo = this.SelectedCMayorChild;
+    this.SelectedCMayorHijo = this.CMayorCtrl.value;
     /*Se crea variable en Modelo Principal y se iguala al valor seleccionado para su validacion del lado del server */
-    this.DataInsert.SelectedCuentaMayorChild = this.SelectedCMayorChild;
+    this.DataInsert.SelectedCuentaMayorChild = this.CMayorCtrl.value;
     /*Se pasan los datos a arreglo de Informacion para Mostrarse en la Vista (Lista de Detalle de Items) */
-    this.ChildsProduct.IdCuentaMayorChild = this.SelectedCMayorChild.IdCuentaMayor;
-    this.ChildsProduct.NameCuentaMayorChild = this.SelectedCMayorChild.Nombre;
+    this.ChildsProduct.IdCuentaMayorChild = this.CMayorCtrl.value.IdCuentaMayor;
+    this.ChildsProduct.NameCuentaMayorChild = this.CMayorCtrl.value.Nombre;
   }
 
   SelectunidadMedidaChild() {
@@ -2313,9 +2324,9 @@ export class ListadoSolicitudesComponent implements OnInit {
     // console.log(this.SelectedUMedidaChild.IdUnidadMedida);
     // console.log(this.SelectedUMedidaChild.NombreUnidadMedida);
     this.ChildsProduct.IdUMedidaChild =
-      this.SelectedUMedidaChild.IdUnidadMedida;
+      this.UnidadMedidaCtrl.value.IdUnidadMedida;
     this.ChildsProduct.NameUMedidaChild =
-      this.SelectedUMedidaChild.NombreUnidadMedida;
+      this.UnidadMedidaCtrl.value.NombreUnidadMedida;
   }
 
   /* metosod de los datos de los items Hijos*/
@@ -2524,7 +2535,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       this.DataInsert.Moneda === undefined ||
       this.DataInsert.Imputacion === undefined ||
       this.DataInsert.Justificacion === undefined ||
-      this.DataInsert.Justificacion === ''
+      this.DataInsert.Justificacion === ""
 
       //  || this.DataInsert.Posicion === undefined
       //|| this.DataInsert.Tipo === undefined
@@ -2535,13 +2546,15 @@ export class ListadoSolicitudesComponent implements OnInit {
       //  || this.DataInsert.GArticulo === undefined
       //  || this.DataInsert.GCompra === undefined
     ) {
-      if(this.DataInsert.Justificacion === undefined ||
-        this.DataInsert.Justificacion === ''){
-          this.toast.setMessage(
-            "El campo de Justificacion es un campo obligatorio, por favor ingresa una Justificacion.",
-            "warning"
-          );
-      }else{
+      if (
+        this.DataInsert.Justificacion === undefined ||
+        this.DataInsert.Justificacion === ""
+      ) {
+        this.toast.setMessage(
+          "El campo de Justificacion es un campo obligatorio, por favor ingresa una Justificacion.",
+          "warning"
+        );
+      } else {
         this.toast.setMessage(
           "Los Campos de Usuario y Datos Generales son requeridos, Revisar Informacion",
           "warning"
@@ -2638,7 +2651,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 name: "IdSol",
                                 value: this.IdSoliforFile.toString(),
                               });
-                              this.uploader.options.removeAfterUpload.valueOf();
+                              //this.uploader.options.removeAfterUpload.valueOf();
                               this.uploader.setOptions(this.uploader);
                               this.uploader.uploadAll();
                               //fin de envio de archivo ---------------------------------
@@ -2657,9 +2670,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 )
                                 .subscribe(
                                   (data) => {
-                                    setTimeout(() =>{
+                                    setTimeout(() => {
                                       this.solicitudComp.show = false;
-                                    },3000)
+                                    }, 3000);
                                     this.UsrAuthEmail = data;
                                     console.log(
                                       "------------------------------"
@@ -2670,24 +2683,19 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
                                       "success"
                                     );
-                                    this.uploader.clearQueue();
+                                    //this.uploader.clearQueue();
                                     //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                     this.isEnviadoSolPed = false;
-                                    this.uploader = new FileUploader({
-                                      url: URL,
-                                      itemAlias: " ",
-                                    });
-
                                     this.ngOnInit();
                                     //si se guardo la Solicitud limpiamos los registros
                                     this.date = "";
@@ -2758,7 +2766,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -2802,7 +2810,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 name: "IdSol",
                                 value: this.IdSoliforFile.toString(),
                               });
-                              this.uploader.options.removeAfterUpload.valueOf();
+                              //this.uploader.options.removeAfterUpload.valueOf();
                               this.uploader.setOptions(this.uploader);
                               this.uploader.uploadAll();
                               //fin de envio de cotizacion -----------------------------
@@ -2831,24 +2839,19 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
                                       "success"
                                     );
-                                    this.uploader.clearQueue();
+                                    //this.uploader.clearQueue();
                                     //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                     this.isEnviadoSolPed = false;
-                                    this.uploader = new FileUploader({
-                                      url: URL,
-                                      itemAlias: " ",
-                                    });
-
                                     this.ngOnInit();
                                     //si se guardo la Solicitud limpiamos los registros
                                     this.date = "";
@@ -2897,7 +2900,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   (err) => {
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        err
+                                      err
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -2938,9 +2941,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                               name: "IdSol",
                               value: this.IdSoliforFile.toString(),
                             });
-                            this.uploader.options.removeAfterUpload.valueOf();
+                            //this.uploader.options.removeAfterUpload.valueOf();
                             this.uploader.setOptions(this.uploader);
-                            this.uploader.uploadAll();
+                            this.uploadfile();
                             Role = 2;
                             status = 1;
                             console.log(Role);
@@ -2964,24 +2967,20 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   );
                                   console.log(
                                     "Id de la DIreccion a enviar correo" +
-                                      IdDIreccion
+                                    IdDIreccion
                                   );
                                   console.log(
                                     "Nombre de la DIrecion a la que se enviara mail--->" +
-                                      NombreDir
+                                    NombreDir
                                   );
                                   this.toast.setMessage(
                                     "Envio de Solicitud Correcto. ",
                                     "success"
                                   );
                                   //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
-                                  this.uploader.clearQueue();
+                                  //this.uploader.clearQueue();
                                   //si no se ha enviado a guardar la SolPed a la base de datos el boton de subir cotizacion quedara inhablilitado
                                   this.isEnviadoSolPed = false;
-                                  this.uploader = new FileUploader({
-                                    url: URL,
-                                    itemAlias: " ",
-                                  });
                                   this.ngOnInit();
                                   //si se guardo la Solicitud limpiamos los registros
                                   this.date = "";
@@ -3032,7 +3031,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 (err) => {
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      err
+                                    err
                                   );
                                   this.solicitudComp.show = false;
                                 }
@@ -3050,7 +3049,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                   (err) => {
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
-                        err
+                      err
                     );
                     this.solicitudComp.show = false;
                   }
@@ -3068,17 +3067,17 @@ export class ListadoSolicitudesComponent implements OnInit {
           if (this.DataInsert.Imputacion.IdTipoSolicitud == 2) {
             console.log(
               "se cumple la condicion-------------2------------------" +
-                this.DataInsert.CentroCostos +
-                "-------------" +
-                this.DataInsert.OrdenInterna +
-                "--------------" +
-                this.DataInsert.Cuentamayor +
-                "Slected CCostps" +
-                this.SelectedCostos +
-                "Selected Onrdern Inve --< " +
-                this.SelectedOInvercion +
-                "Selected Cuenta mayor -->" +
-                this.SelectedCMayor
+              this.DataInsert.CentroCostos +
+              "-------------" +
+              this.DataInsert.OrdenInterna +
+              "--------------" +
+              this.DataInsert.Cuentamayor +
+              "Slected CCostps" +
+              this.SelectedCostos +
+              "Selected Onrdern Inve --< " +
+              this.SelectedOInvercion +
+              "Selected Cuenta mayor -->" +
+              this.SelectedCMayor
             );
             if (
               this.SelectedCostos == undefined &&
@@ -3136,11 +3135,12 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 name: "IdSol",
                                 value: this.IdSoliforFile.toString(),
                               });
+                              //this.uploader.setOptions(this.uploader);
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
-                              console.log(Role);
-                              console.log(status);
-                              console.log(this.DataInsert.Area.IdDireccion);
+                              this.uploadfile();
+                              // console.log(Role);
+                              // console.log(status);
+                              // console.log(this.DataInsert.Area.IdDireccion);
                               var Solicitante = this.DataInsert.Usr;
                               var IdDIreccion =
                                 this.DataInsert.Area.IdDireccion;
@@ -3162,11 +3162,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -3242,7 +3242,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -3287,7 +3287,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -3312,11 +3312,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -3370,7 +3370,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   (err) => {
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        err
+                                      err
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -3415,7 +3415,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                               value: this.IdSoliforFile.toString(),
                             });
                             this.uploader.setOptions(this.uploader);
-                            this.uploader.uploadAll();
+                            this.uploadfile();
                             console.log(Role);
                             console.log(status);
                             console.log(this.DataInsert.Area.IdDireccion);
@@ -3437,11 +3437,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   );
                                   console.log(
                                     "Id de la DIreccion a enviar correo" +
-                                      IdDIreccion
+                                    IdDIreccion
                                   );
                                   console.log(
                                     "Nombre de la DIrecion a la que se enviara mail--->" +
-                                      NombreDir
+                                    NombreDir
                                   );
                                   this.toast.setMessage(
                                     "Envio de Solicitud Correcto. ",
@@ -3497,7 +3497,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 (err) => {
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      err
+                                    err
                                   );
                                   this.solicitudComp.show = false;
                                 }
@@ -3515,7 +3515,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                   (err) => {
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
-                        err
+                      err
                     );
                     this.solicitudComp.show = false;
                   }
@@ -3649,17 +3649,17 @@ export class ListadoSolicitudesComponent implements OnInit {
           if (this.DataInsert.Imputacion.IdTipoSolicitud == 3) {
             console.log(
               "se cumple la condicion-------------3------------------" +
-                this.DataInsert.CentroCostos +
-                "-------------" +
-                this.DataInsert.OrdenInterna +
-                "--------------" +
-                this.DataInsert.Cuentamayor +
-                "------------" +
-                this.SelectedCostos +
-                "------------" +
-                this.SelectedOInvercion +
-                "-------------" +
-                this.SelectedCMayor
+              this.DataInsert.CentroCostos +
+              "-------------" +
+              this.DataInsert.OrdenInterna +
+              "--------------" +
+              this.DataInsert.Cuentamayor +
+              "------------" +
+              this.SelectedCostos +
+              "------------" +
+              this.SelectedOInvercion +
+              "-------------" +
+              this.SelectedCMayor
             );
             if (
               this.SelectedCostos != undefined ||
@@ -3724,7 +3724,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               var Solicitante = this.DataInsert.Usr;
                               var IdDIreccion =
                                 this.DataInsert.Area.IdDireccion;
@@ -3746,11 +3746,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -3771,7 +3771,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
                                     var SendStatusmailRechazo = 5; //este numero se pondra en el boton de rechaar para saber que el directore rechaza la nueva solicitud desde el mail.
                                     //esta parte es para el envio de correo para el dir de area.
-                                    
+
                                     this.solicitudComp
                                       .SendEmailNewSolicitud(
                                         res,
@@ -3787,7 +3787,9 @@ export class ListadoSolicitudesComponent implements OnInit {
                                       )
                                       .subscribe(
                                         (res) => {
-                                          console.log("antes de mandar al ngOinit")
+                                          console.log(
+                                            "antes de mandar al ngOinit"
+                                          );
                                           console.log(res);
                                           this.toast.setMessage(
                                             "Se realizo el envio del Email a Dir de Area",
@@ -3829,7 +3831,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -3871,7 +3873,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               var Solicitante = this.DataInsert.Usr;
                               var IdDIreccion =
                                 this.DataInsert.Area.IdDireccion;
@@ -3893,11 +3895,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -3973,7 +3975,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -4018,7 +4020,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                               value: this.IdSoliforFile.toString(),
                             });
                             this.uploader.setOptions(this.uploader);
-                            this.uploader.uploadAll();
+                            this.uploadfile();
                             var Solicitante = this.DataInsert.Usr;
                             var IdDIreccion = this.DataInsert.Area.IdDireccion;
                             var NombreDir = this.DataInsert.Area.Nombre;
@@ -4037,11 +4039,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   );
                                   console.log(
                                     "Id de la DIreccion a enviar correo" +
-                                      IdDIreccion
+                                    IdDIreccion
                                   );
                                   console.log(
                                     "Nombre de la DIrecion a la que se enviara mail--->" +
-                                      NombreDir
+                                    NombreDir
                                   );
                                   this.toast.setMessage(
                                     "Envio de Solicitud Correcto. ",
@@ -4117,7 +4119,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      error
+                                    error
                                   );
                                   this.solicitudComp.show = false;
                                 }
@@ -4144,7 +4146,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                     }
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
-                        error
+                      error
                     );
                     this.solicitudComp.show = false;
                   }
@@ -4159,30 +4161,38 @@ export class ListadoSolicitudesComponent implements OnInit {
           }
 
           if (this.DataInsert.Imputacion.IdTipoSolicitud == 4) {
-            console.log("se cumple la condicion-------------4------------------");
+            console.log(
+              "se cumple la condicion-------------4------------------"
+            );
 
-            console.log("First CentroCosotos  " + this.SelectedCostos)
+            console.log("First CentroCosotos  " + this.SelectedCostos);
             console.log("CCostos   " + this.SelectCentroCostosHijo);
-            console.log("First Orden invercion  "  + this.SelectedOInvercion)
+            console.log("First Orden invercion  " + this.SelectedOInvercion);
             console.log("OEstadistica  " + this.SelectedOrdenEstaHijo);
-            console.log("First CCuenta maYor   " + this.SelectedCMayor )
+            console.log("First CCuenta maYor   " + this.SelectedCMayor);
             console.log("CMayor   " + this.SelectedCMayorHijo);
-            console.log("-.-.-.-.-.-.-.-.-.--.-.-.-.-.--.-.-.-.-.--.-.-.-.-.-.-")
+            console.log(
+              "-.-.-.-.-.-.-.-.-.--.-.-.-.-.--.-.-.-.-.--.-.-.-.-.-.-"
+            );
             console.log("CCostos   " + this.SelectedCostosChild);
-            console.log( "   CMayor   " +this.SelectedCMayorChild);
+            console.log("   CMayor   " + this.SelectedCMayorChild);
             console.log("  OEstadisitica   " + this.SelectedOrEstChild);
             this.SelectedCostos = undefined;
             this.SelectedCMayor = undefined;
             this.DataInsert.Productos.forEach((element) => {
               console.log(element.ChildsProducts.length);
-              if (element.ChildsProducts.length === 0 || element.ChildsProducts.length === undefined || element.ChildsProducts.length === null) {
+              if (
+                element.ChildsProducts.length === 0 ||
+                element.ChildsProducts.length === undefined ||
+                element.ChildsProducts.length === null
+              ) {
                 console.log("dentro del if que dice que tenemos cero hijos");
                 this.countChilds = 0;
-              }else{
+              } else {
                 this.countChilds = element.ChildsProducts.length;
               }
             });
-            console.log(this.countChilds)
+            console.log(this.countChilds);
             if (
               this.SelectedCostos == undefined &&
               this.SelectCentroCostosHijo != undefined &&
@@ -4241,7 +4251,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -4266,11 +4276,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -4346,7 +4356,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -4391,7 +4401,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -4416,11 +4426,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -4496,7 +4506,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -4542,7 +4552,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                               value: this.IdSoliforFile.toString(),
                             });
                             this.uploader.setOptions(this.uploader);
-                            this.uploader.uploadAll();
+                              this.uploadfile();
                             console.log(Role);
                             console.log(status);
                             console.log(this.DataInsert.Area.IdDireccion);
@@ -4564,11 +4574,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   );
                                   console.log(
                                     "Id de la DIreccion a enviar correo" +
-                                      IdDIreccion
+                                    IdDIreccion
                                   );
                                   console.log(
                                     "Nombre de la DIrecion a la que se enviara mail--->" +
-                                      NombreDir
+                                    NombreDir
                                   );
                                   this.toast.setMessage(
                                     "Envio de Solicitud Correcto. ",
@@ -4644,7 +4654,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      error
+                                    error
                                   );
                                   this.solicitudComp.show = false;
                                 }
@@ -4671,7 +4681,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                     }
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
-                        error
+                      error
                     );
                     this.solicitudComp.show = false;
                   }
@@ -4741,10 +4751,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              const update = this.uploader.uploadAll();
-                              console.log("-.-.-.-.-.-.-.-.-.-.-Valor de regreso del UPDATE DEL ARCHIVO -.-.-.-.-.-.-.-.-.-.")
-                              console.log(update)
-                              console.log("-.-.-.-.-.-.-.-.-.-.-Valor de regreso del UPDATE DEL ARCHIVO -.-.-.-.-.-.-.-.-.-.")
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -4769,11 +4776,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -4788,7 +4795,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    
+
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 4; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4892,7 +4899,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -4917,11 +4924,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -4936,7 +4943,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.tel.reset();
                                     this.ext.reset();
                                     this.nombreProduccion.reset();
-                                    
+
                                     this.addProdForm.reset();
                                     this.BloqMoreItem = false;
                                     var SendStatusMailAutorizacion = 0; //este numero cuatro se ponodra en el boton de autorizar para saber que autoriza direccion a nivel mail.
@@ -4998,7 +5005,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -5038,7 +5045,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                               value: this.IdSoliforFile.toString(),
                             });
                             this.uploader.setOptions(this.uploader);
-                            this.uploader.uploadAll();
+                              this.uploadfile();
                             console.log(Role);
                             console.log(status);
                             console.log(this.DataInsert.Area.IdDireccion);
@@ -5060,11 +5067,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   );
                                   console.log(
                                     "Id de la DIreccion a enviar correo" +
-                                      IdDIreccion
+                                    IdDIreccion
                                   );
                                   console.log(
                                     "Nombre de la DIrecion a la que se enviara mail--->" +
-                                      NombreDir
+                                    NombreDir
                                   );
                                   this.toast.setMessage(
                                     "Envio de Solicitud Correcto. ",
@@ -5140,7 +5147,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      error
+                                    error
                                   );
                                   this.solicitudComp.show = false;
                                 }
@@ -5162,7 +5169,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                   (err) => {
                     console.log(
                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                        err
+                      err
                     );
                     this.solicitudComp.show = false;
                   }
@@ -5179,13 +5186,13 @@ export class ListadoSolicitudesComponent implements OnInit {
           if (this.DataInsert.Imputacion.IdTipoSolicitud == 6) {
             console.log(
               "se cumple la condicion-------------6----------------CCosto--" +
-                this.SelectedCostos +
-                "------------OInvercion-" +
-                this.SelectedOInvercion +
-                "-------------OEstadistica-" +
-                this.DataInsert.OrdenEstadistica +
-                "-------------------CMayor--" +
-                this.SelectedCMayor
+              this.SelectedCostos +
+              "------------OInvercion-" +
+              this.SelectedOInvercion +
+              "-------------OEstadistica-" +
+              this.DataInsert.OrdenEstadistica +
+              "-------------------CMayor--" +
+              this.SelectedCMayor
             );
             if (
               this.SelectedCostos != undefined &&
@@ -5245,7 +5252,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -5270,11 +5277,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -5350,7 +5357,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -5389,7 +5396,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               console.log(this.DataInsert.Area.IdDireccion);
@@ -5414,11 +5421,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -5494,7 +5501,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -5536,7 +5543,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                               value: this.IdSoliforFile.toString(),
                             });
                             this.uploader.setOptions(this.uploader);
-                            this.uploader.uploadAll();
+                            this.uploadfile();
                             console.log(Role);
                             console.log(status);
                             console.log(this.DataInsert.Area.IdDireccion);
@@ -5558,11 +5565,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   );
                                   console.log(
                                     "Id de la DIreccion a enviar correo" +
-                                      IdDIreccion
+                                    IdDIreccion
                                   );
                                   console.log(
                                     "Nombre de la DIrecion a la que se enviara mail--->" +
-                                      NombreDir
+                                    NombreDir
                                   );
                                   this.toast.setMessage(
                                     "Envio de Solicitud Correcto. ",
@@ -5617,6 +5624,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                           this.auth.logout();
                                           this.solicitudComp.show = false;
                                         }
+                                        this.ngOnInit();
                                         console.log(error);
                                         this.solicitudComp.show = false;
                                         //this.toast.setMessage('Error en el envio de el Correo','success');
@@ -5637,7 +5645,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      error
+                                    error
                                   );
                                   this.ngOnInit();
                                   this.solicitudComp.show = false;
@@ -5668,7 +5676,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                     }
                     console.log(
                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                        error
+                      error
                     );
                     this.solicitudComp.show = false;
                   }
@@ -5809,10 +5817,13 @@ export class ListadoSolicitudesComponent implements OnInit {
             console.log("CC  H " + this.SelectCentroCostosHijo);
             this.DataInsert.Productos.forEach((element) => {
               console.log(element.ChildsProducts.length);
-              if (element.ChildsProducts.length === 0 ||element.ChildsProducts.length === undefined ||element.ChildsProducts.length === null
+              if (
+                element.ChildsProducts.length === 0 ||
+                element.ChildsProducts.length === undefined ||
+                element.ChildsProducts.length === null
               ) {
                 this.countChilds = 0;
-              }else{
+              } else {
                 this.countChilds = element.ChildsProducts.length;
               }
             });
@@ -5867,7 +5878,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                 value: this.IdSoliforFile.toString(),
                               });
                               this.uploader.setOptions(this.uploader);
-                              this.uploader.uploadAll();
+                              this.uploadfile();
                               console.log(Role);
                               console.log(status);
                               var Solicitante = this.DataInsert.Usr;
@@ -5891,11 +5902,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -5970,7 +5981,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     this.ngOnInit();
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                   }
                                 );
@@ -6031,11 +6042,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     );
                                     console.log(
                                       "Id de la DIreccion a enviar correo" +
-                                        IdDIreccion
+                                      IdDIreccion
                                     );
                                     console.log(
                                       "Nombre de la DIrecion a la que se enviara mail--->" +
-                                        NombreDir
+                                      NombreDir
                                     );
                                     this.toast.setMessage(
                                       "Envio de Solicitud Correcto. ",
@@ -6111,7 +6122,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                     }
                                     console.log(
                                       "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                        error
+                                      error
                                     );
                                     this.solicitudComp.show = false;
                                   }
@@ -6173,11 +6184,11 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   );
                                   console.log(
                                     "Id de la DIreccion a enviar correo" +
-                                      IdDIreccion
+                                    IdDIreccion
                                   );
                                   console.log(
                                     "Nombre de la DIrecion a la que se enviara mail--->" +
-                                      NombreDir
+                                    NombreDir
                                   );
                                   this.toast.setMessage(
                                     "Envio de Solicitud Correcto. ",
@@ -6251,7 +6262,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                                   }
                                   console.log(
                                     "error al recuperar la informacion del usuario aotorizador por DIreccion" +
-                                      error
+                                    error
                                   );
                                 }
                               );
@@ -6274,7 +6285,7 @@ export class ListadoSolicitudesComponent implements OnInit {
                     }
                     console.log(
                       "error al recuperar la informacion de las Exxcepcions" +
-                        error
+                      error
                     );
                   }
                 );
@@ -6352,7 +6363,7 @@ export class ListadoSolicitudesComponent implements OnInit {
       }
 
       var cadena = ret.join("").toString();
-      
+
       return cadena;
     }
   }
@@ -6363,15 +6374,15 @@ export class ListadoSolicitudesComponent implements OnInit {
     return this.email.hasError("required")
       ? "Debes ingresar un valor"
       : this.email.hasError("email")
-      ? "email invalido"
-      : "";
+        ? "email invalido"
+        : "";
   }
   getErrorMensajeExt() {
     return this.ext.hasError("required")
       ? "El campo no puede estar vacion"
       : this.ext.hasError("maxLength")
-      ? "Extencion invalida"
-      : "";
+        ? "Extencion invalida"
+        : "";
   }
   getErrorMensajeTel() {
     return this.tel.hasError("required")
