@@ -2,7 +2,7 @@
 import * as multer from 'multer' //libreria que instalar desde NPM
 import *  as path from 'path';
 import { read } from 'fs';
-import SolicitudCompraCTR  from '../controllers/SolicitudCompra';
+import SolicitudCompraCTR from '../controllers/SolicitudCompra';
 
 
 
@@ -17,157 +17,167 @@ const Log = new SolicitudCompraCTR();
 // const DIR = '../IntranetGrupoImagen/datos';
 
 
-const ruta = "http://solicitud.adgimm.com.mx:3000/public/"
-const DIR = '../IntranetProduccion/datos';
+const ruta = "http://10.29.148.40:3000/public/"
+const DIR = '../IntranetGrupoImagen/datos';
 
 //const UrlCompador = "http://solicitud.adgimm.com.mx:3000/public/DatosCompras/";
-var id = 0;
-let storage = multer.diskStorage({
-  
-    destination: (req, file, cb) => {
-      cb(null, DIR);
+// var id = 0;
+// let storage = multer.diskStorage({
+//   destination: (req, file, cb) => {cb(null, DIR);},
+//   filename: (req, file, cb) => {
+//     let ext = path.extname(file.originalname);
+//     let basename = path.basename(file.originalname, ext);
+//     cb(null, id + file.fieldname + basename + ext);
+//   }
+// });
+
+
+
+
+export default class UploadFilesController {
+
+  upLoadSingleFile = async (req, res) => {
+    const file = req.file;
+    console.log("valores del archivo-----------------");
+    console.log(req.headers.idsol);
+    let id = req.headers.idsol;
+    if (!file) {
+      const error = new Error("Please upload a file");
+      res.status(500).json(error);
+      res.end();
     }
-    ,
-    filename: (req, file, cb) => {
-      
-        let ext = path.extname(file.originalname);
-        let basename = path.basename(file.originalname,ext );
-        console.log(file);
-        console.log("Este es el Nombre del archivo --> " + file.originalname);
-        console.log("esta es su extencion --> " + ext);
-        console.log("---------"+basename);
-        cb(null, id+file.fieldname  + basename+  ext);
+    var RutaCotizacion = encodeURI(
+      `${ruta + id}-${req.file.originalname}`
+    );
+    console.log(req.file);
+    console.log("Esta es la ruta del archivo---" + RutaCotizacion);
+    var RutaCotizacion = encodeURI(`${ruta + req.headers.idsol}-${req.file.originalname}`);
+    console.log("Esta es la ruta del archivo---" + RutaCotizacion);
+    Log.InsertLog(req.headers.idsol, "Carga de Pre cotización", RutaCotizacion);
+    let isSaverPathDB = await this.InsertRutaCotizacionDB(RutaCotizacion);
+    console.log("Valor del guardado EN DB");
+    console.log(isSaverPathDB);
+    if(isSaverPathDB.is == true){
+      res.status(200);
+      res.send(file);
+      res.end();
+    }else{
+      res.status(500);
+      res.send({isSaverPathDB});
+      res.end();
     }
     
-});
+    // console.log("fin de los valores de los archivos-------------------------");
+    // try {
+    //   let uploadfile = await multer({ storage: storage }).single('-');
+    //   console.log(uploadfile)
+    //    uploadfile(req, res, async ()=>{
+    //     
+    //     let isSaverPathDB = await this.InsertRutaCotizacionDB(RutaCotizacion);
+    //     Log.InsertLog(req.headers.idsol, 'Carga de Pre cotización', RutaCotizacion);
+    //     console.log("Valor del guardado EN DB")
+    //     console.log(isSaverPathDB)
+    //     res.status(200);
+    //     res.end();
+    //   });
+    // } catch (error) {
+    //   console.log("Error en la carga del archivo en UploadFilesController");
+    //   console.log(error)
+    //   res.status(500).json(error);
+    //   res.end();
+    // }
+  }
+
+  InsertRutaCotizacionDB = async (RutaCotizacion) =>{
+    let sql = require("mssql");
+    //variable de entorno para realizar la conexión
+    let env = process.env.NODE_ENV || 'SERWEB';
+    //de el archivo de configuración traeme en un arreglo el nodo que tenga el nombre 
+    let config = require('../controllers/connections/servers')[env];
+    let serealizo;
+    await new sql.ConnectionPool(config).connect().then( pool => {
+      return pool.request()
+        .input('Ruta', sql.VarChar, RutaCotizacion)
+        .execute('InsertRutaCotizacion')
+    }).then(result => {
+      console.log("-.-.-.Se Guardo Ruta de File en DB-.-.-");
+      serealizo = {result: result, is: true};
+    }).catch(err => {
+      console.log("-.-.-.Error al Guardar Ruta en DB-.-.-");
+      console.log(err);
+      serealizo = {result: err, is: false};
+    });
+    // console.log(serealizo);
+    // console.log("*/*/*/*/*/*/*/*/*/*/*/*/*///*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/");
+    return serealizo;
+}
+
+  createFileComrpas = (req, res) => {
+    console.log("creando el archivo para compras");
+    console.log(req.params.ID);
+    var fs = require('fs');
+    var fecha = new Date(new Date().toUTCString());
+
+    var dia = fecha.getDate();
+    var mes = fecha.getMonth();
+    var MES = mes + 1;
+    var año = fecha.getFullYear();
+
+    var hora = fecha.getHours();
+    var minutos = fecha.getMinutes();
+
+
+    var sql = require("mssql");
+    var env = process.env.NODE_ENV || 'SERWEB';
+    var config = require('../../server/controllers/connections/servers')[env];
+
+    new sql.ConnectionPool(config).connect().then(pool => {
+      return pool.request()
+        .input('IdSolPed', sql.Int, req.params.ID)
+        .execute('DatosFileCompras')
+    }).then(result => {
+      //const ExcelJS = require('exceljs');
+
+      var stringify = require('csv-stringify');
+      var path = require('path');
+      console.log(result.recordset);
+      var Data = new Object();
+      Data = result.recordset;
+      if (Data != undefined || Data != '') {
+        var FileName = 'datos ' + dia + '-' + MES + '-' + año + ' , ' + hora + ':' + minutos + '.csv';
+        console.log(stringify(Data));
+        var path = path.join(__dirname, '../../../datos/DatosCompras/' + FileName);
+        stringify(Data, function (err, output) {
+          fs.writeFile(path, output, 'utf-8', function (err) {
+            if (err) {
+              console.log("ocurrió un error de algún tipo        " + err);
+            } else {
+              console.log(".....Se creo el Archivo CSV.... ");
+              var RutaCotizacion = ruta + "/DatosCompras/" + FileName;
+              console.log(RutaCotizacion);
+              res.status(201).json(RutaCotizacion);
+            }
+          })
+        });
+
+      } else {
+        res.status(400).json('No se pudo Generar el archivo ya que no ahi datos existentes para generarlo.')
+      }
+    });
+
+
+  }
 
 
 
 
-export default class UploadFilesController {    
-
-    upLoadSingleFile =  (req, res) => {
-          
-          console.log("valores del archivo-----------------");
-           console.log(req.headers.idsol);
-           id = req.headers.idsol;
-           console.log("fin de los varoles de los archuvos-------------------------");
-
-           var uploadfile = multer({storage: storage}).single(' ');
-          try {
-            uploadfile(req, res, function (err) {
-              //console.log("File = " + req.file.originalname + " - " + path.extname(req.file.originalname) );
-              if (err) {
-                  console.log("Se genero un error al enviar el archivo"+ err);
-                  
-                  return res.send({
-                      success: false
-                  });
-              }
-              // Everything went fine.
-              //console.log("GOOOOD------- guardamos la ruta del archivo subido a la DB");
-              var RutaCotizacion = encodeURI(ruta + req.headers.idsol+' '+req.file.originalname);
-              console.log(req.file);
-              console.log("Esta es la ruta del archivo---" + RutaCotizacion);
-              
-              Log.InsertLog( req.headers.idsol, 'Carga de Precotizacion', RutaCotizacion);
-              var sql = require("mssql");
-              //variable de entorno para realizar la coneccion
-              var env = process.env.NODE_ENV || 'SERWEB';
-              //de el archivo de configuracion traeme en un arreglo el nodo que tenga el nombre 
-              var config = require('../controllers/connections/servers')[env];
-              new sql.ConnectionPool(config).connect().then(pool =>{
-                  return pool.request()
-                                    .input('Ruta', sql.VarChar, RutaCotizacion)
-                                    .execute('InsertRutaCotizacion')
-                }).then(resultt => {
-                  console.log("-.-.-.SE INSERTO URLFILE-.-.-");
-                  console.log(resultt);
-                  res.status(200).json(resultt);
-                  sql.close();
-                  res.end();
-                }).catch(err => {
-                  console.log("-.-.-.ERROR AL GUARDAR URL FILE-.-.-");
-                  console.log(err);
-                  if(err) console.log(err);
-                  sql.close();
-                  res.end();
-                }); 
-              //return res.send({success: true})
-            });
-          } catch (error) {
-            console.log("Error en la carga del archivo en UploadFilesController");
-            console.log(error)
-          }
-    }
-
-    createFileComrpas = (req, res) => {
-      console.log("creando el archivo para compras");
-      console.log(req.params.ID);
-      var fs = require('fs');
-      var fecha = new Date(new Date().toUTCString());
-    
-      var dia = fecha.getDate();
-      var mes = fecha.getMonth();
-      var MES = mes +1; 
-      var año = fecha.getFullYear();
-      
-      var hora = fecha.getHours();
-      var minutos = fecha.getMinutes();
-
-
-      var sql = require("mssql");
-              var env = process.env.NODE_ENV || 'SERWEB';
-              var config = require('../../server/controllers/connections/servers')[env];
-
-              new sql.ConnectionPool(config).connect().then(pool =>{
-                return pool.request()
-                                    .input('IdSolPed', sql.Int, req.params.ID)
-                                    .execute('DatosFileCompras')
-              }).then(result =>{
-                //const ExcelJS = require('exceljs');
-                
-                var stringify = require('csv-stringify');
-                var path = require('path');
-                console.log(result.recordset); 
-                var Data = new Object();
-                Data = result.recordset;
-                if(Data != undefined || Data != ''){
-                  var FileName = 'datos '+dia+'-'+MES+'-'+año+' , '+hora+':'+minutos+'.csv';
-                  console.log( stringify(Data));
-                  var path = path.join(__dirname ,'../../../datos/DatosCompras/'+FileName);
-                  stringify(Data, function(err, output){
-                    fs.writeFile(path, output, 'utf-8', function(err){
-                      if(err){
-                        console.log("ocurrió un error de algún tipo        " + err);
-                      }else{
-                        console.log(".....Se creo el Archivo CSV.... ");
-                        var RutaCotizacion = ruta + "/DatosCompras/" + FileName;
-                        console.log(RutaCotizacion);
-                        res.status(201).json(RutaCotizacion);
-                      }
-                    })
-                  });
-                  
-                }else{
-                  res.status(400).json('No se pudo Generar el archivo ya que no ahi datos existentes para generarlo.')
-                }
-              });
-
-
-    }
-
-
-   
-    
 
 
 
-   
+
 
 
 
 
 
 }
-  

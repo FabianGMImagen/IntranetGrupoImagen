@@ -10,7 +10,6 @@ export class Empresa {
         this.Bukrs = 0;
         this.Butxt = "";
         this.Acronimo = "";
-
     }
   }
   

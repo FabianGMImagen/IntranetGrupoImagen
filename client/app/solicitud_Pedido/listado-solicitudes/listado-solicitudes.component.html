@@ -27,7 +27,7 @@
             [matDatepicker]="date"
             placeholder="FECHA DE CREACION"
             [formControl]="Date"
-            disabled
+            [disabled]="isfecha"
           />
           <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
           <mat-datepicker #date></mat-datepicker>
@@ -158,7 +158,9 @@
                   [formControl]="ext"
                   maxlength="4"
                 />
-                <mat-error *ngIf="ext.invalid">{{getErrorMensajeExt()}}</mat-error>
+                <mat-error *ngIf="ext.invalid">{{
+                  getErrorMensajeExt()
+                }}</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -170,8 +172,11 @@
                 <mat-select
                   [(ngModel)]="this.DataInsert.Area"
                   name="area"
-                  (selectionChange)="selectedArea()">
-                  <mat-option *ngFor="let area of ListAreas" [value]="area">{{area.Nombre}}</mat-option>
+                  (selectionChange)="selectedArea()"
+                >
+                  <mat-option *ngFor="let area of ListAreas" [value]="area">{{
+                    area.Nombre
+                  }}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -185,7 +190,8 @@
                 <mat-select
                   [(ngModel)]="this.DataInsert.Autorizador"
                   name="usr"
-                  disabled="true">
+                  disabled="true"
+                >
                   <mat-option *ngFor="let usr of ListUser" [value]="usr">{{
                     usr.NombreCompleto
                   }}</mat-option>
@@ -244,11 +250,9 @@
                 <!--despues el metodo  donde apunta y donde se guardara-->
                 <mat-select
                   [formControl]="EmpresaCtrl"
-                  [(ngModel)]="DataInsert.Empresa"
                   name="empresa"
                   (selectionChange)="selectedEmpresa()"
-                  [disabled]="BloqMoreItem"
-                >
+                  [disabled]="BloqMoreItem">
                   <mat-option>
                     <ngx-mat-select-search
                       [formControl]="EmpreFilterCtrl"
@@ -271,11 +275,9 @@
                 <mat-label>SUCURZAL/DIV-PLZA</mat-label>
                 <mat-select
                   [formControl]="SucursalCtrl"
-                  [(ngModel)]="this.DataInsert.Plaza"
                   name="plaza"
                   (selectionChange)="selectedPlaza()"
-                  [disabled]="BloqMoreItem"
-                >
+                  [disabled]="BloqMoreItem">
                   <mat-option>
                     <ngx-mat-select-search
                       [formControl]="SucursalFilterCtrl"
@@ -299,12 +301,15 @@
                   [(ngModel)]="this.DataInsert.Categoria"
                   name="categoria"
                   [disabled]="BloqMoreItem">
-                <mat-option
-                  *ngFor="let categoria of ListCategorias"
-                  [value]="categoria"
-                  >{{ categoria.Nombre }}</mat-option>
+                  <mat-option
+                    *ngFor="let categoria of ListCategorias"
+                    [value]="categoria"
+                    >{{ categoria.Nombre }}</mat-option
+                  >
                 </mat-select>
-                <mat-hint>Selecciona una categoria para el area de compras.</mat-hint>
+                <mat-hint
+                  >Selecciona una categoria para el area de compras.</mat-hint
+                >
               </mat-form-field>
             </div>
           </div>
@@ -463,7 +468,6 @@
                 ><!--Simepre es Obligatorio poner un CENTRO-->
                 <mat-select
                   [formControl]="AlmacenCrtl"
-                  [(ngModel)]="this.DataInsert.Almacen"
                   name="almacen"
                   (selectionChange)="selectedAlmacen()"
                   [disabled]="AplicaAlma"
@@ -507,11 +511,9 @@
                 <mat-label>MATERIAL O SERVICIOS</mat-label>
                 <mat-select
                   [formControl]="MaterialesCtrl"
-                  [(ngModel)]="this.DataInsert.Materiales"
                   name="material"
                   [disabled]="AplicaMat"
-                  (selectionChange)="SelectMat()"
-                >
+                  (selectionChange)="SelectMat()">
                   <mat-option>
                     <ngx-mat-select-search
                       [formControl]="MaterialesFilterCtrl"
@@ -520,7 +522,7 @@
                   <mat-option
                     *ngFor="let mat of filteredMaterial | async"
                     [value]="mat"
-                    >{{mat.IdMaterial}} - {{ mat.Nombre }}</mat-option
+                    >{{ mat.IdMaterial }} - {{ mat.Nombre }}</mat-option
                   >
                 </mat-select>
               </mat-form-field>
@@ -536,11 +538,9 @@
                 <mat-label>CENTRO DE COSTOS</mat-label>
                 <mat-select
                   [formControl]="CCostosCrtl"
-                  [(ngModel)]="this.DataInsert.CentroCostos"
                   name="ccosto"
                   (selectionChange)="SelectedCentroCostos()"
-                  [disabled]="AplicaCenCost"
-                >
+                  [disabled]="AplicaCenCost">
                   <mat-option>
                     <ngx-mat-select-search
                       [formControl]="CCosotosFilterCtrl"
@@ -563,7 +563,6 @@
                 <mat-label>CUENTA DE MAYOR</mat-label>
                 <mat-select
                   [formControl]="CMayorCtrl"
-                  [(ngModel)]="this.DataInsert.Cuentamayor"
                   name="cmayorr"
                   (selectionChange)="selectionCMayor()"
                   [disabled]="AplicaCtaMayor"
@@ -593,7 +592,6 @@
                 <mat-label>GRUPO DE COMPRAS</mat-label>
                 <mat-select
                   [formControl]="GCompraCtrl"
-                  [(ngModel)]="this.DataInsert.GCompra"
                   name="gcompra"
                   (selectionChange)="SelectGrupoCompra()"
                 >
@@ -619,7 +617,6 @@
                 <mat-label>UNIDAD DE MEDIDA</mat-label>
                 <mat-select
                   [formControl]="UnidadMedidaCtrl"
-                  [(ngModel)]="this.DataInsert.UMedida"
                   name="umedida"
                   (selectionChange)="SelectunidadMedida()"
                   [disabled]="AplicaUMedida"
@@ -645,10 +642,8 @@
                 <mat-label>ORDEN ESTADÍSTICA</mat-label>
                 <mat-select
                   [formControl]="OrdenEstadisticaCrtl"
-                  [(ngModel)]="this.SelectOrdenEstadisitica"
                   name="oesestadistica"
-                  (selectionChange)="SelectedOrdenestadistica()"
-                >
+                  (selectionChange)="SelectedOrdenestadistica()">
                   <mat-option>
                     <ngx-mat-select-search
                       [formControl]="OrdenEstadisticaFilterCtrl"
@@ -677,7 +672,6 @@
                 <mat-label>NUMERO ACTIVO</mat-label>
                 <mat-select
                   [formControl]="ActivoCrtl"
-                  [(ngModel)]="this.DataInsert.NActivo"
                   name="numactivo"
                   [disabled]="AplicaNumActivo"
                   (selectionChange)="SelectActivo()"
@@ -727,7 +721,7 @@
               <i class="fas fa-heading"></i>
               <mat-form-field class="example-full-width">
                 <textarea
-                  matInput  
+                  matInput
                   type="text"
                   name="UsoProd"
                   [(ngModel)]="this.DataInsert.UsoBien"
@@ -1014,9 +1008,7 @@
         <app-loading></app-loading>
       </div> -->
     </div>
-    <br>
-
-    
+    <br />
   </mat-card-content>
 </mat-card>
 
@@ -1036,7 +1028,6 @@
               <mat-label>ORDEN ESTADISTICA </mat-label>
               <mat-select
                 [formControl]="OrdenEstadisticaCrtl"
-                [(ngModel)]="this.SelectedOrEstChild"
                 name="oesestadistica"
                 (selectionChange)="SelectedOrdenEstadisiticaChilds()"
                 [disabled]="disabledforchild"
@@ -1068,10 +1059,8 @@
               <mat-label>CENTRO DE COSTOS</mat-label>
               <mat-select
                 [formControl]="CCostosCrtl"
-                [(ngModel)]="this.SelectedCostosChild"
                 name="ccosto"
-                (selectionChange)="SelectdCentrodeCostoChild()"
-              >
+                (selectionChange)="SelectdCentrodeCostoChild()">
                 <mat-option>
                   <ngx-mat-select-search
                     [formControl]="CCosotosFilterCtrl"
@@ -1093,10 +1082,8 @@
               <mat-label>CUENTA DE MAYOR</mat-label>
               <mat-select
                 [formControl]="CMayorCtrl"
-                [(ngModel)]="this.SelectedCMayorChild"
                 name="cmayorr"
-                (selectionChange)="SelectedCuentaMayorChild()"
-              >
+                (selectionChange)="SelectedCuentaMayorChild()">
                 <mat-option>
                   <ngx-mat-select-search
                     [formControl]="CMayorFilterCtrl"
@@ -1118,7 +1105,6 @@
               <mat-label>UNIDAD DE MEDIDA</mat-label>
               <mat-select
                 [formControl]="UnidadMedidaCtrl"
-                [(ngModel)]="this.SelectedUMedidaChild"
                 name="umedida"
                 (selectionChange)="SelectunidadMedidaChild()"
               >

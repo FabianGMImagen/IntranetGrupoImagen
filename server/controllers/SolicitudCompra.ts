@@ -6,17 +6,23 @@ const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
-const SERVER = 'http://solicitud.adgimm.com.mx:3000';
-const Intranet = 'http://solicitud.adgimm.com.mx:3000';
+import * as dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
+// const SERVER = 'http://solicitud.adgimm.com.mx:3000';
+// const Intranet = 'http://solicitud.adgimm.com.mx:3000';
 
-// const SERVER = 'http://10.29.148.40:3000';
-// const Intranet = 'http://10.29.148.40:42000';
+const Intranet = process.env.FRONT_FRONT_CALIDAD;
+const SERVER = process.env.SERVER_CALIDAD;
 
 
-const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
-const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
-const REDIRECTURL = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//04F6bjTLj3YJlCgYIARAAGAQSNwF-L9IrrBqIYrbSPZE7BrCNOM9WTr_hff_nDJseZC0vzr_nADwFCsJWcDy485bq7VG3QYd8O6U';
+// const CLIENTID = '149352725404-hdc5872pn8h3ns841ve1tfsgtj9btlra.apps.googleusercontent.com';
+// const CLIENTSECRET = '8EVBFB3CsQGdl1hmo8Ga1RjC';
+// const REDIRECTURL = 'https://developers.google.com/oauthplayground';
+// const REFRESH_TOKEN = '1//04F6bjTLj3YJlCgYIARAAGAQSNwF-L9IrrBqIYrbSPZE7BrCNOM9WTr_hff_nDJseZC0vzr_nADwFCsJWcDy485bq7VG3QYd8O6U';
+const CLIENTID = process.env.CLIENTID;
+const CLIENTSECRET = process.env.CLIENTSECRET;
+const REDIRECTURL = process.env.REDIRECTURL;
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 
 
 export default class SolicitudCompraCTR {
@@ -789,7 +795,7 @@ export default class SolicitudCompraCTR {
                 return pool.request()
                   .input('IdSolicitud', sql.Int, result.output.output_IdSol)
                   .input('Cantidad', sql.Int, prod.Cantidad) // Simepre va a ser null es un tipo de solicitud A
-                  .input('Precio', sql.Decimal(9, 2), prod.Precio) // Simepre va a ser null es un tipo de solicitud A
+                  .input('Precio', sql.Decimal, prod.Precio) // Simepre va a ser null es un tipo de solicitud A
                   .input('IdAlmacen', sql.VarChar, prod.Almacen)
                   .input('AlmacenName', sql.VarChar, prod.AlmacenName)
                   .input('IdMaterial', sql.VarChar, prod.Material)
@@ -970,7 +976,7 @@ export default class SolicitudCompraCTR {
                 return pool.request()
                   .input('IdSolicitud', sql.Int, result.output.output_IdSol)
                   .input('Cantidad', sql.Int, prod.Cantidad)
-                  .input('Precio', sql.Decimal(9, 2), prod.Precio)
+                  .input('Precio', sql.Decimal, prod.Precio)
                   .input('IdAlmacen', sql.VarChar, prod.Almacen)
                   .input('AlmacenName', sql.VarChar, prod.AlmacenName)
                   .input('IdMaterial', sql.VarChar, prod.Material)
@@ -1148,7 +1154,7 @@ export default class SolicitudCompraCTR {
                   .input('IdSolicitud', sql.Int, result.output.output_IdSol)
                   .input('Cantidad', sql.Int, prod.Cantidad)
                   // sql.map.register(Number, sql.Real);
-                  .input('Precio', sql.Decimal(9, 2), prod.Precio)
+                  .input('Precio', sql.Decimal, prod.Precio)
                   .input('IdAlmacen', sql.VarChar, prod.Almacen)
                   .input('AlmacenName', sql.VarChar, prod.AlmacenName)
                   .input('IdMaterial', sql.VarChar, prod.Material)
@@ -1329,7 +1335,7 @@ export default class SolicitudCompraCTR {
                 return pool.request()
                   .input('IdSolicitud', sql.Int, result.output.output_IdSol)
                   .input('Cantidad', sql.Int, prod.Cantidad)
-                  .input('Precio', sql.Decimal(9, 2), prod.Precio)
+                  .input('Precio', sql.Decimal, prod.Precio)
                   .input('IdAlmacen', sql.VarChar, prod.Almacen)
                   .input('AlmacenName', sql.VarChar, prod.AlmacenName)
                   .input('IdMaterial', sql.VarChar, prod.Material)
@@ -1377,7 +1383,7 @@ export default class SolicitudCompraCTR {
                     return pool.request()
                       .input('IdProducto', sql.Int, resp.output.output_Product)
                       .input('CantidadChild', sql.Int, child.Cantidad)
-                      .input('PrecioChild', sql.Decimal(9, 2), child.Precio)
+                      .input('PrecioChild', sql.Decimal, child.Precio)
                       .input('TextoService', sql.VarChar, child.TextoServicio)
                       .input('IdUnidadMedida', sql.VarChar, child.IdUMedidaChild)
                       .input('UnidadmedidaName', sql.VarChar, child.NameUMedidaChild)
@@ -1547,7 +1553,7 @@ export default class SolicitudCompraCTR {
                 return pool.request()
                   .input('IdSolicitud', sql.Int, result.output.output_IdSol)
                   .input('Cantidad', sql.Int, prod.Cantidad)
-                  .input('Precio', sql.Decimal(9, 2), prod.Precio)
+                  .input('Precio', sql.Decimal, prod.Precio)
                   .input('IdAlmacen', sql.VarChar, prod.Almacen)
                   .input('AlmacenName', sql.VarChar, prod.AlmacenName)
                   .input('IdMaterial', sql.VarChar, prod.Material)
@@ -1728,7 +1734,7 @@ export default class SolicitudCompraCTR {
                 return pool.request()
                   .input('IdSolicitud', sql.Int, result.output.output_IdSol)
                   .input('Cantidad', sql.Int, prod.Cantidad)
-                  .input('Precio', sql.Decimal(9, 2), prod.Precio)
+                  .input('Precio', sql.Decimal, prod.Precio)
                   .input('IdAlmacen', sql.VarChar, prod.Almacen)
                   .input('AlmacenName', sql.VarChar, prod.AlmacenName)
                   .input('IdMaterial', sql.VarChar, prod.Material)
@@ -1913,7 +1919,7 @@ export default class SolicitudCompraCTR {
                 return pool.request()
                   .input('IdSolicitud', sql.Int, result.output.output_IdSol)
                   .input('Cantidad', sql.Int, prod.Cantidad)
-                  .input('Precio', sql.Decimal(9, 2), prod.Precio)
+                  .input('Precio', sql.Decimal, prod.Precio)
                   .input('IdAlmacen', sql.VarChar, prod.Almacen)
                   .input('AlmacenName', sql.VarChar, prod.AlmacenName)
                   .input('IdMaterial', sql.VarChar, prod.Material)
@@ -1961,7 +1967,7 @@ export default class SolicitudCompraCTR {
                     return pool.request()
                       .input('IdProducto', sql.Int, resp.output.output_Product)
                       .input('CantidadChild', sql.Int, child.Cantidad)
-                      .input('PrecioChild', sql.Decimal(9, 2), child.Precio)
+                      .input('PrecioChild', sql.Decimal, child.Precio)
                       .input('TextoService', sql.VarChar, child.TextoServicio)
                       .input('IdUnidadMedida', sql.VarChar, child.IdUMedidaChild)
                       .input('UnidadmedidaName', sql.VarChar, child.NameUMedidaChild)
@@ -2008,7 +2014,6 @@ export default class SolicitudCompraCTR {
     }
 
   }
-
 
   //buscamos Direcciones por Usuario
   getDirforUser = (req, res) => {
@@ -2619,7 +2624,7 @@ export default class SolicitudCompraCTR {
     // console.log("Id de Solicitud-->" + req.params.IdSolicitud);
     // console.log("id de Status SOl-->"  + req.params.IdStatus);
     // console.log("id de Area-->" + req.params.IdArea);
-    // console.log("id de Solicitante-->"+req.params.Solicitante);
+    console.log("id de Solicitante-->"+req.params.Solicitante);
     // console.log("Id de Rool -->" + req.params.IdRol);
     // console.log("Name Autoriza -->" + req.params.NombreAutorizador);
     // console.log("Email de la Persona DirArea que Autoriza--->" + req.params.EmailAutorizador);
@@ -2657,7 +2662,7 @@ export default class SolicitudCompraCTR {
       console.log("----------------*****datos de regreso del solicitante----------------");
       console.log(result.recordset);
       console.log(result.recordset[0]);
-      NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
+      NombreCompletoSolicitante = req.params.Solicitante;
       console.log(NombreCompletoSolicitante);
       EmailSolicitante = result.recordset[0].Email;
       console.log(EmailSolicitante);
@@ -2740,7 +2745,7 @@ export default class SolicitudCompraCTR {
         console.log("----------------*****datos de regreso del solicitante----------------");
         // console.log(result.recordset);
         console.log(result.recordset[0]);
-        NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
+        NombreCompletoSolicitante = req.params.Solicitante;
         console.log(NombreCompletoSolicitante);
         EmailSolicitante = result.recordset[0].Email;
         console.log(EmailSolicitante);
@@ -2877,7 +2882,7 @@ export default class SolicitudCompraCTR {
         console.log("----------------*****datos de regreso del solicitante----------------");
         // console.log(result.recordset);
         // console.log(result.recordset[0]);
-        NombreCompletoSolicitante = result.recordset[0].NombreCompleto;
+        NombreCompletoSolicitante = req.params.NombreAutorizador;
         EmailSolicitante = result.recordset[0].Email;
         // console.log(NombreCompletoSolicitante);
         // console.log(EmailSolicitante);
@@ -2924,7 +2929,7 @@ export default class SolicitudCompraCTR {
   UpStatus = (req, res) => {
     // console.log("Dentro de el metodo que Actualiza el status metodo Solicitado desde la pagina de el correo");
     // console.log(req.params.IdSolicitud);
-    // console.log(req.params.Solicitante);
+    console.log(req.params.Solicitante);
     // console.log("----STATUS-----" + req.params.IdStatus);
     //----------------------------Validmaos la opcion seleccionada de GERENTE DE AREA o DIRECCION
     let NombreAutorizador: string;
@@ -2987,7 +2992,8 @@ export default class SolicitudCompraCTR {
               NombreAutorizador = resultexept.recordset[0].NombreCompleto;
               EmailAutorizador = resultexept.recordset[0].Email;
               StatusSolicitud = resultexept.recordsets[1][0].IdStatusSolicitud;
-              NombreCompletoSolicitante = resultexept.recordsets[4][0].NombreCompleto;
+              NombreCompletoSolicitante = req.params.Solicitante;
+              //NombreCompletoSolicitante = resultexept.recordsets[4][0].NombreCompleto;
               EmailSolicitante = resultexept.recordsets[4][0].Email;
               
               EnvioStatusAutoriza = 6;
@@ -3183,7 +3189,8 @@ export default class SolicitudCompraCTR {
               console.log(resultexept.recordset[0].NombreCompleto);
               console.log(resultexept.recordset[0].Email);
               StatusSolicitud = resultexept.recordsets[1][0].IdStatusSolicitud;
-              NombreCompletoSolicitante = resultexept.recordsets[4][0].NombreCompleto;
+              NombreCompletoSolicitante = req.params.Solicitante;
+              //NombreCompletoSolicitante = resultexept.recordsets[4][0].NombreCompleto;
               EmailSolicitante = resultexept.recordsets[4][0].Email;
 
               if (req.params.IdStatus == 2) {
@@ -3374,7 +3381,8 @@ export default class SolicitudCompraCTR {
           NombreAutorizador = resultexept.recordset[0].NombreCompleto;
           EmailAutorizador = resultexept.recordset[0].Email;
           StatusSolicitud = resultexept.recordsets[1][0].IdStatusSolicitud;
-          NombreCompletoSolicitante = resultexept.recordsets[4][0].NombreCompleto;
+          NombreCompletoSolicitante = req.params.Solicitante;
+          //NombreCompletoSolicitante = resultexept.recordsets[4][0].NombreCompleto;
           EmailSolicitante = resultexept.recordsets[4][0].Email;
 
           if (req.params.IdStatus == 2) {
@@ -3649,7 +3657,8 @@ export default class SolicitudCompraCTR {
             console.log("este es el resultado de el Update de la SolPed");
             
             StatusSolicitud = resultauth.recordsets[1][0].IdStatusSolicitud;
-            NombreCompletoSolicitante = resultauth.recordsets[4][0].NombreCompleto;
+            NombreCompletoSolicitante = req.params.Solicitante;
+            //NombreCompletoSolicitante = resultauth.recordsets[4][0].NombreCompleto;
             EmailSolicitante = resultauth.recordsets[4][0].Email;
             IdNewestatus = req.params.IdStatus;
             
@@ -3954,7 +3963,8 @@ export default class SolicitudCompraCTR {
           }).then( async result => {
             
             StatusSolicitud = resultauth.recordsets[1][0].IdStatusSolicitud;
-            NombreCompletoSolicitante = resultauth.recordsets[4][0].NombreCompleto;
+            NombreCompletoSolicitante = req.params.Solicitante;
+            //NombreCompletoSolicitante = resultauth.recordsets[4][0].NombreCompleto;
             EmailSolicitante = resultauth.recordsets[4][0].Email;
             IdNewestatus = req.params.IdStatus;
             if (req.params.IdStatus == 6) {
@@ -4232,9 +4242,9 @@ export default class SolicitudCompraCTR {
                   html:'<div style="text-align: center;">'+
                           '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;">' + NameStatus + ', REALIZADO POR : ' + NameAutorizador + '</h1>' +
                           '<h3 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : <p style="text-decoration: underline;">' + IdSolicitud + '</p><h3>' +
-                          '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;">FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</p>' +
-
+                          '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> PARA VER DETALLE ENTRAR A LA INTRANET</p>' +
                           '<a style="color: #c8c8c8; text-decoration: underline;" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
+                          
                           '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 30px;"> POR FAVOR NO RESPONDER ESTE MENSAJE, ES UN MENSAJE AUTOMATICO</p>'+
                         '</div>'
                   }
@@ -4258,7 +4268,7 @@ export default class SolicitudCompraCTR {
                   html: '<div style="text-align: center;">'+
                           '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;">TIENES UNA SOLICITUD DE PEDIDO PENDIENTE POR REVISAR DE : ' + NameSolicitante + '</h1>'+ 
                           '<h2 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : ' + IdSolicitud + '</h2>'+ 
-                          '<h3 style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;">FAVOR DE ENTRAR A INTRANET PARA SU REVISION DETALLADA</h3>' +
+                          '<h3 style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;">PARA VER DETALLE ENTRAR A LA INTRANET</h3>' +
                           '<a style="color: #c8c8c8; text-decoration: underline;" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
                           '<br>' +
                           '<p style="color: #007bff !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 30px;"> POR FAVOR NO RESPONDER ESTE MENSAJE, ES UN MENSAJE AUTOMATICO</p>'+
@@ -4285,7 +4295,7 @@ export default class SolicitudCompraCTR {
                           '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase; ">REALIZASTE CAMBIO DE ESTATUS A : '+ NameStatus +'</h1>'+
                           '<h2 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 60px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;" > PARA LA SOLICITUD CON ID : '+ IdSolicitud +'</h2>' + 
                           '<h3 style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> SOLICITANTE :' + NameSolicitante + '</h3>' +
-                          '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> FAVOR DE ENTRAR A INTRANET PARA SU REVISION MAS DETALLADA</p>' +
+                          '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> PARA VER DETALLE ENTRAR A LA INTRANET</p>' +
                           '<a style="color: #007bff; text-decoration: underline;" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
                           '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> POR FAVOR NO RESPONDER ESTE MENSAJE, ES UN MENSAJE AUTOMATICO</p>'+
                         '<div>' 
@@ -4323,12 +4333,11 @@ export default class SolicitudCompraCTR {
                                   subject: Subjetc,
                                   html: '<div style="text-align: center;">'+
                                         '<h1 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 72px; margin: 0 0 24px; text-align: center; text-transform: uppercase;">TIENES UNA SOLICITUD DE PEDIDO PENDIENTE POR REVISAR DE : ' + NameSolicitante + '</h1>'+
-                                        '<h3 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : ' + IdSolicitud + '<h3>' +                                
+                                        '<h3 style="color: #919499 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 62px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center;">CON UN ID DE SOLICITUD : ' + IdSolicitud + '<h3>' + 
+                                        '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 24px;"> PARA VER DETALLE ENTRAR A LA INTRANET</p>' +
+                                        '<a style="color: #007bff; text-decoration: underline;" href="'+Intranet+'">ENTRAR A INTRANET</a>' +                              
                                         '<p style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 18px; font-weight: 500; line-height: 32px; margin: 0 0 24px;">EN CASO DE DENEGAR LA SOLICITUD SE DEBERA ENTRAR A LA INTRANET PARA CAPTURAR MOTIVO DE RECHAZO</p>' +
-                                        '<a style="color: #007bff !important; text-decoration: none; padding-top:5px" href="'+Intranet+'">ENTRAR A INTRANET</a>' +
-                                        '<br>' +
                                           ButtonAutoriza + ButtonRechaza +
-                                        '<br>' +
                                         '<br>' +
                                         '<p Style="color: #f8f8f8 !important; font-family: "'+"Raleway"+'",sans-serif; font-size: 15px; font-weight: 500; line-height: 32px; margin: 0 0 30px;> POR FAVOR NO RESPONDER A ESTE MENSAJE, ES UN MENSAJE AUTOMATICO</p>'+
                                         '</div>'

@@ -63,7 +63,7 @@ var newnuf  = Buffer.from(buf).toString('base64');
 //var auth = 'WEFDQUJBTExFUk86U2VpZG9yMTIq';//contraseña para conectar a sap
 var auth = newnuf;//contraseña para conectar a sap
 console.log(process.env.SECRET_SAP);
-//var buf = btoa("INTRANCOMUNI:Intr4netC01"); --> para QIM Calidad
+//var buf = btoa("INTRANCOMUNI:Intr4netC03"); --> para QIM Calidad
 //var buf = btoa("INTRANCOMUNI:Intr4netC0"); ---> para PIM Produccion
 
 
@@ -75,9 +75,9 @@ console.log(process.env.SECRET_SAP);
 //nota para otros casos con mandar authorization y la contraseña en ASCCI es mas que suficiente.
 //LINK DE CALIDAD PARA QIM (CALIDAD)       -->http://smxcrqim.grupoempresarialangeles.com.mx:8025/sap/bc/srt/wsdl/flv_10002A10MAD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
 
-//LINK DE PRODUCCION PARA PIM (PRODUCCION) -->http://smxcrpim.grupoempresarialangeles.com.mx:8035/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
+//LINK DE PRODUCCION PARA PIM (PRODUCCION) -->http://smxcrpim.grupoempresarialangeles.com.mx:8034/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zws_sap_in/320/zws_sap_in/zws_sap_in?sap-client=320
 //const URL = 'http://smxcrpim.grupoempresarialangeles.com.mx:8035';
-const URL = 'http://smxcrpim.grupoempresarialangeles.com.mx:8034';
+const URL = 'http://smxcrqim.grupoempresarialangeles.com.mx:8025';
 app.use('/sap', proxy({ target: URL,
                         changeOrigin: true, 
                         logLevel: 'debug',
