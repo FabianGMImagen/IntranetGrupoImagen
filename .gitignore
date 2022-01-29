@@ -10,10 +10,10 @@ proxy.conf.json
 package-lock.json
 .env
 #datos archivos de excel o csv
-datos/
+/datos*
 # dependencies
 /node_modules
-
+/oldfilessap
 
 # IDEs and editors
 /.idea
