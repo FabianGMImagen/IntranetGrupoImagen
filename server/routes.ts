@@ -19,7 +19,8 @@ import { inflateRaw } from 'zlib';
 
 var configMensaje = require('../server/email/configMensaje');
 var auth = require('./middleware/auth');
-
+import * as multer from 'multer' //librería que instalar desde NPM
+import *  as path from 'path';
 
 export default function setRoutes(app) {
 
@@ -40,7 +41,20 @@ export default function setRoutes(app) {
   const UploadCTR = new UploadFilesController();
   const webservicesap = new WebServiceSap();
   //const configMensaje = new 
-
+  const DIR = process.env.PATH_UPLOADFILE;
+  let storage = multer.diskStorage({
+    destination: (req, file, cb) => {cb(null, DIR);},
+    filename: (req, file, cb) => {
+      let id = req.headers.idsol;
+      let ext = path.extname(file.originalname);
+      let basename = path.basename(file.originalname, ext);
+      console.log(basename)
+      console.log(file.fieldname)
+      cb(null, id+file.fieldname + basename + ext);
+    }
+  
+  });
+  const upload = multer({ storage: storage });
 
 //router.route('/webservicesap').get(webservicesap.example);
 
@@ -252,7 +266,7 @@ export default function setRoutes(app) {
 
 
   //ruta para procesar el archivo subido en el front 
-  router.route('/upload/singlefile').post(UploadCTR.upLoadSingleFile);
+  router.route('/upload/singlefile').post(upload.single('-') ,UploadCTR.upLoadSingleFile);
   //crear archivo de excel con informacion de la solicitud para tablas comparativas
   router.route('/getfilecompras/:ID').get(auth, UploadCTR.createFileComrpas);
   
@@ -420,9 +434,13 @@ export default function setRoutes(app) {
                   console.log("pasamos a subir el archivo.....");
                   //'../ImagenFinanzasFabi/'+FileName, '/'+FileName
                   //var upfile = [{local:'../ImagenFinanzasFabi/' + FileName, remote:'/'+FileName}];
-                  ftp.cd("/", function(err, path){
-                    ftp.upload('../IntranetProduccion/'+FileName, FileName, function(err){
-                      if(err) console.log(err);
+                  ftp.cd("/Calidad", function(err, path){
+                    ftp.upload('../IntranetGrupoImagen/'+FileName, FileName, function(err){
+                      if(err){
+                        console.log("ERRORRRRRRRRRR");
+                        console.log(err);
+                        ftp.close();
+                      }
                       else console.log("Se dejo el Archivo en el //10.29.148.24/ " + "El nombre del Archivo es...  " + FileName + "  en la hora  " + HoraExacta);
                       ftp.close();
                     });

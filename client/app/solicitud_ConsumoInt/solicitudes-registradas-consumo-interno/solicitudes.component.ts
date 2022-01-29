@@ -37,6 +37,7 @@ import { DialogDetalleSolConsumoInternoComponent } from 'client/app/dialogs/dial
   ],
 })
 
+
 export class SolicitudesComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;

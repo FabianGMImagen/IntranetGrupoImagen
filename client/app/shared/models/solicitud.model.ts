@@ -34,18 +34,18 @@ export class Solicitud {
     TipoSolicitud:number;
     EstatusSol:number;
     IdUsuario:number;
-    Autorizador:User;
-    Area:Area;
-    Empresa:Empresa;
-    Plaza:SucursalPlaza;
-    Categoria:Categorias;
-    Imputacion:Imputacion;
-    Materiales: Materiales;
-    Posicion:Posiciones;
-    CentroCostos:CentroCostos;
-    Cuentamayor:CuentaMayor;
-    OrdenInterna:OrdenInterna;
-    OrdenEstadistica:OrdenInterna;
+    Autorizador:User = new User();
+    Area:Area = new Area();
+    Empresa:Empresa = new Empresa();
+    Plaza:SucursalPlaza = new SucursalPlaza();
+    Categoria:Categorias = new Categorias();
+    Imputacion:Imputacion = new Imputacion();
+    Materiales: Materiales = new Materiales();
+    Posicion:Posiciones = new Posiciones();
+    CentroCostos:CentroCostos = new CentroCostos();
+    Cuentamayor:CuentaMayor = new CuentaMayor();
+    OrdenInterna:OrdenInterna = new OrdenInterna();
+    OrdenEstadistica:OrdenInterna = new OrdenInterna();
     //Tipo:string;
     IdOrdenInterna:number;
     Usr:string;
@@ -57,15 +57,15 @@ export class Solicitud {
     
     PuestoAutoriza:string;
 
-    Almacen:Almacen;
-    Necesidad:Necesidad;
-    GArticulo:GrupoArticulo;
-    GCompra:GrupoCompra;
-    UMedida:UnidadMedida;
-    NActivo:Activo;
-    Moneda:Moneda;
+    Almacen:Almacen = new Almacen();
+    Necesidad:Necesidad = new Necesidad();
+    GArticulo:GrupoArticulo = new GrupoArticulo();
+    GCompra:GrupoCompra = new GrupoCompra();
+    UMedida:UnidadMedida = new UnidadMedida();
+    NActivo:Activo = new Activo();
+    Moneda:Moneda = new Moneda();
 
-    ImputacionItem:Imputacion;
+    ImputacionItem:Imputacion = new Imputacion();
     
 
     Productos :Producto[] = [];
@@ -78,9 +78,9 @@ export class Solicitud {
     Justificacion:string;
 
     /*-----------------------------------------Variables Hijos de Productos para validaciones del lado del NODE ----------------------------------- */
-        SelectedOEstadisiticaChild:OrdenInterna;
-        SelectedCentroCosotosChild:CentroCostos;
-        SelectedCuentaMayorChild:CuentaMayor;
+        SelectedOEstadisiticaChild:OrdenInterna = new OrdenInterna();
+        SelectedCentroCosotosChild:CentroCostos = new CentroCostos();
+        SelectedCuentaMayorChild:CuentaMayor = new CuentaMayor();
     /*----------------------------------------- FIn de las Variables -------------------------------------------------------------------------------*/
 
     constructor(){
