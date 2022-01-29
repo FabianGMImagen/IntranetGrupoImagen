@@ -58,6 +58,7 @@ var proxy = require('http-proxy-middleware');
 app.get('/ps', function(req, res){
 console.log(req);
 });
+
 var buf = process.env.SECRET_SAP;
 var newnuf  = Buffer.from(buf).toString('base64');
 //var auth = 'WEFDQUJBTExFUk86U2VpZG9yMTIq';//contraseña para conectar a sap

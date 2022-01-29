@@ -96,11 +96,10 @@ export class AdminComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
               public auth: AuthServices,
-              public solicitudComp: SolicitudCompraService,
               public toast: ToastComponent,
               private userService: UserService,
               public dialog: MatDialog,
-              public solicitudComp: SolicitudCompraService,) { }
+              public solicitudComp: SolicitudCompraService) { }
 
   ngOnInit() {
     this.getUsers();

@@ -36,7 +36,7 @@ var config = {
         user: 'sa',
         password: 'd1nosauri0Z',
         server: '10.29.128.63',
-        database: 'ImagenFinanzasPruebas',
+        database: 'ImagenFinanzasProd',
         options: {tdsVersion:'7_1'}
     }
 
